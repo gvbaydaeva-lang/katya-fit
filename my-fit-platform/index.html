@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Катя Fit — тренировки и личный кабинет</title>
+    <meta
+      name="description"
+      content="Онлайн-фитнес с Катей: программы, результаты учеников и тарифы. После оплаты — личный кабинет."
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      html {
+        scroll-behavior: smooth;
+      }
+      section {
+        scroll-margin-top: 5rem;
+      }
+    </style>
+  </head>
+  <body class="bg-zinc-50 text-zinc-900 antialiased">
+  <script>
+    (function () {
+      var base =
+        location.pathname.indexOf("/katya-fit") === 0 ? "/katya-fit" : "";
+      document.documentElement.dataset.base = base;
+    })();
+  </script>
+
+    <header
+      class="sticky top-0 z-50 border-b border-zinc-200/80 bg-white/90 backdrop-blur"
+    >
+      <div
+        class="mx-auto flex max-w-5xl items-center justify-between gap-4 px-4 py-4"
+      >
+        <a href="#hero" class="text-lg font-semibold">
+          Катя <span class="text-rose-600">Fit</span>
+        </a>
+        <nav class="hidden items-center gap-1 text-sm md:flex">
+          <a href="#about" class="rounded-full px-3 py-1.5 text-zinc-600 hover:bg-rose-50 hover:text-rose-800">О тренере</a>
+          <a href="#programs" class="rounded-full px-3 py-1.5 text-zinc-600 hover:bg-rose-50 hover:text-rose-800">Программы</a>
+          <a href="#results" class="rounded-full px-3 py-1.5 text-zinc-600 hover:bg-rose-50 hover:text-rose-800">Результаты</a>
+          <a href="#pricing" class="rounded-full px-3 py-1.5 text-zinc-600 hover:bg-rose-50 hover:text-rose-800">Тарифы</a>
+        </nav>
+        <a
+          id="nav-login"
+          href="/login/"
+          class="shrink-0 rounded-full bg-rose-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-rose-700"
+          >Войти</a
+        >
+      </div>
+    </header>
+
+    <main>
+      <!-- Hero -->
+      <section
+        id="hero"
+        class="relative overflow-hidden bg-gradient-to-br from-rose-50 via-white to-orange-50"
+      >
+        <div
+          class="mx-auto grid max-w-5xl gap-10 px-4 py-20 lg:grid-cols-2 lg:items-center lg:py-28"
+        >
+          <div>
+            <p class="text-sm font-medium uppercase tracking-wider text-rose-600">
+              Онлайн-фитнес с заботой о теле
+            </p>
+            <h1
+              class="mt-4 text-4xl font-semibold leading-tight sm:text-5xl"
+            >
+              Сильное тело и уверенность — с персональной программой
+            </h1>
+            <p class="mt-6 text-lg text-zinc-600">
+              Вся информация о тренировках и тарифах на одной странице. После
+              оплаты открывается личный кабинет на платформе.
+            </p>
+            <div class="mt-8 flex flex-wrap gap-3">
+              <a
+                href="#pricing"
+                class="inline-flex items-center justify-center rounded-full bg-rose-600 px-5 py-2.5 text-sm font-medium text-white shadow-sm shadow-rose-600/20 hover:bg-rose-700"
+                >Выбрать тариф</a
+              >
+              <a
+                id="hero-app"
+                href="/app/"
+                class="inline-flex items-center justify-center rounded-full border border-zinc-300 bg-white px-5 py-2.5 text-sm font-medium hover:bg-zinc-50"
+                >Личный кабинет</a
+              >
+            </div>
+            <p class="mt-4 text-sm text-zinc-500">
+              Уже есть доступ?
+              <a id="hero-login" href="/login/" class="text-rose-600 underline"
+                >Войти</a
+              >
+            </p>
+          </div>
+          <div
+            class="relative aspect-[4/5] overflow-hidden rounded-3xl bg-gradient-to-tr from-rose-200 to-orange-100 shadow-xl"
+          >
+            <div class="absolute inset-0 flex items-end p-8">
+              <div class="rounded-2xl bg-white/90 p-4 backdrop-blur">
+                <p class="text-sm font-medium">+120 учеников</p>
+                <p class="text-xs text-zinc-600">
+                  Результаты за 8–12 недель программы
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- О тренере -->
+      <section id="about" class="border-t border-zinc-200/80 py-20">
+        <div class="mx-auto max-w-5xl px-4">
+          <h2 class="text-3xl font-semibold tracking-tight">О тренере</h2>
+          <p class="mt-3 max-w-2xl text-lg text-zinc-600">
+            Катя — сертифицированный тренер. Помогает выстроить устойчивую
+            привычку движения без выгорания.
+          </p>
+          <div class="mt-10 grid gap-8 lg:grid-cols-2">
+            <div
+              class="aspect-square rounded-3xl bg-gradient-to-br from-rose-100 to-orange-100"
+            ></div>
+            <div class="space-y-6 text-zinc-600">
+              <p>
+                Работаю с женщинами и мужчинами, которые хотят укрепить тело,
+                улучшить осанку и почувствовать энергию в повседневной жизни.
+              </p>
+              <p>
+                В программах — прогрессия нагрузок, техника, восстановление и
+                поддержка в чате. Без экстремальных диет и «магических»
+                обещаний.
+              </p>
+              <dl class="grid gap-4 sm:grid-cols-3">
+                <div class="rounded-xl border border-zinc-200 bg-white p-4">
+                  <dt class="text-xs uppercase text-zinc-500">Опыт</dt>
+                  <dd class="mt-1 font-medium text-zinc-900">8+ лет</dd>
+                </div>
+                <div class="rounded-xl border border-zinc-200 bg-white p-4">
+                  <dt class="text-xs uppercase text-zinc-500">Специализация</dt>
+                  <dd class="mt-1 font-medium text-zinc-900">
+                    Силовой тренинг
+                  </dd>
+                </div>
+                <div class="rounded-xl border border-zinc-200 bg-white p-4">
+                  <dt class="text-xs uppercase text-zinc-500">Формат</dt>
+                  <dd class="mt-1 font-medium text-zinc-900">Онлайн</dd>
+                </div>
+              </dl>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Программы -->
+      <section id="programs" class="border-t border-zinc-200/80 py-20">
+        <div class="mx-auto max-w-5xl px-4">
+          <h2 class="text-3xl font-semibold tracking-tight">Программы</h2>
+          <p class="mt-3 max-w-2xl text-lg text-zinc-600">
+            Форматы занятий. Полная программа и видео — в личном кабинете после
+            оплаты тарифа.
+          </p>
+          <ul class="mt-10 grid gap-6 md:grid-cols-3">
+            <li class="rounded-2xl border border-zinc-200 bg-white p-6">
+              <h3 class="font-semibold">Силовые</h3>
+              <p class="mt-2 text-sm text-zinc-600">
+                Присед, тяга, жим — с акцентом на технику и прогрессию.
+              </p>
+            </li>
+            <li class="rounded-2xl border border-zinc-200 bg-white p-6">
+              <h3 class="font-semibold">Функциональные</h3>
+              <p class="mt-2 text-sm text-zinc-600">
+                Кор, баланс, мобильность для повседневных задач.
+              </p>
+            </li>
+            <li class="rounded-2xl border border-zinc-200 bg-white p-6">
+              <h3 class="font-semibold">Домашние</h3>
+              <p class="mt-2 text-sm text-zinc-600">
+                Минимум оборудования: коврик, гантели, резинки.
+              </p>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Результаты -->
+      <section id="results" class="border-t border-zinc-200/80 py-20">
+        <div class="mx-auto max-w-5xl px-4">
+          <h2 class="text-3xl font-semibold tracking-tight">Результаты</h2>
+          <p class="mt-3 max-w-2xl text-lg text-zinc-600">
+            Реальные истории учеников.
+          </p>
+          <div class="mt-10 grid gap-6 sm:grid-cols-3">
+            <article class="rounded-2xl border border-zinc-200 bg-white p-6">
+              <div
+                class="mb-4 h-32 rounded-xl bg-gradient-to-r from-rose-100 to-orange-100"
+              ></div>
+              <h3 class="font-medium">Анна</h3>
+              <p class="mt-1 text-sm text-rose-700">−6 кг, +сила в приседе</p>
+              <p class="mt-2 text-xs text-zinc-500">10 недель</p>
+            </article>
+            <article class="rounded-2xl border border-zinc-200 bg-white p-6">
+              <div
+                class="mb-4 h-32 rounded-xl bg-gradient-to-r from-rose-100 to-orange-100"
+              ></div>
+              <h3 class="font-medium">Мария</h3>
+              <p class="mt-1 text-sm text-rose-700">
+                Осанка, меньше боли в спине
+              </p>
+              <p class="mt-2 text-xs text-zinc-500">8 недель</p>
+            </article>
+            <article class="rounded-2xl border border-zinc-200 bg-white p-6">
+              <div
+                class="mb-4 h-32 rounded-xl bg-gradient-to-r from-rose-100 to-orange-100"
+              ></div>
+              <h3 class="font-medium">Елена</h3>
+              <p class="mt-1 text-sm text-rose-700">Тонус и выносливость</p>
+              <p class="mt-2 text-xs text-zinc-500">12 недель</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- Тарифы -->
+      <section id="pricing" class="border-t border-zinc-200/80 bg-zinc-50/80 py-20">
+        <div class="mx-auto max-w-5xl px-4">
+          <h2 class="text-3xl font-semibold tracking-tight">Тарифы</h2>
+          <p class="mt-3 max-w-2xl text-lg text-zinc-600">
+            Выберите формат. После оплаты откроется доступ к закрытой платформе.
+          </p>
+          <div class="mt-10 grid gap-6 lg:grid-cols-3">
+            <!-- Самостоятельно -->
+            <article class="flex flex-col rounded-2xl border border-zinc-200 bg-white p-6">
+              <h3 class="text-lg font-semibold">Самостоятельно</h3>
+              <p class="mt-2 text-sm text-zinc-600">
+                Готовая программа тренировок — вы занимаетесь в своём темпе.
+              </p>
+              <p class="mt-4 text-3xl font-semibold">
+                2 990 ₽<span class="text-base font-normal text-zinc-500">/мес</span>
+              </p>
+              <ul class="mt-6 flex-1 space-y-2 text-sm text-zinc-700">
+                <li class="flex gap-2"><span class="text-rose-600">✓</span> План на 4 недели</li>
+                <li class="flex gap-2"><span class="text-rose-600">✓</span> Видео с разбором техники</li>
+                <li class="flex gap-2"><span class="text-rose-600">✓</span> Чек-листы</li>
+              </ul>
+              <a
+                data-checkout="self"
+                href="/checkout/self/"
+                class="buy-btn mt-8 inline-flex w-full items-center justify-center rounded-full bg-rose-600 py-2.5 text-sm font-medium text-white hover:bg-rose-700"
+                >Купить</a
+              >
+            </article>
+            <!-- С сопровождением -->
+            <article
+              class="flex flex-col rounded-2xl border border-rose-300 bg-white p-6 shadow-lg shadow-rose-100"
+            >
+              <span
+                class="mb-3 w-fit rounded-full bg-rose-600 px-3 py-0.5 text-xs font-medium text-white"
+                >Популярный</span
+              >
+              <h3 class="text-lg font-semibold">С личным сопровождением</h3>
+              <p class="mt-2 text-sm text-zinc-600">
+                Персональная программа и еженедельная обратная связь от тренера.
+              </p>
+              <p class="mt-4 text-3xl font-semibold">
+                6 990 ₽<span class="text-base font-normal text-zinc-500">/мес</span>
+              </p>
+              <ul class="mt-6 flex-1 space-y-2 text-sm text-zinc-700">
+                <li class="flex gap-2"><span class="text-rose-600">✓</span> Корректировки каждую неделю</li>
+                <li class="flex gap-2"><span class="text-rose-600">✓</span> Разбор питания</li>
+                <li class="flex gap-2"><span class="text-rose-600">✓</span> Приоритетный чат</li>
+              </ul>
+              <a
+                data-checkout="coached"
+                href="/checkout/coached/"
+                class="buy-btn mt-8 inline-flex w-full items-center justify-center rounded-full bg-rose-600 py-2.5 text-sm font-medium text-white hover:bg-rose-700"
+                >Купить</a
+              >
+            </article>
+            <!-- Платформа -->
+            <article class="flex flex-col rounded-2xl border border-zinc-200 bg-white p-6">
+              <h3 class="text-lg font-semibold">
+                Доступ к платформе без тренера
+              </h3>
+              <p class="mt-2 text-sm text-zinc-600">
+                Библиотека тренировок и записи эфиров — без индивидуального
+                ведения.
+              </p>
+              <p class="mt-4 text-3xl font-semibold">
+                1 990 ₽<span class="text-base font-normal text-zinc-500">/мес</span>
+              </p>
+              <ul class="mt-6 flex-1 space-y-2 text-sm text-zinc-700">
+                <li class="flex gap-2"><span class="text-rose-600">✓</span> Полный архив видео</li>
+                <li class="flex gap-2"><span class="text-rose-600">✓</span> Новые записи каждую неделю</li>
+                <li class="flex gap-2"><span class="text-rose-600">✓</span> Доступ с любого устройства</li>
+              </ul>
+              <a
+                data-checkout="platform"
+                href="/checkout/platform/"
+                class="buy-btn mt-8 inline-flex w-full items-center justify-center rounded-full bg-rose-600 py-2.5 text-sm font-medium text-white hover:bg-rose-700"
+                >Купить</a
+              >
+            </article>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="border-t border-zinc-200 bg-zinc-50">
+      <div
+        class="mx-auto flex max-w-5xl flex-col gap-4 px-4 py-8 text-sm text-zinc-600 sm:flex-row sm:items-center sm:justify-between"
+      >
+        <p>© <span id="year"></span> Катя Fit</p>
+        <div class="flex gap-4">
+          <a href="#pricing" class="hover:text-zinc-900">Тарифы</a>
+          <a href="#about" class="hover:text-zinc-900">О тренере</a>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      (function () {
+        var base = document.documentElement.dataset.base || "";
+        document.getElementById("year").textContent = new Date().getFullYear();
+
+        var links = document.querySelectorAll(
+          "#nav-login, #hero-login, #hero-app, .buy-btn"
+        );
+        for (var i = 0; i < links.length; i++) {
+          var el = links[i];
+          var path = el.getAttribute("href");
+          if (path && path.charAt(0) === "/") {
+            el.setAttribute("href", base + path);
+          }
+        }
+
+        // Подсветка пункта меню при прокрутке
+        var sections = ["about", "programs", "results", "pricing"];
+        var navLinks = document.querySelectorAll("header nav a");
+
+        function onScroll() {
+          var current = "";
+          for (var s = 0; s < sections.length; s++) {
+            var sec = document.getElementById(sections[s]);
+            if (sec && sec.getBoundingClientRect().top <= 120) {
+              current = sections[s];
+            }
+          }
+          for (var n = 0; n < navLinks.length; n++) {
+            var link = navLinks[n];
+            var href = link.getAttribute("href") || "";
+            if (href === "#" + current) {
+              link.classList.add("bg-rose-100", "text-rose-800");
+              link.classList.remove("text-zinc-600");
+            } else {
+              link.classList.remove("bg-rose-100", "text-rose-800");
+              link.classList.add("text-zinc-600");
+            }
+          }
+        }
+        window.addEventListener("scroll", onScroll, { passive: true });
+        onScroll();
+      })();
+    </script>
+  </body>
+</html>
