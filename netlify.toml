@@ -1,4 +1,4 @@
 [build]
-base = "my-fit-platform"
-command = "npm run build"
-publish = "my-fit-platform/.next"
+  base = "my-fit-platform"
+  command = "npm run build"
+  publish = ".next"
