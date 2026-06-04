@@ -6,6 +6,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { dsTabTrack } from "@/lib/ds-theme";
 
 type TabsContextValue = {
   value: string;
@@ -61,10 +62,7 @@ type TabsListProps = {
 
 export function TabsList({ className = "", children }: TabsListProps) {
   return (
-    <div
-      role="tablist"
-      className={`inline-flex h-10 items-center gap-1 rounded-xl bg-zinc-100 p-1 ${className}`}
-    >
+    <div role="tablist" className={`inline-flex h-10 items-center gap-1 ${dsTabTrack} ${className}`}>
       {children}
     </div>
   );
@@ -90,10 +88,10 @@ export function TabsTrigger({
       role="tab"
       aria-selected={isActive}
       onClick={() => onValueChange(value)}
-      className={`inline-flex items-center justify-center rounded-lg px-4 py-1.5 text-sm font-medium transition-colors ${
+      className={`inline-flex items-center justify-center rounded-lg px-4 py-1.5 text-sm font-medium transition-colors duration-200 ${
         isActive
-          ? "bg-white text-zinc-900 shadow-sm"
-          : "text-zinc-600 hover:text-zinc-900"
+          ? "bg-ds-bg text-ds-heading shadow-sm"
+          : "text-ds-muted hover:text-ds-text"
       } ${className}`}
     >
       {children}
@@ -116,7 +114,7 @@ export function TabsContent({
   if (active !== value) return null;
 
   return (
-    <div role="tabpanel" className={`mt-6 ${className}`}>
+    <div role="tabpanel" className={`mt-3 ${className}`}>
       {children}
     </div>
   );

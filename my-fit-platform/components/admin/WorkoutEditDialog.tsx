@@ -19,6 +19,8 @@ import {
 } from "@/components/ui/dialog";
 import { isValidPlanId } from "@/lib/stripe/plans";
 import type { DbWorkout } from "@/lib/supabase/database.types";
+import { prepareWorkoutBlocksForSave } from "@/lib/admin/upload-content-blocks";
+import type { PendingBlockFilesMap } from "@/lib/admin/pending-block-files";
 import {
   resolveContentBlocks,
   type WorkoutContentBlock,
@@ -40,10 +42,18 @@ export function WorkoutEditDialog({
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
   const [contentBlocks, setContentBlocks] = useState<WorkoutContentBlock[]>([]);
+  const [pendingFiles, setPendingFiles] = useState<PendingBlockFilesMap>({});
+  const [mediaUploading, setMediaUploading] = useState(false);
+  const [uploadingBlockIds, setUploadingBlockIds] = useState<string[]>([]);
+
+  const saveDisabled = pending || mediaUploading || uploadingBlockIds.length > 0;
 
   useEffect(() => {
     if (workout && open) {
       setContentBlocks(resolveContentBlocks(workout));
+      setPendingFiles({});
+      setMediaUploading(false);
+      setUploadingBlockIds([]);
       setError(null);
     }
   }, [workout?.id, open, workout]);
@@ -56,13 +66,32 @@ export function WorkoutEditDialog({
     const data = new FormData(e.currentTarget);
 
     startTransition(async () => {
+      const prepared = await prepareWorkoutBlocksForSave(
+        contentBlocks,
+        pendingFiles,
+        {
+          onBlockUploadStart: (blockId) =>
+            setUploadingBlockIds((prev) =>
+              prev.includes(blockId) ? prev : [...prev, blockId],
+            ),
+          onBlockUploadEnd: (blockId) =>
+            setUploadingBlockIds((prev) =>
+              prev.filter((id) => id !== blockId),
+            ),
+        },
+      );
+      if (!prepared.ok) {
+        setError(prepared.error);
+        return;
+      }
+
       const result = await updateWorkoutAction({
         id: workout.id,
         title: String(data.get("title") ?? ""),
         module_name: String(data.get("module_name") ?? ""),
         position: Number(data.get("position") ?? 1),
         is_published: data.get("is_published") === "on",
-        content_blocks: contentBlocks,
+        content_blocks: prepared.blocks,
         tariffs: data
           .getAll("tariffs")
           .map((item) => String(item))
@@ -82,7 +111,7 @@ export function WorkoutEditDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className={WORKOUT_BUILDER_DIALOG_CLASS}>
-        <DialogHeader className="shrink-0 border-b border-zinc-100 px-6 py-4">
+        <DialogHeader className="shrink-0 border-b border-stone-900/8 px-6 py-4">
           <DialogTitle>Редактировать урок</DialogTitle>
           <DialogDescription>
             Измените параметры и блоки контента. Порядок сохраняется в{" "}
@@ -96,8 +125,13 @@ export function WorkoutEditDialog({
               key={workout.id}
               formId={formId}
               pending={pending}
+              saveDisabled={saveDisabled}
               contentBlocks={contentBlocks}
               onContentBlocksChange={setContentBlocks}
+              onPendingFilesChange={setPendingFiles}
+              onMediaUploadingChange={setMediaUploading}
+              uploadingBlockIds={uploadingBlockIds}
+              showTariffAccess
               defaults={{
                 title: workout.title,
                 module_name: workout.module_name,
@@ -113,17 +147,21 @@ export function WorkoutEditDialog({
                       {error}
                     </p>
                   )}
-                  <DialogFooter className="mt-6 border-t border-zinc-100 pt-4 sm:justify-end">
+                  <DialogFooter className="mt-6 border-t border-stone-900/8 pt-4 sm:justify-end">
                     <Button
                       type="button"
                       variant="secondary"
-                      disabled={pending}
+                      disabled={saveDisabled}
                       onClick={() => onOpenChange(false)}
                     >
                       Отмена
                     </Button>
-                    <Button type="submit" form={formId} disabled={pending}>
-                      {pending ? "Сохранение…" : "Сохранить"}
+                    <Button type="submit" form={formId} disabled={saveDisabled}>
+                      {mediaUploading || uploadingBlockIds.length > 0
+                        ? "Загрузка файлов…"
+                        : pending
+                          ? "Сохранение…"
+                          : "Сохранить"}
                     </Button>
                   </DialogFooter>
                 </>

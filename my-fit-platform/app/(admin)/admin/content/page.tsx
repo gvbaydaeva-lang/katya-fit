@@ -1,6 +1,5 @@
 import { WorkoutForm } from "@/components/admin/WorkoutForm";
 import { WorkoutsTable } from "@/components/admin/WorkoutsTable";
-import { PageHeading } from "@/components/ui/PageHeading";
 import {
   Tabs,
   TabsContent,
@@ -13,34 +12,27 @@ export default async function AdminContentPage() {
   const workouts = await listWorkouts();
 
   return (
-    <>
-      <PageHeading
-        title="Контент"
-        description="Управление видео-уроками"
-      />
+    <Tabs defaultValue="list" className="w-full min-w-0">
+      <TabsList>
+        <TabsTrigger value="form">Добавить урок</TabsTrigger>
+        <TabsTrigger value="list">Список уроков</TabsTrigger>
+      </TabsList>
 
-      <Tabs defaultValue="form" className="w-full">
-        <TabsList>
-          <TabsTrigger value="form">Добавить урок</TabsTrigger>
-          <TabsTrigger value="list">Список уроков</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="form">
-          <div className="rounded-2xl border border-dashed border-zinc-300 bg-zinc-50/80 px-6 py-10 text-center">
-            <p className="text-sm text-zinc-600">
-              Откройте широкий конструктор, чтобы собрать урок из блоков текста,
-              видео и файлов.
-            </p>
-            <div className="mt-4 flex justify-center">
-              <WorkoutForm />
-            </div>
+      <TabsContent value="form">
+        <div className="rounded-xl border-none bg-ds-surface px-5 py-6 text-center shadow-sm">
+          <p className="text-sm text-ds-muted">
+            Откройте широкий конструктор, чтобы собрать урок из блоков текста,
+            видео и файлов.
+          </p>
+          <div className="mt-3 flex justify-center">
+            <WorkoutForm />
           </div>
-        </TabsContent>
+        </div>
+      </TabsContent>
 
-        <TabsContent value="list">
-          <WorkoutsTable workouts={workouts} />
-        </TabsContent>
-      </Tabs>
-    </>
+      <TabsContent value="list" className="w-full min-w-0">
+        <WorkoutsTable workouts={workouts} />
+      </TabsContent>
+    </Tabs>
   );
 }

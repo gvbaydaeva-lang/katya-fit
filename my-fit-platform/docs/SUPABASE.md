@@ -18,10 +18,33 @@
 2. `supabase/migrations/002_grants.sql` (если есть)
 3. `supabase/migrations/003_workouts.sql` — таблица уроков
 4. `supabase/migrations/004_workouts_multitariff_and_assets.sql` — колонки `materials`, `tariffs`, `video_type` и bucket `workout-assets`
+5. `supabase/migrations/006_workouts_publish_status.sql` — `is_published`
+6. `supabase/migrations/007_workouts_content_blocks.sql` — колонка `content_blocks` (JSONB)
+7. `supabase/migrations/008_workouts_form_schema.sql` — все колонки формы админки (безопасно повторно)
+8. `supabase/migrations/009_profile_questionnaire.sql` (устарело, если не применяли — пропустите)
+9. `supabase/migrations/010_profiles_form_columns.sql` — колонки анкеты: `last_name`, `first_name`, `middle_name`, `birth_date`, `phone`, `city`, `about`
 
-Если уже есть ошибки **«Could not find the materials column»** или **«Bucket not found»**, выполните один раз:
+При ошибке **`Could not find the 'about' column`** (или другой колонки `profiles`) выполните один раз:
 
-`supabase/setup-workouts-content.sql`
+`supabase/setup-profile-questionnaire.sql`
+
+Если уже есть ошибки **«Could not find the … column»** или **«Bucket not found»**, выполните один раз:
+
+`supabase/setup-workouts-content.sql` или `008_workouts_form_schema.sql`
+
+### Ошибка `Could not find the content_blocks column`
+
+В **Supabase → SQL Editor → New query** вставьте и нажмите **Run**:
+
+```sql
+alter table public.workouts
+  add column if not exists content_blocks jsonb not null default '[]'::jsonb;
+
+create index if not exists workouts_content_blocks_gin_idx
+  on public.workouts using gin (content_blocks);
+```
+
+Либо выполните весь файл `supabase/migrations/007_workouts_content_blocks.sql` (то же самое).
 
 ### Таблицы
 

@@ -17,11 +17,19 @@ export const AUTH_ROUTES = {
 /** Префикс закрытой зоны личного кабинета */
 export const STUDENT_APP_PREFIX = "/app";
 
+import { moduleListHref } from "@/lib/workouts/content-blocks";
+
 export const STUDENT_ROUTES = {
   dashboard: "/app",
   myWorkouts: "/app/workouts",
-  lesson: (id: string) => `/app/workouts/${id}`,
+  settings: "/app/profile",
   profile: "/app/profile",
+  module: (moduleName: string) => moduleListHref(moduleName),
+  lesson: (id: string, moduleName?: string) => {
+    const path = `/app/workouts/${id}`;
+    if (!moduleName?.trim()) return path;
+    return `${path}?module=${encodeURIComponent(moduleName.trim())}`;
+  },
 } as const;
 
 export const ADMIN_ROUTES = {

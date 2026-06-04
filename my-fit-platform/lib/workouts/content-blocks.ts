@@ -137,6 +137,54 @@ export function deriveLegacyFromBlocks(blocks: WorkoutContentBlock[]): {
   };
 }
 
+export function isBlobOrLocalUrl(url: string): boolean {
+  const trimmed = url.trim().toLowerCase();
+  return trimmed.startsWith("blob:") || trimmed.startsWith("file:");
+}
+
+/** Поля, которые реально хранятся в колонке workouts.content_blocks (jsonb). */
+export function serializeContentBlocksForDb(
+  blocks: WorkoutContentBlock[],
+): WorkoutContentBlock[] {
+  return normalizeContentBlocks(blocks).map((block) => {
+    if (block.type === "text") {
+      return { id: block.id, type: "text" as const, text: block.text };
+    }
+    if (block.type === "video") {
+      return {
+        id: block.id,
+        type: "video" as const,
+        url: block.url.trim(),
+        video_type: block.video_type,
+      };
+    }
+    return {
+      id: block.id,
+      type: "file" as const,
+      name: block.name.trim() || "Файл",
+      url: block.url.trim(),
+      mime: block.mime.trim() || "application/octet-stream",
+    };
+  });
+}
+
+/** Перед записью в БД: нет локальных blob-URL и заполнены upload/file блоки. */
+export function assertBlocksReadyForDb(blocks: WorkoutContentBlock[]): string | null {
+  for (const block of blocks) {
+    if (block.type === "video" && block.video_type === "upload") {
+      if (!block.url.trim() || isBlobOrLocalUrl(block.url)) {
+        return "Загрузите видеофайл и сохраните урок (файл уйдёт в Storage).";
+      }
+    }
+    if (block.type === "file") {
+      if (!block.url.trim() || isBlobOrLocalUrl(block.url)) {
+        return "Выберите файл материала и сохраните урок.";
+      }
+    }
+  }
+  return null;
+}
+
 export function validateContentBlocks(
   blocks: WorkoutContentBlock[],
 ): string | null {
@@ -210,6 +258,22 @@ export function moduleListHref(moduleName: string): string {
   return `/app/workouts#${moduleNameToAnchorId(moduleName)}`;
 }
 
+/** Название модуля как в админке (module_name), без искусственных префиксов */
+export function formatModulePageLabel(moduleName: string): string {
+  return moduleName.trim() || "Без модуля";
+}
+
+export function resolveModuleNameFromAnchorId(
+  modules: { moduleName: string }[],
+  anchorId: string,
+): string | null {
+  if (!anchorId) return null;
+  const match = modules.find(
+    (module) => moduleNameToAnchorId(module.moduleName) === anchorId,
+  );
+  return match?.moduleName ?? null;
+}
+
 /** Предыдущий / следующий урок только внутри одного модуля */
 export function getLessonNeighborsInModule(
   workouts: DbWorkout[],
@@ -232,11 +296,31 @@ export function getLessonNeighborsInModule(
   };
 }
 
-export function getPrimaryVideoUrl(workout: DbWorkout): string | null {
+export function getPrimaryVideoBlock(
+  workout: Pick<
+    DbWorkout,
+    "content_blocks" | "description" | "video_url" | "video_type" | "materials"
+  >,
+): Extract<WorkoutContentBlock, { type: "video" }> | null {
   const blocks = resolveContentBlocks(workout);
-  const video = blocks.find(
+  const fromBlocks = blocks.find(
     (block): block is Extract<WorkoutContentBlock, { type: "video" }> =>
       block.type === "video",
   );
-  return video?.url ?? workout.video_url ?? null;
+  if (fromBlocks) return fromBlocks;
+
+  if (workout.video_url?.trim()) {
+    return {
+      id: "legacy-video",
+      type: "video",
+      url: workout.video_url.trim(),
+      video_type: workout.video_type === "upload" ? "upload" : "youtube",
+    };
+  }
+
+  return null;
+}
+
+export function getPrimaryVideoUrl(workout: DbWorkout): string | null {
+  return getPrimaryVideoBlock(workout)?.url ?? null;
 }

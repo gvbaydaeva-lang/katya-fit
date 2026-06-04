@@ -3,6 +3,35 @@ export const MAX_WORKOUT_UPLOAD_BYTES = 50 * 1024 * 1024;
 
 export const MAX_WORKOUT_UPLOAD_LABEL = "50 МБ";
 
+/** Значение `accept` для загрузки видео в блоке урока. */
+export const WORKOUT_VIDEO_ACCEPT =
+  "video/mp4,video/quicktime,video/x-msvideo,.mp4,.mov,.avi";
+
+export const WORKOUT_VIDEO_FORMATS_HINT =
+  "Поддерживаемые форматы: MP4, MOV, AVI";
+
+const WORKOUT_VIDEO_EXTENSIONS = [".mp4", ".mov", ".avi"] as const;
+
+const WORKOUT_VIDEO_MIMES = new Set([
+  "video/mp4",
+  "video/quicktime",
+  "video/x-msvideo",
+]);
+
+export function isAllowedWorkoutVideo(file: File): boolean {
+  const ext = file.name.toLowerCase().match(/\.[^.]+$/)?.[0];
+  if (
+    ext &&
+    WORKOUT_VIDEO_EXTENSIONS.includes(
+      ext as (typeof WORKOUT_VIDEO_EXTENSIONS)[number],
+    )
+  ) {
+    return true;
+  }
+  const mime = file.type.toLowerCase();
+  return mime.length > 0 && WORKOUT_VIDEO_MIMES.has(mime);
+}
+
 export function formatStorageUploadError(message: string): string {
   const lower = message.toLowerCase();
 

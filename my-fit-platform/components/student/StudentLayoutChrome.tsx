@@ -1,48 +1,62 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import { useState } from "react";
+import { PanelLeftOpen } from "lucide-react";
 import { AppAccessLogger } from "@/components/debug/AppAccessLogger";
 import { StudentHeader } from "@/components/student/StudentHeader";
 import { StudentNav } from "@/components/student/StudentNav";
-
-const LESSON_FOCUS_PATH = /^\/app\/workouts\/[^/]+$/;
+import {
+  STUDENT_MAIN_PADDING,
+  STUDENT_SIDEBAR_OFFSET,
+} from "@/lib/student/layout-constants";
 
 type StudentLayoutChromeProps = {
   children: React.ReactNode;
   email: string;
-  planName: string;
   signOut: React.ReactNode;
 };
 
 export function StudentLayoutChrome({
   children,
   email,
-  planName,
   signOut,
 }: StudentLayoutChromeProps) {
-  const pathname = usePathname();
-  const isLessonFocus = LESSON_FOCUS_PATH.test(pathname ?? "");
-
-  if (isLessonFocus) {
-    return (
-      <div className="flex min-h-full w-full flex-1 flex-col bg-white">
-        <AppAccessLogger />
-        <main className="w-full flex-1 px-4 py-5 sm:px-6 lg:px-8">
-          {children}
-        </main>
-      </div>
-    );
-  }
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   return (
-    <div className="flex min-h-full flex-1 bg-white">
+    <div className="flex h-dvh w-full overflow-hidden bg-transparent">
       <AppAccessLogger />
-      <StudentNav signOut={signOut} />
-      <div className="flex min-w-0 flex-1 flex-col">
-        <div className="flex-1 p-6 lg:p-8">
-          <StudentHeader email={email} planName={planName} />
+
+      {!sidebarCollapsed && (
+        <StudentNav
+          email={email}
+          signOut={signOut}
+          onToggleCollapse={() => setSidebarCollapsed(true)}
+        />
+      )}
+
+      {sidebarCollapsed && (
+        <button
+          type="button"
+          onClick={() => setSidebarCollapsed(false)}
+          className="fixed left-3 top-3 z-[60] flex h-10 w-10 items-center justify-center rounded-lg border border-stone-900/8 bg-ds-surface text-ds-muted shadow-sm transition-colors hover:bg-ds-hover hover:text-ds-text"
+          aria-label="Развернуть боковую панель"
+          title="Развернуть меню"
+        >
+          <PanelLeftOpen className="h-5 w-5" aria-hidden />
+        </button>
+      )}
+
+      <div
+        className={`flex min-h-0 min-w-0 flex-1 flex-col transition-[padding] duration-200 ${
+          sidebarCollapsed ? "pl-0" : STUDENT_SIDEBAR_OFFSET
+        }`}
+      >
+        <StudentHeader />
+
+        <main className={`min-h-0 flex-1 overflow-y-auto ${STUDENT_MAIN_PADDING}`}>
           {children}
-        </div>
+        </main>
       </div>
     </div>
   );

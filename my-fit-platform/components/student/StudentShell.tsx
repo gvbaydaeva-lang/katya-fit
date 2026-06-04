@@ -28,7 +28,7 @@ export function StudentShell({ children }: { children: React.ReactNode }) {
 
   if (session === undefined) {
     return (
-      <div className="flex min-h-screen items-center justify-center text-sm text-zinc-500">
+      <div className="flex min-h-screen items-center justify-center text-sm text-ds-muted">
         Загрузка кабинета…
       </div>
     );
@@ -39,7 +39,6 @@ export function StudentShell({ children }: { children: React.ReactNode }) {
   return (
     <StudentLayoutChrome
       email={session.email}
-      planName={session.planName}
       signOut={<SignOutStatic />}
     >
       {children}

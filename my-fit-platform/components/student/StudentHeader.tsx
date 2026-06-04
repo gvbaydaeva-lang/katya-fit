@@ -1,20 +1,22 @@
-type StudentHeaderProps = {
-  email: string;
-  planName: string;
-};
+"use client";
 
-export function StudentHeader({ email, planName }: StudentHeaderProps) {
+import { usePathname } from "next/navigation";
+import { getStudentPageTitle } from "@/lib/student/page-titles";
+import { STUDENT_HEADER_HEIGHT } from "@/lib/student/layout-constants";
+
+export function StudentHeader() {
+  const pathname = usePathname();
+  const title = getStudentPageTitle(pathname ?? "");
+
+  if (!title) {
+    return null;
+  }
+
   return (
-    <div className="mb-6 flex flex-wrap items-center justify-between gap-4 border-b border-zinc-200 pb-4">
-      <div>
-        <p className="text-xs font-medium uppercase tracking-wide text-rose-600">
-          Закрытая платформа
-        </p>
-        <p className="text-sm text-zinc-600">Вы вошли как {email}</p>
-      </div>
-      <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-medium text-emerald-800">
-        Тариф: {planName}
-      </span>
-    </div>
+    <header
+      className={`sticky top-0 z-50 flex ${STUDENT_HEADER_HEIGHT} shrink-0 items-center border-b border-stone-900/8 bg-[#fdfbf7]/95 px-6 backdrop-blur-md lg:px-8`}
+    >
+      <h1 className="text-lg font-semibold tracking-tight text-ds-heading">{title}</h1>
+    </header>
   );
 }

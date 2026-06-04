@@ -1,20 +1,20 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { clearBrowserSession } from "@/lib/auth/browser-session";
 import { AUTH_ROUTES } from "@/lib/auth/routes";
 
 export function SignOutStatic() {
   const router = useRouter();
 
+  function handleSignOut() {
+    router.push(AUTH_ROUTES.login);
+  }
+
   return (
     <button
       type="button"
-      onClick={() => {
-        clearBrowserSession();
-        router.push(AUTH_ROUTES.login);
-      }}
-      className="w-full rounded-md px-3 py-2 text-left text-sm text-zinc-500 hover:bg-white hover:text-zinc-900"
+      onClick={handleSignOut}
+      className="flex w-full items-center rounded-lg px-3 py-2.5 text-left text-sm font-medium text-ds-muted transition-colors hover:bg-ds-hover hover:text-ds-text"
     >
       Выйти
     </button>

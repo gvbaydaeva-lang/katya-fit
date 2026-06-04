@@ -5,11 +5,23 @@
   --foreground: #18181b;
 }
 
+/* Премиальная светлая палитра: мягкие слои, насыщенный текст */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  --color-ds-bg: #fdfbf7;
+  --color-ds-surface: #f5f2ed;
+  --color-ds-surface-raised: #ede9e4;
+  --color-ds-text: #1c1917;
+  --color-ds-heading: #1c1917;
+  --color-ds-muted: #57534e;
+  --color-ds-divider: rgb(28 25 23 / 0.08);
+  --color-ds-primary: #4a372e;
+  --color-ds-primary-hover: #574a44;
+  --color-ds-hover: #e8e4df;
 }
 
 html {
@@ -20,4 +32,45 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-geist-sans), system-ui, sans-serif;
+}
+
+[data-ds-theme] {
+  color: var(--color-ds-text);
+}
+
+[data-ds-theme] h1,
+[data-ds-theme] h2,
+[data-ds-theme] h3 {
+  color: var(--color-ds-heading);
+}
+
+[data-ds-theme] ::selection {
+  background-color: rgb(251 191 36 / 0.35);
+}
+
+[data-ds-theme] select option {
+  background-color: #f5f2ed;
+  color: #1c1917;
+}
+
+/* Индикация client-side навигации (аналог полосы вверху вкладки) */
+.navigation-progress-bar {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    #4a372e 35%,
+    #78716c 65%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: navigation-progress-slide 0.9s ease-in-out infinite;
+}
+
+@keyframes navigation-progress-slide {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
 }

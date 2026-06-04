@@ -22,6 +22,10 @@ type WorkoutsModuleAccordionProps = {
   modules: WorkoutModuleGroup[];
 };
 
+/**
+ * Модули из БД (module_name) — карточки-аккордеоны.
+ * В заголовке только название модуля; уроки скрыты до раскрытия.
+ */
 export function WorkoutsModuleAccordion({ modules }: WorkoutsModuleAccordionProps) {
   const [openModules, setOpenModules] = useState<string[]>([]);
 
@@ -34,7 +38,9 @@ export function WorkoutsModuleAccordion({ modules }: WorkoutsModuleAccordionProp
     );
     if (exists) {
       setOpenModules([hash]);
-      document.getElementById(hash)?.scrollIntoView({ behavior: "smooth" });
+      requestAnimationFrame(() => {
+        document.getElementById(hash)?.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
     }
   }, [modules]);
 
@@ -47,53 +53,38 @@ export function WorkoutsModuleAccordion({ modules }: WorkoutsModuleAccordionProp
     >
       {modules.map((module) => {
         const anchorId = moduleNameToAnchorId(module.moduleName);
+        const title = module.moduleName.trim() || "Без модуля";
 
         return (
           <AccordionItem
             key={module.moduleName}
             value={anchorId}
             id={anchorId}
-            className="scroll-mt-6 overflow-hidden"
+            className="scroll-mt-4 overflow-hidden"
           >
-            <AccordionTrigger className="px-5 py-4 hover:bg-zinc-50/80">
-              <span className="min-w-0 flex-1 pr-3 text-left">
-                <span className="block text-lg font-semibold tracking-tight text-zinc-900">
-                  {module.moduleName}
-                </span>
-                <span className="mt-0.5 block text-sm font-normal text-zinc-500">
-                  {module.lessons.length}{" "}
-                  {module.lessons.length === 1 ? "урок" : "уроков"}
-                </span>
+            <AccordionTrigger className="px-4 py-3.5 hover:bg-ds-surface-raised/80">
+              <span className="min-w-0 flex-1 pr-3 text-left text-lg font-bold tracking-tight text-ds-heading sm:text-xl">
+                {title}
               </span>
             </AccordionTrigger>
 
-            <AccordionContent className="border-t border-zinc-100">
-              <ol className="divide-y divide-zinc-100">
+            <AccordionContent className="border-t border-stone-900/8">
+              <ul className="divide-y divide-stone-900/8">
                 {module.lessons.map((lesson) => (
                   <li key={lesson.id}>
                     <Link
-                      href={STUDENT_ROUTES.lesson(lesson.id)}
-                      className="group flex items-center gap-4 px-5 py-4 transition-colors hover:bg-rose-50/50"
+                      href={STUDENT_ROUTES.lesson(lesson.id, module.moduleName)}
+                      className="group flex items-center gap-2 px-4 py-2.5 text-sm text-ds-text transition-colors hover:bg-ds-hover hover:text-rose-700"
                     >
-                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-rose-100 text-sm font-semibold text-rose-700">
-                        {lesson.position}
-                      </span>
-                      <span className="min-w-0 flex-1">
-                        <span className="block font-medium text-zinc-900 group-hover:text-rose-700">
-                          {lesson.title}
-                        </span>
-                        <span className="mt-0.5 block text-sm text-zinc-500">
-                          Урок {lesson.position}
-                        </span>
-                      </span>
+                      <span className="min-w-0 flex-1 leading-snug">{lesson.title}</span>
                       <ChevronRight
-                        className="h-5 w-5 shrink-0 text-zinc-400 transition-transform group-hover:translate-x-0.5 group-hover:text-rose-600"
+                        className="h-4 w-4 shrink-0 text-ds-muted opacity-60 transition-transform group-hover:translate-x-0.5 group-hover:text-rose-600 group-hover:opacity-100"
                         aria-hidden
                       />
                     </Link>
                   </li>
                 ))}
-              </ol>
+              </ul>
             </AccordionContent>
           </AccordionItem>
         );

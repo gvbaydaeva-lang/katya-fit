@@ -2,7 +2,10 @@ import { NextResponse } from "next/server";
 import { createWorkout } from "@/lib/admin/workouts";
 import { assertTrainerApi } from "@/lib/auth/assert-trainer-api";
 import { isValidPlanId } from "@/lib/stripe/plans";
-import { normalizeContentBlocks } from "@/lib/workouts/content-blocks";
+import {
+  normalizeContentBlocks,
+  serializeContentBlocksForDb,
+} from "@/lib/workouts/content-blocks";
 
 export async function POST(request: Request) {
   const auth = await assertTrainerApi();
@@ -21,7 +24,9 @@ export async function POST(request: Request) {
     module_name: String(body.module_name ?? body.moduleName ?? ""),
     position: Number(body.position ?? 1),
     is_published: Boolean(body.is_published),
-    content_blocks: normalizeContentBlocks(body.content_blocks),
+    content_blocks: serializeContentBlocksForDb(
+      normalizeContentBlocks(body.content_blocks),
+    ),
     tariffs,
   });
 

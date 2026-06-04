@@ -12,6 +12,9 @@ import {
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { SupabaseStorageUpload } from "@/components/admin/SupabaseStorageUpload";
+import type { PendingBlockFilesMap } from "@/lib/admin/pending-block-files";
+import { dsEmptyState, dsInput } from "@/lib/ds-theme";
+import { WORKOUT_VIDEO_ACCEPT } from "@/lib/admin/storage-upload";
 import { Button } from "@/components/ui/Button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -19,8 +22,7 @@ import {
   type WorkoutContentBlock,
 } from "@/lib/workouts/content-blocks";
 
-const inputClass =
-  "mt-1.5 w-full rounded-xl border border-zinc-300 bg-white px-3 py-2.5 text-sm outline-none ring-rose-500 focus:ring-2";
+const inputClass = `mt-1.5 ${dsInput}`;
 
 const BLOCK_SHELL: Record<
   WorkoutContentBlock["type"],
@@ -29,19 +31,19 @@ const BLOCK_SHELL: Record<
   text: {
     label: "Текст",
     border: "border-sky-200 ring-sky-100",
-    badge: "bg-sky-100 text-sky-800",
+    badge: "border border-sky-200 bg-sky-50 text-sky-800",
     icon: AlignLeft,
   },
   video: {
     label: "Видео",
     border: "border-rose-200 ring-rose-100",
-    badge: "bg-rose-100 text-rose-800",
+    badge: "border border-rose-200 bg-rose-50 text-rose-800",
     icon: Video,
   },
   file: {
     label: "Файл",
     border: "border-amber-200 ring-amber-100",
-    badge: "bg-amber-100 text-amber-800",
+    badge: "border border-amber-200 bg-amber-50 text-amber-800",
     icon: FileText,
   },
 };
@@ -49,14 +51,23 @@ const BLOCK_SHELL: Record<
 type ContentBlocksEditorProps = {
   value: WorkoutContentBlock[];
   onChange: (blocks: WorkoutContentBlock[]) => void;
+  onPendingFilesChange?: (pending: PendingBlockFilesMap) => void;
+  onMediaUploadingChange?: (uploading: boolean) => void;
+  uploadingBlockIds?: string[];
   disabled?: boolean;
 };
 
 export function ContentBlocksEditor({
   value,
   onChange,
+  onPendingFilesChange,
+  onMediaUploadingChange,
+  uploadingBlockIds = [],
   disabled = false,
 }: ContentBlocksEditorProps) {
+  const [pendingFiles, setPendingFiles] = useState<PendingBlockFilesMap>({});
+  const [pendingNames, setPendingNames] = useState<Record<string, string>>({});
+  const activeUploadsRef = useRef(new Set<string>());
   const [videoModes, setVideoModes] = useState<Record<string, "youtube" | "upload">>(
     () =>
       Object.fromEntries(
@@ -67,6 +78,47 @@ export function ContentBlocksEditor({
   );
   const [addMenuOpen, setAddMenuOpen] = useState(false);
   const addMenuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    onPendingFilesChange?.(pendingFiles);
+  }, [pendingFiles, onPendingFilesChange]);
+
+  function notifyMediaUploading() {
+    onMediaUploadingChange?.(activeUploadsRef.current.size > 0);
+  }
+
+  function setBlockUploading(blockId: string, uploading: boolean) {
+    const slots = activeUploadsRef.current;
+    if (uploading) {
+      slots.add(blockId);
+    } else {
+      slots.delete(blockId);
+    }
+    notifyMediaUploading();
+  }
+
+  function setPendingForBlock(
+    blockId: string,
+    folder: "workouts/videos" | "workouts/materials",
+    file: File | null,
+  ) {
+    setPendingFiles((prev) => {
+      const next = { ...prev };
+      if (!file) {
+        delete next[blockId];
+      } else {
+        next[blockId] = { file, folder };
+      }
+      return next;
+    });
+    if (!file) {
+      setPendingNames((prev) => {
+        const next = { ...prev };
+        delete next[blockId];
+        return next;
+      });
+    }
+  }
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -92,6 +144,7 @@ export function ContentBlocksEditor({
   }
 
   function removeBlock(id: string) {
+    setPendingForBlock(id, "workouts/videos", null);
     onChange(value.filter((block) => block.id !== id));
   }
 
@@ -131,7 +184,7 @@ export function ContentBlocksEditor({
   return (
     <div className="flex min-w-0 flex-col gap-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <p className="text-sm text-zinc-600">
+        <p className="text-sm text-ds-muted">
           Блоки выводятся ученику сверху вниз в том порядке, в котором вы их
           расположили.
         </p>
@@ -151,7 +204,7 @@ export function ContentBlocksEditor({
           </Button>
           {addMenuOpen && (
             <div
-              className="absolute right-0 top-full z-20 mt-1 min-w-[11rem] overflow-hidden rounded-xl border border-zinc-200 bg-white py-1 shadow-lg"
+              className="absolute right-0 top-full z-20 mt-1 min-w-[11rem] overflow-hidden rounded-xl border-none bg-ds-surface py-1 shadow-lg"
               role="menu"
             >
               {(
@@ -167,9 +220,9 @@ export function ContentBlocksEditor({
                   role="menuitem"
                   disabled={disabled}
                   onClick={() => addBlock(type)}
-                  className="flex w-full items-center gap-2 px-3 py-2.5 text-left text-sm text-zinc-700 hover:bg-zinc-50 disabled:opacity-50"
+                  className="flex w-full items-center gap-2 px-3 py-2.5 text-left text-sm text-ds-text hover:bg-ds-hover disabled:opacity-50"
                 >
-                  <Icon className="h-4 w-4 text-zinc-500" aria-hidden />
+                  <Icon className="h-4 w-4 text-ds-muted" aria-hidden />
                   {label}
                 </button>
               ))}
@@ -179,9 +232,9 @@ export function ContentBlocksEditor({
       </div>
 
       {value.length === 0 ? (
-        <div className="rounded-2xl border-2 border-dashed border-zinc-300 bg-zinc-50 px-6 py-14 text-center">
-          <p className="text-sm font-medium text-zinc-700">Пока нет блоков</p>
-          <p className="mt-1 text-sm text-zinc-500">
+        <div className={`${dsEmptyState} border-2`}>
+          <p className="text-sm font-medium text-ds-text">Пока нет блоков</p>
+          <p className="mt-1 text-sm text-ds-muted">
             Нажмите «Добавить блок» и выберите тип: текст, видео или файл.
           </p>
         </div>
@@ -194,9 +247,9 @@ export function ContentBlocksEditor({
             return (
               <li
                 key={block.id}
-                className={`min-w-0 rounded-2xl border-2 bg-white p-4 shadow-sm ring-1 ${meta.border}`}
+                className={`min-w-0 rounded-2xl border-2 bg-ds-surface p-4 shadow-sm ring-1 ${meta.border}`}
               >
-                <div className="mb-4 flex flex-wrap items-center justify-between gap-2 border-b border-zinc-100 pb-3">
+                <div className="mb-4 flex flex-wrap items-center justify-between gap-2 border-b border-stone-900/8 pb-3">
                   <span
                     className={`inline-flex items-center gap-2 rounded-full px-2.5 py-1 text-xs font-semibold ${meta.badge}`}
                   >
@@ -208,7 +261,7 @@ export function ContentBlocksEditor({
                       type="button"
                       disabled={disabled || index === 0}
                       onClick={() => moveBlock(block.id, -1)}
-                      className="rounded-lg border border-zinc-200 bg-white p-2 text-zinc-600 hover:bg-zinc-50 disabled:opacity-40"
+                      className="rounded-lg border-none bg-ds-surface-raised p-2 text-ds-muted shadow-sm hover:bg-ds-hover disabled:opacity-40"
                       aria-label="Переместить вверх"
                       title="Вверх"
                     >
@@ -218,7 +271,7 @@ export function ContentBlocksEditor({
                       type="button"
                       disabled={disabled || index === value.length - 1}
                       onClick={() => moveBlock(block.id, 1)}
-                      className="rounded-lg border border-zinc-200 bg-white p-2 text-zinc-600 hover:bg-zinc-50 disabled:opacity-40"
+                      className="rounded-lg border-none bg-ds-surface-raised p-2 text-ds-muted shadow-sm hover:bg-ds-hover disabled:opacity-40"
                       aria-label="Переместить вниз"
                       title="Вниз"
                     >
@@ -228,7 +281,7 @@ export function ContentBlocksEditor({
                       type="button"
                       disabled={disabled}
                       onClick={() => removeBlock(block.id)}
-                      className="rounded-lg border border-zinc-200 bg-white p-2 text-red-600 hover:bg-red-50"
+                      className="rounded-lg border-none bg-ds-surface-raised p-2 text-red-700 shadow-sm hover:bg-red-50"
                       aria-label="Удалить блок"
                       title="Удалить"
                     >
@@ -262,7 +315,13 @@ export function ContentBlocksEditor({
                           ...prev,
                           [block.id]: video_type,
                         }));
-                        updateBlock(block.id, { video_type });
+                        if (video_type === "youtube") {
+                          setPendingForBlock(block.id, "workouts/videos", null);
+                        }
+                        updateBlock(block.id, {
+                          video_type,
+                          ...(video_type === "youtube" ? { url: block.url } : {}),
+                        });
                       }}
                     >
                       <TabsList>
@@ -285,21 +344,38 @@ export function ContentBlocksEditor({
                       <div className="space-y-2">
                         <SupabaseStorageUpload
                           label="Видео файл"
-                          accept="video/*"
+                          accept={WORKOUT_VIDEO_ACCEPT}
                           folder="workouts/videos"
+                          uploadOnSave={false}
+                          externalUploading={uploadingBlockIds.includes(
+                            block.id,
+                          )}
+                          selectedFileName={
+                            pendingNames[block.id] ??
+                            (block.url && !block.url.startsWith("blob:")
+                              ? "Видео в Storage"
+                              : null)
+                          }
                           disabled={disabled}
+                          onUploadingChange={(uploading) =>
+                            setBlockUploading(block.id, uploading)
+                          }
                           onUploaded={(files) => {
-                            if (files[0]) {
-                              updateBlock(block.id, {
-                                url: files[0].url,
-                                video_type: "upload",
-                              });
-                            }
+                            if (!files[0]) return;
+                            setPendingForBlock(block.id, "workouts/videos", null);
+                            setPendingNames((prev) => ({
+                              ...prev,
+                              [block.id]: files[0].name,
+                            }));
+                            updateBlock(block.id, {
+                              url: files[0].url,
+                              video_type: "upload",
+                            });
                           }}
                         />
-                        {block.url && (
-                          <p className="text-xs text-emerald-700">
-                            Видео загружено
+                        {block.url && !block.url.startsWith("blob:") && (
+                          <p className="text-xs text-emerald-700 transition-opacity duration-200">
+                            Видео в Storage
                           </p>
                         )}
                       </div>
@@ -309,7 +385,7 @@ export function ContentBlocksEditor({
 
                 {block.type === "file" && (
                   <div className="grid gap-4 sm:grid-cols-2">
-                    <label className="block text-sm font-medium text-zinc-700 sm:col-span-2">
+                    <label className="block text-sm font-medium text-ds-text sm:col-span-2">
                       Название файла
                       <input
                         type="text"
@@ -327,19 +403,35 @@ export function ContentBlocksEditor({
                         label="Загрузить файл"
                         accept=".pdf,.doc,.docx,.xlsx,.xls,.txt,.zip,.rar,image/*"
                         folder="workouts/materials"
+                        uploadOnSave
+                        externalUploading={uploadingBlockIds.includes(
+                          block.id,
+                        )}
+                        selectedFileName={pendingNames[block.id] ?? null}
                         disabled={disabled}
-                        onUploaded={(files) => {
-                          if (files[0]) {
-                            updateBlock(block.id, {
-                              name: block.name || files[0].name,
-                              url: files[0].url,
-                              mime: files[0].type,
-                            });
-                          }
+                        onUploadingChange={(uploading) =>
+                          setBlockUploading(block.id, uploading)
+                        }
+                        onFileSelected={({ file, preview }) => {
+                          setPendingNames((prev) => ({
+                            ...prev,
+                            [block.id]: file.name,
+                          }));
+                          setPendingForBlock(
+                            block.id,
+                            "workouts/materials",
+                            file,
+                          );
+                          updateBlock(block.id, {
+                            name: block.name || file.name,
+                            url: preview.url,
+                            mime: preview.type,
+                          });
                         }}
+                        onUploaded={() => {}}
                       />
-                      {block.url && (
-                        <p className="mt-2 truncate text-xs text-zinc-600">
+                      {block.url && !block.url.startsWith("blob:") && (
+                        <p className="mt-2 truncate text-xs text-ds-muted">
                           {block.url}
                         </p>
                       )}

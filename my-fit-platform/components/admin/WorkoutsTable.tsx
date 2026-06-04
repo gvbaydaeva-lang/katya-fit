@@ -1,31 +1,55 @@
 "use client";
 
-import { ExternalLink, Pencil, Search, Trash2, Video } from "lucide-react";
+import { Pencil, Search, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useMemo, useState, useTransition } from "react";
-import {
-  deleteWorkoutAction,
-  setWorkoutPublishedStatusAction,
-} from "@/app/(admin)/admin/content/actions";
+import { deleteWorkoutAction } from "@/app/(admin)/admin/content/actions";
 import { WorkoutEditDialog } from "@/components/admin/WorkoutEditDialog";
+import { WorkoutPreviewDialog } from "@/components/admin/WorkoutPreviewDialog";
+import { WorkoutTablePublishToggle } from "@/components/admin/WorkoutTablePublishToggle";
+import { WorkoutTableTariffMenu } from "@/components/admin/WorkoutTableTariffMenu";
+import { WorkoutTableThumbnail } from "@/components/admin/WorkoutTableThumbnail";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { getPlanById, PLANS } from "@/lib/stripe/plans";
+import { dsEmptyState, dsElevated, dsIconButton, dsInputInline } from "@/lib/ds-theme";
+import { normalizeWorkoutTariffs } from "@/lib/admin/tariff-access-label";
+import { PLANS } from "@/lib/stripe/plans";
 import type { PlanId } from "@/lib/stripe/plans";
 import type { DbWorkout } from "@/lib/supabase/database.types";
-import { getPrimaryVideoUrl } from "@/lib/workouts/content-blocks";
-import { getYoutubeThumbnailUrl } from "@/lib/video/youtube";
 
 type WorkoutsTableProps = {
   workouts: DbWorkout[];
 };
 
-const iconButtonBase =
-  "inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border transition-colors disabled:cursor-not-allowed disabled:opacity-50";
+const iconButtonBase = `inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-colors duration-200 disabled:cursor-not-allowed disabled:opacity-50 ${dsIconButton}`;
+
+const TABLE_CLASS =
+  "w-full table-fixed border-collapse text-left text-sm text-ds-text";
+
+const TH_CLASS =
+  "px-4 py-2.5 text-left align-middle text-xs font-semibold uppercase tracking-wide text-ds-muted";
+
+const TD_CLASS = "px-4 py-2.5 text-left align-middle";
+
+const TH_ACTIONS = `${TH_CLASS} text-right`;
+const TD_ACTIONS = `${TD_CLASS} text-right`;
+
+function WorkoutTableColGroup() {
+  return (
+    <colgroup>
+      <col style={{ width: "5%" }} />
+      <col style={{ width: "15%" }} />
+      <col style={{ width: "25%" }} />
+      <col style={{ width: "20%" }} />
+      <col style={{ width: "20%" }} />
+      <col style={{ width: "15%" }} />
+    </colgroup>
+  );
+}
 
 export function WorkoutsTable({ workouts }: WorkoutsTableProps) {
   const router = useRouter();
@@ -33,10 +57,10 @@ export function WorkoutsTable({ workouts }: WorkoutsTableProps) {
   const [selectedTariff, setSelectedTariff] = useState<PlanId | "all">("all");
   const [editing, setEditing] = useState<DbWorkout | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [previewing, setPreviewing] = useState<DbWorkout | null>(null);
+  const [previewOpen, setPreviewOpen] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
-  const [togglingId, setTogglingId] = useState<string | null>(null);
   const [, startDeleteTransition] = useTransition();
-  const [, startToggleTransition] = useTransition();
 
   const filteredWorkouts = useMemo(() => {
     const normalized = query.trim().toLowerCase();
@@ -44,11 +68,13 @@ export function WorkoutsTable({ workouts }: WorkoutsTableProps) {
       const byQuery = !normalized
         ? true
         : workout.title.toLowerCase().includes(normalized);
-      const byTariff =
-        selectedTariff === "all"
-          ? true
-          : (workout.tariffs ?? []).includes(selectedTariff);
-      return byQuery && byTariff;
+
+      if (selectedTariff === "all") {
+        return byQuery;
+      }
+
+      const workoutTariffs = normalizeWorkoutTariffs(workout.tariffs);
+      return byQuery && workoutTariffs.includes(selectedTariff);
     });
   }, [workouts, query, selectedTariff]);
 
@@ -74,6 +100,11 @@ export function WorkoutsTable({ workouts }: WorkoutsTableProps) {
     setDialogOpen(true);
   }
 
+  function openPreview(workout: DbWorkout) {
+    setPreviewing(workout);
+    setPreviewOpen(true);
+  }
+
   function handleDelete(workout: DbWorkout) {
     if (
       !window.confirm(
@@ -95,33 +126,20 @@ export function WorkoutsTable({ workouts }: WorkoutsTableProps) {
     });
   }
 
-  function handleTogglePublish(workout: DbWorkout, checked: boolean) {
-    setTogglingId(workout.id);
-    startToggleTransition(async () => {
-      const result = await setWorkoutPublishedStatusAction(workout.id, checked);
-      setTogglingId(null);
-      if (!result.ok) {
-        window.alert(result.error);
-        return;
-      }
-      router.refresh();
-    });
-  }
-
   if (workouts.length === 0) {
     return (
-      <p className="rounded-2xl border border-dashed border-zinc-300 bg-zinc-50 px-6 py-12 text-center text-sm text-zinc-500">
+      <p className={dsEmptyState}>
         Пока нет уроков. Добавьте первый на вкладке «Добавить урок».
       </p>
     );
   }
 
   return (
-    <div className="space-y-4">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-        <div className="relative w-full max-w-sm">
+    <div className={`w-full overflow-hidden ${dsElevated}`}>
+      <div className="grid w-full grid-cols-1 gap-3 border-b border-stone-900/8 px-4 py-3 sm:grid-cols-[minmax(0,1fr)_14rem] sm:items-end">
+        <div className="relative min-w-0 w-full">
           <Search
-            className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400"
+            className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ds-muted"
             aria-hidden
           />
           <input
@@ -129,17 +147,20 @@ export function WorkoutsTable({ workouts }: WorkoutsTableProps) {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Поиск по названию…"
-            className="w-full rounded-lg border border-zinc-300 bg-white py-2 pl-9 pr-3 text-sm outline-none ring-rose-500 placeholder:text-zinc-400 focus:ring-2"
+            className={`${dsInputInline} w-full py-2 pl-9 pr-3`}
             aria-label="Поиск уроков по названию"
           />
         </div>
 
-        <label className="flex flex-col gap-1 text-sm text-zinc-700">
-          Фильтр по тарифу
+        <label className="flex w-full min-w-0 flex-col gap-1 text-sm text-ds-text sm:w-auto">
+          Тариф
           <select
             value={selectedTariff}
-            onChange={(e) => setSelectedTariff(e.target.value as PlanId | "all")}
-            className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm outline-none ring-rose-500 focus:ring-2"
+            onChange={(e) =>
+              setSelectedTariff(e.target.value as PlanId | "all")
+            }
+            className={`${dsInputInline} w-full`}
+            aria-label="Фильтр по тарифу"
           >
             <option value="all">Все тарифы</option>
             {PLANS.map((plan) => (
@@ -152,156 +173,121 @@ export function WorkoutsTable({ workouts }: WorkoutsTableProps) {
       </div>
 
       {groupedByModule.length === 0 ? (
-        <div className="rounded-xl border border-zinc-200 bg-white p-8 text-center text-sm text-zinc-500">
+        <div className={`${dsEmptyState} mx-4 my-4 rounded-xl border-none shadow-none`}>
           Ничего не найдено по текущему фильтру.
         </div>
       ) : (
-        <Accordion type="multiple" className="space-y-3">
+        <Accordion type="multiple" className="w-full space-y-2">
           {groupedByModule.map((module) => (
             <AccordionItem
               key={module.moduleName}
               value={module.moduleName}
-              className="overflow-hidden"
+              className="overflow-hidden rounded-none border-none bg-transparent shadow-none"
             >
-              <AccordionTrigger>
+              <AccordionTrigger className="px-4 py-3 hover:bg-ds-hover/50">
                 <div className="flex items-center gap-3">
-                  <span className="text-base">{module.moduleName}</span>
-                  <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-xs text-zinc-600">
+                  <span className="text-base font-medium text-ds-heading">
+                    {module.moduleName}
+                  </span>
+                  <span className="rounded-full bg-ds-surface-raised px-2 py-0.5 text-xs text-ds-muted shadow-sm">
                     {module.workouts.length} уроков
                   </span>
                 </div>
               </AccordionTrigger>
 
-              <AccordionContent className="border-t border-zinc-100">
-                <div className="overflow-x-auto">
-                  <table className="min-w-full text-left text-sm">
+              <AccordionContent className="border-t border-stone-900/8 p-0">
+                <div className="overflow-x-auto px-4 py-2">
+                  <table
+                    className={TABLE_CLASS}
+                    aria-label={`Уроки модуля ${module.moduleName}`}
+                  >
+                    <WorkoutTableColGroup />
                     <thead>
-                      <tr className="border-b border-zinc-100 bg-zinc-50/60">
-                        <th className="px-3 py-2.5 text-xs font-semibold uppercase tracking-wide text-zinc-500">
+                      <tr className="border-b border-stone-900/8 bg-ds-surface-raised/60">
+                        <th className={TH_CLASS} scope="col">
                           #
                         </th>
-                        <th className="px-3 py-2.5 text-xs font-semibold uppercase tracking-wide text-zinc-500">
+                        <th className={TH_CLASS} scope="col">
                           Превью
                         </th>
-                        <th className="px-3 py-2.5 text-xs font-semibold uppercase tracking-wide text-zinc-500">
+                        <th className={TH_CLASS} scope="col">
                           Название
                         </th>
-                        <th className="hidden px-3 py-2.5 text-xs font-semibold uppercase tracking-wide text-zinc-500 lg:table-cell">
-                          Описание
+                        <th className={TH_CLASS} scope="col">
+                          Доступ
                         </th>
-                        <th className="px-3 py-2.5 text-xs font-semibold uppercase tracking-wide text-zinc-500">
+                        <th className={TH_CLASS} scope="col">
                           Статус
                         </th>
-                        <th className="px-3 py-2.5 text-xs font-semibold uppercase tracking-wide text-zinc-500">
-                          Доступность
-                        </th>
-                        <th className="px-3 py-2.5 text-xs font-semibold uppercase tracking-wide text-zinc-500">
-                          Ссылка
-                        </th>
-                        <th className="px-3 py-2.5 text-right text-xs font-semibold uppercase tracking-wide text-zinc-500">
+                        <th className={TH_ACTIONS} scope="col">
                           Действия
                         </th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-zinc-100">
+                    <tbody>
                       {module.workouts.map((workout) => {
-                        const thumbnail = getYoutubeThumbnailUrl(
-                          getPrimaryVideoUrl(workout) ?? "",
-                        );
                         const isDeleting = deletingId === workout.id;
-                        const isToggling = togglingId === workout.id;
 
                         return (
-                          <tr key={workout.id} className="hover:bg-zinc-50/60">
-                            <td className="px-3 py-2 text-sm font-semibold text-zinc-700">
+                          <tr
+                            key={workout.id}
+                            className="cursor-pointer border-b border-stone-900/8 transition-colors last:border-b-0 hover:bg-ds-hover/70"
+                            onClick={() => openPreview(workout)}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter" || e.key === " ") {
+                                e.preventDefault();
+                                openPreview(workout);
+                              }
+                            }}
+                            tabIndex={0}
+                            aria-label={`Просмотр урока «${workout.title}»`}
+                          >
+                            <td
+                              className={`${TD_CLASS} text-sm font-semibold tabular-nums text-ds-text`}
+                            >
                               {workout.position}
                             </td>
-                            <td className="px-3 py-2">
-                              <div className="relative h-11 w-20 overflow-hidden rounded-md bg-zinc-100 ring-1 ring-zinc-200/80">
-                                {thumbnail ? (
-                                  // eslint-disable-next-line @next/next/no-img-element
-                                  <img
-                                    src={thumbnail}
-                                    alt=""
-                                    className="h-full w-full object-cover"
-                                  />
-                                ) : (
-                                  <div className="flex h-full w-full items-center justify-center text-zinc-400">
-                                    <Video className="h-4 w-4" aria-hidden />
-                                  </div>
-                                )}
+                            <td className={TD_CLASS}>
+                              <div className="relative h-11 w-20 shrink-0 overflow-hidden rounded-md bg-black ring-1 ring-stone-900/10">
+                                <WorkoutTableThumbnail workout={workout} />
                               </div>
                             </td>
-                            <td className="max-w-[14rem] px-3 py-2 font-medium text-zinc-900">
-                              <span className="line-clamp-2">{workout.title}</span>
-                            </td>
-                            <td className="hidden max-w-xs px-3 py-2 text-zinc-600 lg:table-cell">
-                              <span className="line-clamp-2 text-xs leading-relaxed">
-                                {workout.description || "—"}
+                            <td className={`${TD_CLASS} font-medium text-ds-text`}>
+                              <span className="block break-words leading-snug">
+                                {workout.title}
                               </span>
                             </td>
-                            <td className="px-3 py-2">
-                              <label className="inline-flex cursor-pointer items-center gap-2">
-                                <input
-                                  type="checkbox"
-                                  className="h-4 w-4 rounded border-zinc-300 text-emerald-600 focus:ring-emerald-500"
-                                  checked={workout.is_published}
-                                  disabled={isToggling}
-                                  onChange={(e) =>
-                                    handleTogglePublish(workout, e.target.checked)
-                                  }
-                                  aria-label={`Сменить статус урока ${workout.title}`}
-                                />
-                                <span
-                                  className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${
-                                    workout.is_published
-                                      ? "bg-emerald-100 text-emerald-700"
-                                      : "bg-amber-100 text-amber-700"
-                                  }`}
-                                >
-                                  {isToggling
-                                    ? "Сохранение..."
-                                    : workout.is_published
-                                      ? "Опубликован"
-                                      : "Черновик"}
-                                </span>
-                              </label>
+                            <td
+                              className={TD_CLASS}
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <WorkoutTableTariffMenu
+                                workoutId={workout.id}
+                                tariffs={workout.tariffs}
+                              />
                             </td>
-                            <td className="px-3 py-2">
-                              <div className="flex max-w-[16rem] flex-wrap gap-1">
-                                {(workout.tariffs ?? []).map((tariff) => (
-                                  <span
-                                    key={tariff}
-                                    className={`rounded-full px-2 py-0.5 text-xs ${
-                                      tariff === "coached"
-                                        ? "bg-rose-100 text-rose-700"
-                                        : tariff === "self"
-                                          ? "bg-emerald-100 text-emerald-700"
-                                          : "bg-sky-100 text-sky-700"
-                                    }`}
-                                  >
-                                    {getPlanById(tariff)?.name ?? tariff}
-                                  </span>
-                                ))}
-                              </div>
+                            <td
+                              className={TD_CLASS}
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <WorkoutTablePublishToggle
+                                workoutId={workout.id}
+                                workoutTitle={workout.title}
+                                isPublished={workout.is_published}
+                              />
                             </td>
-                            <td className="px-3 py-2">
-                              <a
-                                href={workout.video_url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="inline-flex items-center gap-1 text-xs font-medium text-rose-600 hover:text-rose-700"
-                              >
-                                <ExternalLink className="h-3.5 w-3.5" />
-                                Открыть
-                              </a>
-                            </td>
-                            <td className="px-3 py-2">
+                            <td
+                              className={TD_ACTIONS}
+                              onClick={(e) => e.stopPropagation()}
+                            >
                               <div className="flex items-center justify-end gap-1.5">
                                 <button
                                   type="button"
-                                  onClick={() => openEdit(workout)}
-                                  className={`${iconButtonBase} border-zinc-200 text-zinc-600 hover:border-zinc-300 hover:bg-zinc-50 hover:text-zinc-900`}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    openEdit(workout);
+                                  }}
+                                  className={iconButtonBase}
                                   aria-label={`Редактировать «${workout.title}»`}
                                   title="Редактировать"
                                 >
@@ -309,9 +295,12 @@ export function WorkoutsTable({ workouts }: WorkoutsTableProps) {
                                 </button>
                                 <button
                                   type="button"
-                                  onClick={() => handleDelete(workout)}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleDelete(workout);
+                                  }}
                                   disabled={isDeleting}
-                                  className={`${iconButtonBase} border-zinc-200 text-zinc-500 hover:border-red-200 hover:bg-red-50 hover:text-red-600`}
+                                  className={`${iconButtonBase} hover:border-red-200 hover:bg-red-50 hover:text-red-600`}
                                   aria-label={`Удалить «${workout.title}»`}
                                   title="Удалить"
                                 >
@@ -331,7 +320,7 @@ export function WorkoutsTable({ workouts }: WorkoutsTableProps) {
         </Accordion>
       )}
 
-      <div className="rounded-lg border border-zinc-200 bg-zinc-50/60 px-3 py-2 text-xs text-zinc-500">
+      <div className="border-t border-stone-900/8 px-4 py-2 text-xs text-ds-muted">
         {filteredWorkouts.length} из {workouts.length} уроков
       </div>
 
@@ -342,6 +331,16 @@ export function WorkoutsTable({ workouts }: WorkoutsTableProps) {
         onOpenChange={(open) => {
           setDialogOpen(open);
           if (!open) setEditing(null);
+        }}
+      />
+
+      <WorkoutPreviewDialog
+        key={previewing?.id ?? "workout-preview-empty"}
+        workout={previewing}
+        open={previewOpen}
+        onOpenChange={(open) => {
+          setPreviewOpen(open);
+          if (!open) setPreviewing(null);
         }}
       />
     </div>

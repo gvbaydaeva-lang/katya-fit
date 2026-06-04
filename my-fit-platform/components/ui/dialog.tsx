@@ -3,6 +3,7 @@
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
 import type { ComponentProps } from "react";
+import { dsDivider } from "@/lib/ds-theme";
 
 export const Dialog = DialogPrimitive.Root;
 export const DialogTrigger = DialogPrimitive.Trigger;
@@ -15,7 +16,7 @@ export function DialogOverlay({
 }: ComponentProps<typeof DialogPrimitive.Overlay>) {
   return (
     <DialogPrimitive.Overlay
-      className={`fixed inset-0 z-50 bg-black/50 ${className}`}
+      className={`fixed inset-0 z-50 bg-stone-900/40 ${className}`}
       {...props}
     />
   );
@@ -30,13 +31,13 @@ export function DialogContent({
     <DialogPortal>
       <DialogOverlay />
       <DialogPrimitive.Content
-        className={`fixed left-1/2 top-1/2 z-50 grid w-full max-w-lg -translate-x-1/2 -translate-y-1/2 gap-4 rounded-2xl border border-zinc-200 bg-white p-6 shadow-xl ${className}`}
+        className={`fixed left-1/2 top-1/2 z-50 grid w-full max-w-lg -translate-x-1/2 -translate-y-1/2 gap-4 rounded-2xl border-none bg-ds-surface p-6 text-ds-text shadow-xl ${className}`}
         {...props}
       >
         {children}
         <DialogPrimitive.Close
           type="button"
-          className="absolute right-4 top-4 rounded-lg p-1 text-zinc-500 opacity-70 transition-opacity hover:bg-zinc-100 hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-rose-500"
+          className="absolute right-4 top-4 rounded-lg p-1 text-ds-muted transition-colors duration-200 hover:bg-ds-hover hover:text-ds-text focus:outline-none focus:ring-2 focus:ring-[#4a372e]/25"
           aria-label="Закрыть"
         >
           <X className="h-4 w-4" />
@@ -64,7 +65,7 @@ export function DialogFooter({
 }: ComponentProps<"div">) {
   return (
     <div
-      className={`flex flex-col-reverse gap-2 sm:flex-row sm:justify-end ${className}`}
+      className={`flex flex-col-reverse gap-2 border-t ${dsDivider} pt-4 sm:flex-row sm:justify-end ${className}`}
       {...props}
     />
   );
@@ -76,7 +77,7 @@ export function DialogTitle({
 }: ComponentProps<typeof DialogPrimitive.Title>) {
   return (
     <DialogPrimitive.Title
-      className={`text-lg font-semibold text-zinc-900 ${className}`}
+      className={`text-lg font-semibold text-ds-heading ${className}`}
       {...props}
     />
   );
@@ -88,7 +89,7 @@ export function DialogDescription({
 }: ComponentProps<typeof DialogPrimitive.Description>) {
   return (
     <DialogPrimitive.Description
-      className={`text-sm text-zinc-600 ${className}`}
+      className={`text-sm text-ds-muted ${className}`}
       {...props}
     />
   );

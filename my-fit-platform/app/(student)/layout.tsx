@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { RadialGlowBackground } from "@/components/ui/radial-glow-background";
 import { StudentLayoutChrome } from "@/components/student/StudentLayoutChrome";
 import { StudentShell } from "@/components/student/StudentShell";
 import { SignOutButtonServer } from "@/components/student/SignOutButtonServer";
@@ -17,7 +18,11 @@ export default async function StudentLayout({
   children: React.ReactNode;
 }>) {
   if (process.env.NEXT_PUBLIC_STATIC_HOSTING === "true") {
-    return <StudentShell>{children}</StudentShell>;
+    return (
+      <RadialGlowBackground className="h-dvh min-h-0">
+        <StudentShell>{children}</StudentShell>
+      </RadialGlowBackground>
+    );
   }
 
   const session = await getSession();
@@ -43,12 +48,13 @@ export default async function StudentLayout({
   }
 
   return (
-    <StudentLayoutChrome
-      email={session.email}
-      planName={session.planName}
-      signOut={<SignOutButtonServer />}
-    >
-      {children}
-    </StudentLayoutChrome>
+    <RadialGlowBackground className="h-dvh min-h-0">
+      <StudentLayoutChrome
+        email={session.email}
+        signOut={<SignOutButtonServer />}
+      >
+        {children}
+      </StudentLayoutChrome>
+    </RadialGlowBackground>
   );
 }

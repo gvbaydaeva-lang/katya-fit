@@ -1,5 +1,6 @@
 -- Запустите в Supabase → SQL Editor, если видите ошибки:
--- "Could not find the materials column" или "Bucket not found: workout-assets"
+-- "Could not find the materials/content_blocks column" или "Bucket not found: workout-assets"
+-- Полная схема под форму админки: также migrations/008_workouts_form_schema.sql
 --
 -- Порядок: сначала 003_workouts.sql (если таблицы workouts ещё нет),
 -- затем этот файл (или migrations/004_workouts_multitariff_and_assets.sql).

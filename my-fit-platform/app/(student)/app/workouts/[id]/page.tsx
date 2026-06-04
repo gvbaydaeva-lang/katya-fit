@@ -1,8 +1,7 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
+import { LessonBreadcrumbs } from "@/components/student/LessonBreadcrumbs";
 import { LessonContentBlocks } from "@/components/student/LessonContentBlocks";
 import { LessonNavigation } from "@/components/student/LessonNavigation";
-import { STUDENT_ROUTES } from "@/lib/auth/routes";
 import { getSession } from "@/lib/auth/session";
 import {
   getPublishedWorkoutForPlan,
@@ -14,10 +13,15 @@ export const dynamic = "force-dynamic";
 
 type LessonPageProps = {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ module?: string }>;
 };
 
-export default async function StudentLessonPage({ params }: LessonPageProps) {
+export default async function StudentLessonPage({
+  params,
+  searchParams,
+}: LessonPageProps) {
   const { id } = await params;
+  const { module: moduleFromQuery } = await searchParams;
   const session = await getSession();
   if (!session) notFound();
 
@@ -25,45 +29,36 @@ export default async function StudentLessonPage({ params }: LessonPageProps) {
   const workout = await getPublishedWorkoutForPlan(session.planId, id);
   if (!workout) notFound();
 
+  const moduleName =
+    moduleFromQuery?.trim() || workout.module_name?.trim() || "Без модуля";
+
   const { prev, next, index, total } = getLessonNeighborsInModule(
     allWorkouts,
     id,
-    workout.module_name,
+    moduleName,
   );
 
   return (
     <div className="w-full">
-      <Link
-        href={STUDENT_ROUTES.myWorkouts}
-        className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm font-medium text-zinc-600 shadow-sm transition-colors hover:border-rose-200 hover:bg-rose-50 hover:text-rose-700"
-      >
-        <span aria-hidden>←</span>
-        Назад к курсу
-      </Link>
+      <LessonBreadcrumbs
+        moduleName={moduleName}
+        lessonTitle={workout.title}
+      />
 
-      <article className="mx-auto mt-5 w-full max-w-4xl">
-        <header className="space-y-3 border-b border-zinc-100 pb-5">
-          <p className="text-sm font-medium text-rose-600">{workout.module_name}</p>
-          <div className="space-y-1">
-            <h1 className="text-2xl font-semibold tracking-tight text-zinc-900 sm:text-3xl">
-              {workout.title}
-            </h1>
-            <p className="text-sm text-zinc-500">Урок {workout.position}</p>
-          </div>
-
-          {total > 1 && (
-            <LessonNavigation
-              prev={prev}
-              next={next}
-              currentIndex={index}
-              total={total}
-            />
-          )}
-        </header>
-
-        <div className="mt-6 w-full min-w-0">
-          <LessonContentBlocks workout={workout} />
+      {total > 1 && (
+        <div className="mb-4">
+          <LessonNavigation
+            prev={prev}
+            next={next}
+            moduleName={moduleName}
+            currentIndex={index}
+            total={total}
+          />
         </div>
+      )}
+
+      <article className="mx-auto w-full max-w-4xl min-w-0">
+        <LessonContentBlocks workout={workout} />
       </article>
     </div>
   );

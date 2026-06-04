@@ -19,7 +19,7 @@ export function SignOutButtonServer() {
     <button
       type="button"
       onClick={handleSignOut}
-      className="w-full rounded-md px-3 py-2 text-left text-sm text-zinc-500 hover:bg-white hover:text-zinc-900"
+      className="flex w-full items-center rounded-lg px-3 py-2.5 text-left text-sm font-medium text-ds-muted transition-colors hover:bg-ds-hover hover:text-ds-text"
     >
       Выйти
     </button>

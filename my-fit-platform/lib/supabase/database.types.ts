@@ -9,6 +9,13 @@ export type DbProfile = {
   id: string;
   email: string;
   full_name: string | null;
+  last_name: string | null;
+  first_name: string | null;
+  middle_name: string | null;
+  birth_date: string | null;
+  phone: string | null;
+  city: string | null;
+  about: string | null;
   created_at: string;
   updated_at: string;
 };
@@ -60,7 +67,20 @@ export type Database = {
         Insert: Pick<DbProfile, "id" | "email"> & {
           full_name?: string | null;
         };
-        Update: Partial<Pick<DbProfile, "full_name" | "email">>;
+        Update: Partial<
+          Pick<
+            DbProfile,
+            | "full_name"
+            | "email"
+            | "last_name"
+            | "first_name"
+            | "middle_name"
+            | "birth_date"
+            | "phone"
+            | "city"
+            | "about"
+          >
+        >;
       };
       subscriptions: {
         Row: DbSubscription;

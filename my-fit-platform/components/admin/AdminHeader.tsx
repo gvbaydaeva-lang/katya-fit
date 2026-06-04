@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { AUTH_ROUTES } from "@/lib/auth/routes";
+import { dsSecondaryButton } from "@/lib/ds-theme";
 
 type AdminHeaderProps = {
   email: string;
@@ -20,18 +21,18 @@ export function AdminHeader({ email }: AdminHeaderProps) {
   }
 
   return (
-    <header className="mb-8 flex flex-wrap items-center justify-between gap-4 border-b border-zinc-200 pb-6">
+    <header className="mb-4 flex flex-wrap items-center justify-between gap-3 border-b border-stone-900/8 pb-4">
       <div>
-        <p className="text-sm font-medium text-rose-600">Админ-панель</p>
-        <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">
+        <p className="text-sm font-medium text-rose-500">Админ-панель</p>
+        <h1 className="text-2xl font-semibold tracking-tight text-ds-heading">
           Катя Fit
         </h1>
-        <p className="mt-1 text-sm text-zinc-500">{email}</p>
+        <p className="mt-1 text-sm text-ds-muted">{email}</p>
       </div>
       <button
         type="button"
         onClick={handleSignOut}
-        className="rounded-full border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-50"
+        className={`rounded-full px-4 py-2 text-sm font-medium transition-colors duration-200 ${dsSecondaryButton}`}
       >
         Выйти
       </button>

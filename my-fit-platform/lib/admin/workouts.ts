@@ -1,8 +1,10 @@
 import type { PlanId } from "@/lib/stripe/plans";
 import { isValidPlanId } from "@/lib/stripe/plans";
 import {
+  assertBlocksReadyForDb,
   deriveLegacyFromBlocks,
   normalizeContentBlocks,
+  serializeContentBlocksForDb,
   validateContentBlocks,
   type WorkoutContentBlock,
 } from "@/lib/workouts/content-blocks";
@@ -30,7 +32,7 @@ function validateWorkoutFields(
   const module_name = input.module_name.trim() || "Общий модуль";
   const position = Number(input.position);
   const is_published = Boolean(input.is_published);
-  const content_blocks = normalizeContentBlocks(input.content_blocks);
+  const content_blocks = serializeContentBlocksForDb(input.content_blocks);
   const tariffs = Array.from(
     new Set(input.tariffs.map((tariff) => String(tariff).trim() as PlanId)),
   );
@@ -51,6 +53,11 @@ function validateWorkoutFields(
   const blocksError = validateContentBlocks(content_blocks);
   if (blocksError) {
     return { ok: false, error: blocksError };
+  }
+
+  const storageError = assertBlocksReadyForDb(content_blocks);
+  if (storageError) {
+    return { ok: false, error: storageError };
   }
 
   return {
@@ -136,15 +143,19 @@ function formatWorkoutDbError(message: string): string {
     return `${message}. Выполните SQL из supabase/setup-workouts-content.sql в Supabase SQL Editor.`;
   }
   if (message.includes("content_blocks")) {
-    return `${message}. Примените миграцию 007_workouts_content_blocks.sql.`;
+    return `${message}. Примените миграцию 007 или setup-workouts-content.sql в Supabase SQL Editor.`;
+  }
+  if (message.includes("is_published")) {
+    return `${message}. Примените миграцию 006_workouts_publish_status.sql.`;
   }
   if (
     message.includes("tariffs") ||
     message.includes("video_type") ||
     message.includes("module_name") ||
-    message.includes("position")
+    message.includes("position") ||
+    message.includes("description")
   ) {
-    return `${message}. Примените миграции 004–007 в папке supabase/migrations.`;
+    return `${message}. Примените supabase/migrations/008_workouts_form_schema.sql (или setup-workouts-content.sql).`;
   }
   return message;
 }
@@ -217,6 +228,47 @@ export async function deleteWorkout(
 
   if (error) {
     return { ok: false, error: error.message };
+  }
+
+  return { ok: true };
+}
+
+export async function setWorkoutTariffs(
+  id: string,
+  tariffs: PlanId[],
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  if (!getServiceRoleKey()) {
+    return {
+      ok: false,
+      error: "SUPABASE_SERVICE_ROLE_KEY не задан",
+    };
+  }
+
+  const workoutId = id.trim();
+  if (!workoutId) {
+    return { ok: false, error: "Не указан id урока" };
+  }
+
+  const unique = Array.from(
+    new Set(tariffs.map((tariff) => String(tariff).trim() as PlanId)),
+  );
+
+  if (unique.length === 0) {
+    return { ok: false, error: "Выберите хотя бы один тариф" };
+  }
+
+  if (!unique.every((tariff) => isValidPlanId(tariff))) {
+    return { ok: false, error: "Неверный тариф" };
+  }
+
+  const admin = createAdminClient();
+  const { error } = await admin
+    .from("workouts")
+    .update({ tariffs: unique })
+    .eq("id", workoutId);
+
+  if (error) {
+    return { ok: false, error: formatWorkoutDbError(error.message) };
   }
 
   return { ok: true };
