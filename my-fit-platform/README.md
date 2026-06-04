@@ -4,6 +4,15 @@
 
 ## Локальная разработка
 
+Приложение Next.js в папке `my-fit-platform`. Из **корня репозитория** (`Катя фит`):
+
+```bash
+npm run install:app
+npm run dev
+```
+
+Или из этой папки:
+
 ```bash
 npm install
 npm run dev
