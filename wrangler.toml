@@ -1,8 +1,7 @@
-"$schema" = "my-fit-platform/node_modules/wrangler/config-schema.json"
-
 name = "katya-fit"
 compatibility_date = "2026-06-05"
 compatibility_flags = ["nodejs_compat", "global_fetch_strictly_public"]
 
-# Cloudflare Pages: clean deploy bundle from prepare-pages-deploy.mjs
+# OpenNext + prepare-pages-deploy.mjs → my-fit-platform/pages-dist
+# (создаётся командой npm run pages:build, не npm run build)
 pages_build_output_dir = "my-fit-platform/pages-dist"

@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "dev": "npm run dev --prefix my-fit-platform",
-    "build": "npm run build --prefix my-fit-platform",
+    "build": "npm run pages:build",
     "start": "npm run start --prefix my-fit-platform",
     "lint": "npm run lint --prefix my-fit-platform",
     "install:app": "npm install --prefix my-fit-platform",
