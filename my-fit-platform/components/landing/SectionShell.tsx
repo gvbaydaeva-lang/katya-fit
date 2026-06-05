@@ -1,7 +1,5 @@
-import type { LandingSectionId } from "@/lib/landing/anchors";
-
 type SectionShellProps = {
-  id: LandingSectionId;
+  id: string;
   title: string;
   description?: string;
   children: React.ReactNode;

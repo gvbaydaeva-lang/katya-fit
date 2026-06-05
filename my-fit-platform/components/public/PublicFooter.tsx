@@ -1,5 +1,5 @@
-import { AnchorLink } from "@/components/public/AnchorLink";
-import { LANDING_SECTIONS } from "@/lib/landing/anchors";
+import Link from "next/link";
+import { PAGE_NAV } from "@/lib/landing/page-nav";
 
 export function PublicFooter() {
   return (
@@ -7,18 +7,11 @@ export function PublicFooter() {
       <div className="mx-auto flex max-w-5xl flex-col gap-4 px-4 py-8 text-sm text-zinc-600 sm:flex-row sm:items-center sm:justify-between">
         <p>© {new Date().getFullYear()} Катя Fit</p>
         <div className="flex flex-wrap gap-4">
-          <AnchorLink
-            sectionId={LANDING_SECTIONS.pricing}
-            className="hover:text-zinc-900"
-          >
-            Тарифы
-          </AnchorLink>
-          <AnchorLink
-            sectionId={LANDING_SECTIONS.about}
-            className="hover:text-zinc-900"
-          >
-            О тренере
-          </AnchorLink>
+          {PAGE_NAV.map((item) => (
+            <Link key={item.href} href={item.href} className="hover:text-zinc-900">
+              {item.label}
+            </Link>
+          ))}
         </div>
       </div>
     </footer>
