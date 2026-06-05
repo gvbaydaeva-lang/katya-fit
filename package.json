@@ -6,7 +6,10 @@
     "build": "npm run build --prefix my-fit-platform",
     "start": "npm run start --prefix my-fit-platform",
     "lint": "npm run lint --prefix my-fit-platform",
-    "install:app": "npm install --prefix my-fit-platform"
+    "install:app": "npm install --prefix my-fit-platform",
+    "pages:build": "npm run install:app && npm run pages:build --prefix my-fit-platform",
+    "pages:deploy": "npm run pages:build && npm exec --prefix my-fit-platform wrangler pages deploy",
+    "pages:preview": "npm run pages:build && npm exec --prefix my-fit-platform wrangler pages dev my-fit-platform/.open-next --compatibility-date=2026-06-05 --compatibility-flags=nodejs_compat"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.12"

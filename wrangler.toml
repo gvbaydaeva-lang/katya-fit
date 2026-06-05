@@ -1,0 +1,8 @@
+"$schema" = "my-fit-platform/node_modules/wrangler/config-schema.json"
+
+name = "katya-fit"
+compatibility_date = "2026-06-05"
+compatibility_flags = ["nodejs_compat", "global_fetch_strictly_public"]
+
+# Cloudflare Pages: директория сборки OpenNext (статика + _worker.js)
+pages_build_output_dir = "my-fit-platform/.open-next"
