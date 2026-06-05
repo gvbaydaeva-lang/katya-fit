@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { landingNewTabProps } from "@/lib/landing/link-props";
 import { PAGE_NAV } from "@/lib/landing/page-nav";
 
 export function PublicFooter() {
@@ -8,7 +9,12 @@ export function PublicFooter() {
         <p>© {new Date().getFullYear()} Катя Fit</p>
         <div className="flex flex-wrap gap-4">
           {PAGE_NAV.map((item) => (
-            <Link key={item.href} href={item.href} className="hover:text-zinc-900">
+            <Link
+              key={item.href}
+              href={item.href}
+              {...landingNewTabProps(item.href)}
+              className="hover:text-zinc-900"
+            >
               {item.label}
             </Link>
           ))}

@@ -4,5 +4,5 @@ name = "katya-fit"
 compatibility_date = "2026-06-05"
 compatibility_flags = ["nodejs_compat", "global_fetch_strictly_public"]
 
-# Cloudflare Pages: OpenNext output (prepare-pages-deploy.mjs hoists assets/ to root)
-pages_build_output_dir = "my-fit-platform/.open-next"
+# Cloudflare Pages: clean deploy bundle from prepare-pages-deploy.mjs
+pages_build_output_dir = "my-fit-platform/pages-dist"

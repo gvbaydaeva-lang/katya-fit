@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { SubscriptionRedirectLogger } from "@/components/debug/SubscriptionRedirectLogger";
 import { HashScrollHandler } from "@/components/public/HashScrollHandler";
 import { PublicFooter } from "@/components/public/PublicFooter";
-import { PublicHeader } from "@/components/public/PublicHeader";
+import { Header } from "@/components/Header";
 
 export default function PublicLayout({
   children,
@@ -15,7 +15,7 @@ export default function PublicLayout({
         <SubscriptionRedirectLogger />
       </Suspense>
       <HashScrollHandler />
-      <PublicHeader />
+      <Header />
       <main className="flex-1">{children}</main>
       <PublicFooter />
     </div>
