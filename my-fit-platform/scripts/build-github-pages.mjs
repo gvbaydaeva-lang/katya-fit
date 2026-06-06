@@ -1,4 +1,4 @@
-import { renameSync, existsSync, copyFileSync } from "node:fs";
+import { renameSync, existsSync } from "node:fs";
 import { execSync } from "node:child_process";
 
 const toHide = [
@@ -28,11 +28,6 @@ try {
       NEXT_PUBLIC_STATIC_HOSTING: "true",
     },
   });
-
-  if (existsSync("index.html") && existsSync("out")) {
-    copyFileSync("index.html", "out/index.html");
-    console.log("✓ index.html скопирован в out/ как главная страница");
-  }
 } finally {
   for (const [path, backup] of toHide) restore(path, backup);
 }
