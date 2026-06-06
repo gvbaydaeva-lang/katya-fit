@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev --hostname 127.0.0.1",
     "build": "next build",
+    "export": "node scripts/build-github-pages.mjs",
     "build:pages": "node scripts/build-github-pages.mjs",
     "start": "next start",
     "lint": "eslint",

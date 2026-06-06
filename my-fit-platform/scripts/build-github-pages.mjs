@@ -3,6 +3,9 @@ import { execSync } from "node:child_process";
 
 const toHide = [
   ["app/api", ".api-github-pages-backup"],
+  ["app/auth", ".auth-github-pages-backup"],
+  ["app/(student)", ".student-github-pages-backup"],
+  ["app/(admin)", ".admin-github-pages-backup"],
   ["middleware.ts", ".middleware-github-pages-backup"],
 ];
 

@@ -21,11 +21,11 @@ jobs:
       - name: Install dependencies
         run: npm install --prefix my-fit-platform
       - name: Build
-        run: npm run pages:build --prefix my-fit-platform
+        run: npm run export --prefix my-fit-platform
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './my-fit-platform/pages-dist'
+          path: './my-fit-platform/out'
 
   deploy:
     needs: build
