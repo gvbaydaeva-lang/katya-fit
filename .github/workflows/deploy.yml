@@ -5,38 +5,31 @@ on:
     branches:
       - main
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pages: write
-      id-token: write
     steps:
       - uses: actions/checkout@v4
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: '20'
-      - name: Install dependencies
-        run: npm install --prefix my-fit-platform
-      - name: Build
-        run: npm run export --prefix my-fit-platform
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+          node-version: '18'
+      - run: npm install --prefix my-fit-platform
+      - run: npm run export --prefix my-fit-platform
+      - uses: actions/upload-pages-artifact@v3
         with:
           path: './my-fit-platform/out'
 
   deploy:
     needs: build
     runs-on: ubuntu-latest
-    permissions:
-      pages: write
-      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Deploy
-        id: deployment
+      - id: deployment
         uses: actions/deploy-pages@v4
