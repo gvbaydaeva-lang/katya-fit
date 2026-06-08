@@ -18,9 +18,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: '20'
 
@@ -32,17 +34,17 @@ jobs:
 
       - name: Verify build output
         run: |
-          test -d my-fit-platform/out
-          test -f my-fit-platform/out/index.html
-          ls -la my-fit-platform/out
+          test -d ./my-fit-platform/out
+          test -f ./my-fit-platform/out/index.html
+          ls -la ./my-fit-platform/out
 
       - name: Add .nojekyll
-        run: touch my-fit-platform/out/.nojekyll
+        run: touch ./my-fit-platform/out/.nojekyll
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: my-fit-platform/out
+          path: ./my-fit-platform/out
 
   deploy:
     needs: build
