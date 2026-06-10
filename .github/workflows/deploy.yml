@@ -2,20 +2,14 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
+  workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: pages
-  cancel-in-progress: true
+  contents: write
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -25,34 +19,26 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: my-fit-platform/package-lock.json
 
       - name: Install dependencies
-        run: npm install --prefix my-fit-platform
+        run: npm ci --prefix my-fit-platform
 
       - name: Build static export
         run: npm run export --prefix my-fit-platform
 
       - name: Verify build output
         run: |
-          test -d ./my-fit-platform/out
-          test -f ./my-fit-platform/out/index.html
-          ls -la ./my-fit-platform/out
+          ls -la my-fit-platform/out
+          test -f my-fit-platform/out/index.html
 
       - name: Add .nojekyll
-        run: touch ./my-fit-platform/out/.nojekyll
+        run: touch my-fit-platform/out/.nojekyll
 
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+      - name: Deploy to gh-pages branch
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          path: ./my-fit-platform/out
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./my-fit-platform/out
+          force_orphan: true
