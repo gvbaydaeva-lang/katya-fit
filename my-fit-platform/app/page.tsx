@@ -3,6 +3,7 @@ import Link from "next/link";
 import { LandingChrome } from "@/components/landing/LandingChrome";
 import { LANDING_ROUTES } from "@/lib/landing/routes";
 import { landingNewTabProps } from "@/lib/landing/link-props";
+import heroKatya from "@/public/images/hero-katya.jpg";
 
 export const metadata = {
   title: "KATY D. — фитнес-тренер для женщин",
@@ -67,7 +68,7 @@ export default function HomePage() {
             <div className="relative">
               <div className="relative aspect-[3/4] w-full max-w-md mx-auto overflow-hidden rounded-sm">
                 <Image
-                  src="/images/hero-katya.jpg"
+                  src={heroKatya}
                   alt="Катя — фитнес-тренер для женщин в декрете и эмиграции"
                   fill
                   className="object-cover object-center"
