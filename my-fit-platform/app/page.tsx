@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { LandingChrome } from "@/components/landing/LandingChrome";
 import { LANDING_ROUTES } from "@/lib/landing/routes";
@@ -64,7 +65,16 @@ export default function HomePage() {
               </div>
             </div>
             <div className="relative">
-              <PhotoSlot label="Фото Кати (портретное)" className="aspect-[3/4] w-full max-w-md mx-auto rounded-sm" />
+              <div className="relative aspect-[3/4] w-full max-w-md mx-auto overflow-hidden rounded-sm">
+                <Image
+                  src="/images/hero-katya.jpg"
+                  alt="Катя — фитнес-тренер для женщин в декрете и эмиграции"
+                  fill
+                  className="object-cover object-center"
+                  priority
+                  sizes="(max-width: 1024px) 100vw, 28rem"
+                />
+              </div>
               <div className="absolute -bottom-4 -left-4 h-32 w-32 rounded-sm bg-[#C4956A]/10 -z-10" />
             </div>
           </div>
