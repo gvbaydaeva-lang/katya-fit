@@ -2,6 +2,10 @@ import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { HeroSection } from "@/components/landing/HeroSection";
+import { PainPointsSection } from "@/components/landing/PainPointsSection";
+import WhyItWorksSection from "@/components/landing/WhyItWorksSection";
+import FaqSection from "@/components/landing/FaqSection";
+import FinalCtaSection from "@/components/landing/FinalCtaSection";
 import { LandingChrome } from "@/components/landing/LandingChrome";
 import { LANDING_ROUTES } from "@/lib/landing/routes";
 import { landingNewTabProps } from "@/lib/landing/link-props";
@@ -12,7 +16,6 @@ import resultKarina from "@/public/images/result-karina.webp";
 import resultElena from "@/public/images/result-elena.webp";
 import resultGalina from "@/public/images/result-galina.webp";
 import resultAisa from "@/public/images/result-aisa.webp";
-import ctaConsultation from "@/public/images/cta-consultation.webp";
 
 const resultClients = [
   {
@@ -155,6 +158,8 @@ export default function HomePage() {
 
       <HeroSection />
 
+      <PainPointsSection />
+
       {/* ─── МОЯ ИСТОРИЯ ─── */}
       <section id="about" className="bg-white py-20 lg:py-28">
         <div className="mx-auto max-w-6xl px-6">
@@ -185,6 +190,30 @@ export default function HomePage() {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── РЕЗУЛЬТАТЫ ─── */}
+      <section id="results" className="bg-white py-20 lg:py-28">
+        <div className="mx-auto max-w-6xl px-6">
+          <h2 className="text-3xl font-bold text-stone-900 sm:text-4xl text-center">Результаты моих клиенток</h2>
+          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4 lg:items-stretch">
+            {resultClients.map((client) => (
+              <ResultCard key={client.name} image={client.image} alt={client.alt}>
+                <p className="text-xs font-semibold text-stone-900">{client.name}</p>
+                <p className="mt-0.5 text-[11px] text-stone-500 leading-snug sm:text-xs">{client.profession}</p>
+                <p className="mt-2 text-[11px] text-stone-500 leading-relaxed italic break-words sm:text-xs">{client.quote}</p>
+                <p className="mt-3 text-[11px] font-bold text-[#C4956A] sm:text-xs">Результат за {client.period}:</p>
+                <ul className="mt-1 space-y-0.5">
+                  {client.stats.map((stat) => (
+                    <li key={stat} className="text-[11px] text-stone-600 leading-snug break-words sm:text-xs">
+                      {stat}
+                    </li>
+                  ))}
+                </ul>
+              </ResultCard>
+            ))}
           </div>
         </div>
       </section>
@@ -230,52 +259,9 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ─── РЕЗУЛЬТАТЫ ─── */}
-      <section id="results" className="bg-white py-20 lg:py-28">
-        <div className="mx-auto max-w-6xl px-6">
-          <h2 className="text-3xl font-bold text-stone-900 sm:text-4xl text-center">Результаты моих клиенток</h2>
-          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4 lg:items-stretch">
-            {resultClients.map((client) => (
-              <ResultCard key={client.name} image={client.image} alt={client.alt}>
-                <p className="text-xs font-semibold text-stone-900">{client.name}</p>
-                <p className="mt-0.5 text-[11px] text-stone-500 leading-snug sm:text-xs">{client.profession}</p>
-                <p className="mt-2 text-[11px] text-stone-500 leading-relaxed italic break-words sm:text-xs">{client.quote}</p>
-                <p className="mt-3 text-[11px] font-bold text-[#C4956A] sm:text-xs">Результат за {client.period}:</p>
-                <ul className="mt-1 space-y-0.5">
-                  {client.stats.map((stat) => (
-                    <li key={stat} className="text-[11px] text-stone-600 leading-snug break-words sm:text-xs">
-                      {stat}
-                    </li>
-                  ))}
-                </ul>
-              </ResultCard>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ─── CTA ─── */}
-      <section id="contact" className="bg-[#F0EAE0] py-20 lg:py-28">
-        <div className="mx-auto max-w-6xl px-6">
-          <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
-            <div className="min-w-0">
-              <h2 className="text-3xl font-bold text-stone-900 sm:text-4xl">Готовы начать свой путь?</h2>
-              <p className="mt-4 text-lg text-stone-500 leading-relaxed">Запишитесь на бесплатную консультацию, и мы вместе разберём вашу ситуацию и подберём лучший формат работы.</p>
-              <Link href="#" className="mt-8 inline-flex rounded-sm bg-[#C4956A] px-8 py-3.5 text-sm font-semibold tracking-wider text-white hover:bg-[#B07D54] transition-colors">
-                ЗАПИСАТЬСЯ НА КОНСУЛЬТАЦИЮ
-              </Link>
-            </div>
-            <div className="w-full min-w-0">
-              <CoverImage
-                src={ctaConsultation}
-                alt="Катя — запись на консультацию"
-                aspectClass="aspect-[3/4] rounded-sm"
-                sizes="(max-width: 1024px) 100vw, 50vw"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
+      <WhyItWorksSection />
+      <FaqSection />
+      <FinalCtaSection />
 
     </LandingChrome>
   );
