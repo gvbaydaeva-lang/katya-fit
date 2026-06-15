@@ -1,9 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
+import type { ReactNode } from "react";
 import { LandingChrome } from "@/components/landing/LandingChrome";
 import { LANDING_ROUTES } from "@/lib/landing/routes";
 import { landingNewTabProps } from "@/lib/landing/link-props";
 import heroKatya from "@/public/images/hero-katya.jpg";
+import programDomVZal from "@/public/images/program-dom-v-zal.webp";
+import programOnline from "@/public/images/program-online.webp";
+import storyBeforeAfter from "@/public/images/story-before-after.webp";
 
 export const metadata = {
   title: "KATY D. — фитнес-тренер для женщин",
@@ -23,6 +27,57 @@ function PhotoSlot({ label, className = "" }: { label: string; className?: strin
     <div className={`flex items-center justify-center bg-stone-200 ${className}`}>
       <p className="text-stone-400 text-xs text-center px-4 leading-relaxed">📷 {label}</p>
     </div>
+  );
+}
+
+function CoverImage({
+  src,
+  alt,
+  aspectClass,
+  sizes,
+  priority = false,
+}: {
+  src: import("next/image").StaticImageData;
+  alt: string;
+  aspectClass: string;
+  sizes: string;
+  priority?: boolean;
+}) {
+  return (
+    <div className={`relative w-full shrink-0 overflow-hidden ${aspectClass}`}>
+      <Image
+        src={src}
+        alt={alt}
+        fill
+        className="object-cover object-center"
+        sizes={sizes}
+        priority={priority}
+      />
+    </div>
+  );
+}
+
+function ProgramCard({
+  image,
+  alt,
+  children,
+}: {
+  image: import("next/image").StaticImageData;
+  alt: string;
+  children: ReactNode;
+}) {
+  return (
+    <article className="flex h-full w-full min-w-0 flex-col overflow-hidden rounded-sm border border-[#E8E2D9] bg-white">
+      <CoverImage
+        src={image}
+        alt={alt}
+        aspectClass="aspect-[2/3]"
+        sizes="(max-width: 1024px) 100vw, 50vw"
+      />
+      <div className="flex w-full min-w-0 flex-1 flex-col px-5 pb-6 pt-5 sm:px-7 sm:pb-8 sm:pt-6">
+        {children}
+      </div>
+    </article>
   );
 }
 
@@ -86,9 +141,13 @@ export default function HomePage() {
       <section id="about" className="bg-white py-20 lg:py-28">
         <div className="mx-auto max-w-6xl px-6">
           <div className="grid gap-16 lg:grid-cols-2 lg:items-center">
-            <div className="grid grid-cols-2 gap-3">
-              <PhotoSlot label="До трансформации" className="aspect-[3/4] rounded-sm" />
-              <PhotoSlot label="После трансформации" className="aspect-[3/4] rounded-sm mt-8" />
+            <div className="w-full min-w-0">
+              <CoverImage
+                src={storyBeforeAfter}
+                alt="Трансформация Кати — до и после"
+                aspectClass="aspect-square rounded-sm"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+              />
             </div>
             <div>
               <h2 className="text-3xl font-bold text-stone-900 sm:text-4xl">Моя история</h2>
@@ -116,37 +175,39 @@ export default function HomePage() {
       <section id="programs" className="bg-[#FAF8F4] py-20 lg:py-28">
         <div className="mx-auto max-w-6xl px-6">
           <h2 className="text-3xl font-bold text-stone-900 sm:text-4xl text-center">Мои программы</h2>
-          <div className="mt-12 grid gap-6 lg:grid-cols-2">
-            <div className="rounded-sm overflow-hidden bg-white border border-[#E8E2D9] flex flex-col">
-              <PhotoSlot label="Фото программы «Из дома в зал»" className="aspect-[16/9]" />
-              <div className="p-8 flex flex-col flex-1">
-                <h3 className="text-xl font-bold text-stone-900">Из дома в зал</h3>
-                <p className="mt-2 text-sm text-stone-500 leading-relaxed">12-недельная программа для женщин, которые хотят начать тренироваться и уверенно чувствовать себя в зале.</p>
-                <ul className="mt-5 space-y-2 flex-1">
-                  {["Тренировки дома и в зале", "Питание без подсчёта калорий", "Пошаговые инструкции", "Поддержка"].map((f) => (
-                    <li key={f} className="flex gap-2 items-center text-sm text-stone-600"><CheckIcon /> {f}</li>
-                  ))}
-                </ul>
-                <Link href={LANDING_ROUTES.domVZal} {...landingNewTabProps(LANDING_ROUTES.domVZal)} className="mt-6 inline-flex rounded-sm border border-[#C4956A] px-6 py-2.5 text-xs font-semibold tracking-widest text-[#C4956A] hover:bg-[#C4956A] hover:text-white transition-colors">
-                  ПОДРОБНЕЕ
-                </Link>
-              </div>
-            </div>
-            <div className="rounded-sm overflow-hidden bg-white border border-[#E8E2D9] flex flex-col">
-              <PhotoSlot label="Фото программы «Онлайн сопровождение»" className="aspect-[16/9]" />
-              <div className="p-8 flex flex-col flex-1">
-                <h3 className="text-xl font-bold text-stone-900">Онлайн сопровождение</h3>
-                <p className="mt-2 text-sm text-stone-500 leading-relaxed">Индивидуальная работа со мной для тех, кто хочет получить максимальный результат.</p>
-                <ul className="mt-5 space-y-2 flex-1">
-                  {["Индивидуальный план питания и тренировок", "Регулярные корректировки", "Поддержка 24/7", "Помощь при срывах и плато"].map((f) => (
-                    <li key={f} className="flex gap-2 items-center text-sm text-stone-600"><CheckIcon /> {f}</li>
-                  ))}
-                </ul>
-                <Link href={LANDING_ROUTES.online} {...landingNewTabProps(LANDING_ROUTES.online)} className="mt-6 inline-flex rounded-sm border border-[#C4956A] px-6 py-2.5 text-xs font-semibold tracking-widest text-[#C4956A] hover:bg-[#C4956A] hover:text-white transition-colors">
-                  ПОДРОБНЕЕ
-                </Link>
-              </div>
-            </div>
+          <div className="mt-12 grid gap-6 lg:grid-cols-2 lg:items-stretch">
+            <ProgramCard image={programDomVZal} alt="Программа «Из дома в зал»">
+              <h3 className="text-xl font-bold text-stone-900">Из дома в зал</h3>
+              <p className="mt-2 max-w-full text-[13px] text-stone-500 leading-relaxed break-words sm:text-sm">
+                12-недельная программа для женщин, которые хотят начать тренироваться и уверенно чувствовать себя в зале.
+              </p>
+              <ul className="mt-5 flex-1 space-y-2">
+                {["Тренировки дома и в зале", "Питание без подсчёта калорий", "Пошаговые инструкции", "Поддержка"].map((f) => (
+                  <li key={f} className="flex items-center gap-2 text-[13px] text-stone-600 break-words sm:text-sm">
+                    <CheckIcon /> {f}
+                  </li>
+                ))}
+              </ul>
+              <Link href={LANDING_ROUTES.domVZal} {...landingNewTabProps(LANDING_ROUTES.domVZal)} className="mt-6 inline-flex w-fit max-w-full rounded-sm border border-[#C4956A] px-6 py-2.5 text-xs font-semibold tracking-widest text-[#C4956A] hover:bg-[#C4956A] hover:text-white transition-colors">
+                ПОДРОБНЕЕ
+              </Link>
+            </ProgramCard>
+            <ProgramCard image={programOnline} alt="Программа «Онлайн сопровождение»">
+              <h3 className="text-xl font-bold text-stone-900">Онлайн сопровождение</h3>
+              <p className="mt-2 max-w-full text-[13px] text-stone-500 leading-relaxed break-words sm:text-sm">
+                Индивидуальная работа со мной для тех, кто хочет получить максимальный результат.
+              </p>
+              <ul className="mt-5 flex-1 space-y-2">
+                {["Индивидуальный план питания и тренировок", "Регулярные корректировки", "Поддержка 24/7", "Помощь при срывах и плато"].map((f) => (
+                  <li key={f} className="flex items-center gap-2 text-[13px] text-stone-600 break-words sm:text-sm">
+                    <CheckIcon /> {f}
+                  </li>
+                ))}
+              </ul>
+              <Link href={LANDING_ROUTES.online} {...landingNewTabProps(LANDING_ROUTES.online)} className="mt-6 inline-flex w-fit max-w-full rounded-sm border border-[#C4956A] px-6 py-2.5 text-xs font-semibold tracking-widest text-[#C4956A] hover:bg-[#C4956A] hover:text-white transition-colors">
+                ПОДРОБНЕЕ
+              </Link>
+            </ProgramCard>
           </div>
         </div>
       </section>
