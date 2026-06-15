@@ -8,6 +8,50 @@ import heroKatya from "@/public/images/hero-katya.jpg";
 import programDomVZal from "@/public/images/program-dom-v-zal.webp";
 import programOnline from "@/public/images/program-online.webp";
 import storyBeforeAfter from "@/public/images/story-before-after.webp";
+import resultKarina from "@/public/images/result-karina.webp";
+import resultElena from "@/public/images/result-elena.webp";
+import resultGalina from "@/public/images/result-galina.webp";
+import resultAisa from "@/public/images/result-aisa.webp";
+import ctaConsultation from "@/public/images/cta-consultation.webp";
+
+const resultClients = [
+  {
+    name: "Карина, 36 лет",
+    profession: "Пекарь, мама двоих детей",
+    quote: "«Я до последнего не верила, что можно есть любимые торты и при этом худеть. Оказалось — можно!»",
+    period: "8 недель",
+    stats: ["Вес: –7,5 кг", "Талия: –26 см", "Бёдра: –12 см"],
+    image: resultKarina,
+    alt: "Результат Карины — до и после",
+  },
+  {
+    name: "Елена, 30 лет",
+    profession: "Удалённая работа, мама",
+    quote: "«Перед отпуском на море меня ждал \"сюрприз\": старый купальник просто сваливался. Пришлось экстренно покупать новый на пару размеров меньше!»",
+    period: "8 недель",
+    stats: ["Вес: –8,1 кг", "Талия: –11 см", "Бёдра: –6 см", "Ноги: –7 см"],
+    image: resultElena,
+    alt: "Результат Елены — до и после",
+  },
+  {
+    name: "Галина, 26 лет",
+    profession: "Мастер маникюра",
+    quote: "«Начинала дома с простых упражнений без веса, потом добавила гантели. Сейчас чувствую такую силу, что готова переходить на новый уровень — в тренажёрный зал!»",
+    period: "3 месяца",
+    stats: ["Вес: –8,7 кг", "Прогресс: От домашних тренировок до уверенного перехода в зал"],
+    image: resultGalina,
+    alt: "Результат Галины — до и после",
+  },
+  {
+    name: "Айса, 39 лет",
+    profession: "Мама троих детей",
+    quote: "«С тремя детьми найти время на себя сложно, но реально. Минус 5 кг за месяц — это не только цифры, это совершенно другое отражение в зеркале».",
+    period: "4 недели",
+    stats: ["Вес: 65,8 кг → 60,6 кг (–5,2 кг)"],
+    image: resultAisa,
+    alt: "Результат Айсы — до и после",
+  },
+] as const;
 
 export const metadata = {
   title: "KATY D. — фитнес-тренер для женщин",
@@ -77,6 +121,30 @@ function ProgramCard({
       <div className="flex w-full min-w-0 flex-1 flex-col px-5 pb-6 pt-5 sm:px-7 sm:pb-8 sm:pt-6">
         {children}
       </div>
+    </article>
+  );
+}
+
+function ResultCard({
+  image,
+  alt,
+  children,
+}: {
+  image: import("next/image").StaticImageData;
+  alt: string;
+  children: ReactNode;
+}) {
+  return (
+    <article className="flex h-full min-w-0 flex-col overflow-hidden rounded-sm border border-[#E8E2D9] bg-[#FAF8F4]">
+      <div className="shrink-0 p-2">
+        <CoverImage
+          src={image}
+          alt={alt}
+          aspectClass="aspect-[4/3] rounded-sm"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+        />
+      </div>
+      <div className="min-w-0 flex-1 px-2 pb-5 pt-1">{children}</div>
     </article>
   );
 }
@@ -216,25 +284,21 @@ export default function HomePage() {
       <section id="results" className="bg-white py-20 lg:py-28">
         <div className="mx-auto max-w-6xl px-6">
           <h2 className="text-3xl font-bold text-stone-900 sm:text-4xl text-center">Результаты моих клиенток</h2>
-          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {[
-              { name: "Анна, 34 года", result: "-12 кг за 3 месяца", quote: "«Наконец-то я чувствую себя собой и у меня есть энергия на ребёнка и на себя»" },
-              { name: "Мария, 31 год", result: "-15 кг за 4 месяца", quote: "«Я больше не сажусь на диеты. Я просто живу по системе, которую мы выстроили»" },
-              { name: "Елена, 36 лет", result: "-9 кг за 2.5 месяца", quote: "«Это первый раз, когда у меня получилось без стресса и головняков»" },
-              { name: "Ольга, 38 лет", result: "-11 кг за 3 месяца", quote: "«Я из дома в зал, как и обещала. Это изменило не только моё тело, но и мою жизнь»" },
-            ].map((client) => (
-              <div key={client.name} className="rounded-sm border border-[#E8E2D9] overflow-hidden bg-[#FAF8F4]">
-                <div className="grid grid-cols-3 gap-1 p-2">
-                  <div className="aspect-[2/3] bg-stone-200 rounded-sm" />
-                  <div className="aspect-[2/3] bg-stone-300 rounded-sm" />
-                  <div className="aspect-[2/3] bg-stone-200 rounded-sm" />
-                </div>
-                <div className="px-4 pb-5 pt-2">
-                  <p className="text-xs font-semibold text-stone-900">{client.name}</p>
-                  <p className="text-xs font-bold text-[#C4956A] mt-0.5">{client.result}</p>
-                  <p className="mt-2 text-xs text-stone-500 leading-relaxed italic">{client.quote}</p>
-                </div>
-              </div>
+          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4 lg:items-stretch">
+            {resultClients.map((client) => (
+              <ResultCard key={client.name} image={client.image} alt={client.alt}>
+                <p className="text-xs font-semibold text-stone-900">{client.name}</p>
+                <p className="mt-0.5 text-[11px] text-stone-500 leading-snug sm:text-xs">{client.profession}</p>
+                <p className="mt-2 text-[11px] text-stone-500 leading-relaxed italic break-words sm:text-xs">{client.quote}</p>
+                <p className="mt-3 text-[11px] font-bold text-[#C4956A] sm:text-xs">Результат за {client.period}:</p>
+                <ul className="mt-1 space-y-0.5">
+                  {client.stats.map((stat) => (
+                    <li key={stat} className="text-[11px] text-stone-600 leading-snug break-words sm:text-xs">
+                      {stat}
+                    </li>
+                  ))}
+                </ul>
+              </ResultCard>
             ))}
           </div>
         </div>
@@ -244,14 +308,21 @@ export default function HomePage() {
       <section id="contact" className="bg-[#F0EAE0] py-20 lg:py-28">
         <div className="mx-auto max-w-6xl px-6">
           <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
-            <div>
+            <div className="min-w-0">
               <h2 className="text-3xl font-bold text-stone-900 sm:text-4xl">Готовы начать свой путь?</h2>
               <p className="mt-4 text-lg text-stone-500 leading-relaxed">Запишитесь на бесплатную консультацию, и мы вместе разберём вашу ситуацию и подберём лучший формат работы.</p>
               <Link href="#" className="mt-8 inline-flex rounded-sm bg-[#C4956A] px-8 py-3.5 text-sm font-semibold tracking-wider text-white hover:bg-[#B07D54] transition-colors">
                 ЗАПИСАТЬСЯ НА КОНСУЛЬТАЦИЮ
               </Link>
             </div>
-            <PhotoSlot label="Фото для CTA секции" className="aspect-[4/3] rounded-sm" />
+            <div className="w-full min-w-0">
+              <CoverImage
+                src={ctaConsultation}
+                alt="Катя — запись на консультацию"
+                aspectClass="aspect-[3/4] rounded-sm"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+              />
+            </div>
           </div>
         </div>
       </section>
