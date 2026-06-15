@@ -31,3 +31,13 @@ body {
   0% { background-position: 100% 0; }
   100% { background-position: -100% 0; }
 }
+
+@keyframes pricing-marquee-left {
+  from { transform: translateX(0); }
+  to { transform: translateX(-33.333333%); }
+}
+
+@keyframes pricing-marquee-right {
+  from { transform: translateX(-33.333333%); }
+  to { transform: translateX(0); }
+}

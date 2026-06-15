@@ -1,10 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { HeroSection } from "@/components/landing/HeroSection";
 import { LandingChrome } from "@/components/landing/LandingChrome";
 import { LANDING_ROUTES } from "@/lib/landing/routes";
 import { landingNewTabProps } from "@/lib/landing/link-props";
-import heroKatya from "@/public/images/hero-katya.jpg";
 import programDomVZal from "@/public/images/program-dom-v-zal.webp";
 import programOnline from "@/public/images/program-online.webp";
 import storyBeforeAfter from "@/public/images/story-before-after.webp";
@@ -153,57 +153,7 @@ export default function HomePage() {
   return (
     <LandingChrome>
 
-      {/* ─── HERO ─── */}
-      <section className="overflow-hidden bg-[#FAF8F4]">
-        <div className="mx-auto max-w-6xl px-6 py-16 lg:py-24">
-          <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
-            <div>
-              <p className="text-xs font-medium tracking-[0.2em] text-[#C4956A] uppercase mb-4">
-                Для женщин в декрете и в эмиграции
-              </p>
-              <h1 className="text-4xl font-bold leading-[1.1] text-stone-900 sm:text-5xl lg:text-6xl">
-                Верните себе<br />не только форму,<br />но и себя
-              </h1>
-              <p className="mt-6 text-lg text-stone-500 leading-relaxed max-w-md">
-                Я помогу вам восстановить энергию, обрести уверенность и построить тело, в котором вам будет комфортно жить.
-              </p>
-              <div className="mt-8 flex flex-wrap gap-3">
-                <Link href="/#programs" className="rounded-sm bg-[#C4956A] px-8 py-3.5 text-sm font-semibold tracking-wider text-white hover:bg-[#B07D54] transition-colors">
-                  МОИ ПРОГРАММЫ
-                </Link>
-                <Link href="/#about" className="rounded-sm border border-stone-300 px-8 py-3.5 text-sm font-semibold tracking-wider text-stone-700 hover:bg-stone-100 transition-colors">
-                  ОБО МНЕ
-                </Link>
-              </div>
-              <div className="mt-10 grid grid-cols-3 gap-4 border-t border-stone-200 pt-8">
-                {[
-                  { icon: "🔬", text: "Научный подход без диет и крайностей" },
-                  { icon: "🤝", text: "Индивидуальный подход и поддержка" },
-                  { icon: "🏋️", text: "Из дома в зал: пошаговый путь" },
-                ].map((b) => (
-                  <div key={b.text} className="flex flex-col items-center text-center gap-2">
-                    <span className="text-xl">{b.icon}</span>
-                    <p className="text-xs text-stone-500 leading-snug">{b.text}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="relative">
-              <div className="relative aspect-[3/4] w-full max-w-md mx-auto overflow-hidden rounded-sm">
-                <Image
-                  src={heroKatya}
-                  alt="Катя — фитнес-тренер для женщин в декрете и эмиграции"
-                  fill
-                  className="object-cover object-center"
-                  priority
-                  sizes="(max-width: 1024px) 100vw, 28rem"
-                />
-              </div>
-              <div className="absolute -bottom-4 -left-4 h-32 w-32 rounded-sm bg-[#C4956A]/10 -z-10" />
-            </div>
-          </div>
-        </div>
-      </section>
+      <HeroSection />
 
       {/* ─── МОЯ ИСТОРИЯ ─── */}
       <section id="about" className="bg-white py-20 lg:py-28">
