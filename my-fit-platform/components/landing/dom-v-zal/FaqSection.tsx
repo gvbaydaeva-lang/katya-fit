@@ -51,13 +51,9 @@ export function FaqSection({ checkoutHref }: FaqSectionProps) {
 
         <Accordion.Root type="single" collapsible className="mt-10 space-y-2">
           {faqItems.map((item, index) => (
-            <Accordion.Item
-              key={item.q}
-              value={`faq-${index}`}
-              className="overflow-hidden rounded-sm border border-[#E8E2D9] bg-white"
-            >
+            <Accordion.Item key={item.q} value={`faq-${index}`}>
               <Accordion.Header>
-                <Accordion.Trigger className="group flex w-full items-center justify-between gap-4 px-5 py-4 text-left text-sm font-semibold text-[#1c1917] transition-colors hover:text-[#C4956A]">
+                <Accordion.Trigger className="group flex w-full items-center justify-between gap-4 rounded-sm border border-[#E8E2D9] bg-white px-5 py-4 text-left text-sm font-semibold text-[#1c1917] transition-colors hover:text-[#C4956A]">
                   <span>{item.q}</span>
                   <ChevronDown
                     className="h-4 w-4 shrink-0 text-[#C4956A] transition-transform duration-200 group-data-[state=open]:rotate-180"
@@ -66,7 +62,7 @@ export function FaqSection({ checkoutHref }: FaqSectionProps) {
                 </Accordion.Trigger>
               </Accordion.Header>
               <Accordion.Content className="overflow-hidden data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down">
-                <p className="border-t border-[#E8E2D9] px-5 py-4 text-sm leading-relaxed text-stone-500">
+                <p className="px-4 py-3 text-sm leading-relaxed text-stone-500">
                   {item.a}
                 </p>
               </Accordion.Content>
@@ -74,12 +70,14 @@ export function FaqSection({ checkoutHref }: FaqSectionProps) {
           ))}
         </Accordion.Root>
 
-        <ButtonLink
-          href={checkoutHref}
-          className="mx-auto mt-10 flex w-full max-w-sm justify-center rounded-sm !bg-[#C4956A] px-5 py-3.5 text-sm font-semibold tracking-wider text-white hover:!bg-[#B07D54]"
-        >
-          ПОЛУЧИТЬ ДОСТУП
-        </ButtonLink>
+        <div className="mt-10 flex justify-center">
+          <ButtonLink
+            href={checkoutHref}
+            className="w-fit rounded-sm !bg-[#C4956A] px-10 py-3.5 text-sm font-semibold uppercase tracking-widest text-white transition-colors hover:!bg-[#B07D54]"
+          >
+            ПОЛУЧИТЬ ДОСТУП
+          </ButtonLink>
+        </div>
       </div>
     </section>
   );

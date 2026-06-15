@@ -51,12 +51,14 @@ export function PricingCTASection({ checkoutHref }: PricingCTASectionProps) {
 
         <p className="mt-8 text-center text-5xl font-bold text-[#1c1917]">$79</p>
 
-        <ButtonLink
-          href={checkoutHref}
-          className="mt-6 flex w-full justify-center rounded-sm !bg-[#C4956A] py-4 text-sm font-medium uppercase tracking-widest text-white transition-colors hover:!bg-[#B07D54]"
-        >
-          ПОЛУЧИТЬ ДОСТУП
-        </ButtonLink>
+        <div className="mt-6 flex justify-center">
+          <ButtonLink
+            href={checkoutHref}
+            className="w-fit rounded-sm !bg-[#C4956A] px-10 py-4 text-sm font-medium uppercase tracking-widest text-white transition-colors hover:!bg-[#B07D54]"
+          >
+            ПОЛУЧИТЬ ДОСТУП
+          </ButtonLink>
+        </div>
       </div>
     </section>
   );
