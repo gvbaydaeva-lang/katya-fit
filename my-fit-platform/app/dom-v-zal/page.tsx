@@ -1,5 +1,74 @@
+import Image from "next/image";
 import Link from "next/link";
+import type { ReactNode } from "react";
 import { LandingChrome } from "@/components/landing/LandingChrome";
+import katyaHero from "@/public/images/katya-hero.webp";
+
+const ACCENT = "#C4956A";
+
+function IconWorkouts() {
+  return (
+    <svg width="64" height="64" viewBox="0 0 72 72" fill="none" stroke={ACCENT} strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <rect x="13" y="27" width="46" height="13" rx="6.5" />
+      <rect x="7" y="33" width="8" height="8" rx="4" />
+      <rect x="57" y="33" width="8" height="8" rx="4" />
+      <path d="M25 27V19M47 27V19" />
+      <path d="M23 19h26" />
+      <path d="M27 40v12M45 40v12" />
+      <path d="M23 52h8M41 52h8" />
+    </svg>
+  );
+}
+
+function IconNutrition() {
+  return (
+    <svg width="64" height="64" viewBox="0 0 72 72" fill="none" stroke={ACCENT} strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <path d="M36 14c-9 0-18 6-18 16 0 6 3 11 9 14v4h18v-4c6-3 9-8 9-14 0-10-9-16-18-16z" />
+      <path d="M27 38c0 0 3 5 9 5s9-5 9-5" />
+      <circle cx="28" cy="31" r="2" fill={ACCENT} stroke="none" />
+      <circle cx="44" cy="31" r="2" fill={ACCENT} stroke="none" />
+      <path d="M27 48h18M29 52h14" />
+    </svg>
+  );
+}
+
+function IconCalendar() {
+  return (
+    <svg width="64" height="64" viewBox="0 0 72 72" fill="none" stroke={ACCENT} strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <rect x="13" y="14" width="46" height="46" rx="3" />
+      <path d="M13 27h46" />
+      <path d="M25 14v13M47 14v13" />
+      <rect x="22" y="35" width="8" height="8" rx="1" />
+      <rect x="32" y="35" width="8" height="8" rx="1" />
+      <rect x="42" y="35" width="8" height="8" rx="1" />
+      <rect x="22" y="45" width="8" height="8" rx="1" />
+      <rect x="32" y="45" width="8" height="8" rx="1" />
+    </svg>
+  );
+}
+
+function IconVideo() {
+  return (
+    <svg width="64" height="64" viewBox="0 0 72 72" fill="none" stroke={ACCENT} strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <rect x="9" y="17" width="54" height="36" rx="4" />
+      <path d="M9 45h54" />
+      <path d="M27 53h18M36 49v4" />
+      <path d="M29 30l15-7v14z" />
+    </svg>
+  );
+}
+
+function IconSupport() {
+  return (
+    <svg width="64" height="64" viewBox="0 0 72 72" fill="none" stroke={ACCENT} strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <path d="M35 22c-8 0-15 6-15 13 0 5 3 9 7 11l-3 9 11-5.5" />
+      <path d="M37 22c8 0 15 6 15 13 0 8-8 15-19 15-2 0-4-.3-6-.8" />
+      <circle cx="29" cy="35" r="2.2" fill={ACCENT} stroke="none" />
+      <circle cx="36" cy="35" r="2.2" fill={ACCENT} stroke="none" />
+      <circle cx="43" cy="35" r="2.2" fill={ACCENT} stroke="none" />
+    </svg>
+  );
+}
 
 export const metadata = {
   title: "Из дома в зал — KATY D.",
@@ -14,10 +83,54 @@ function Check() {
   );
 }
 
+function HeroPhotoGradient() {
+  return (
+    <div className="pointer-events-none absolute inset-y-0 left-0 z-[1] w-[48%] bg-gradient-to-r from-[#FAF8F4] from-5% via-[#FAF8F4]/75 via-35% to-transparent" />
+  );
+}
+
 function PhotoSlot({ label, className = "" }: { label: string; className?: string }) {
   return (
     <div className={`flex items-center justify-center bg-stone-200 ${className}`}>
       <p className="text-stone-400 text-xs text-center px-3 leading-relaxed">📷 {label}</p>
+    </div>
+  );
+}
+
+function WeeksCard({
+  className = "",
+  compact = false,
+  mini = false,
+}: {
+  className?: string;
+  compact?: boolean;
+  mini?: boolean;
+}) {
+  const padding = mini ? "p-2" : compact ? "p-3" : "p-6";
+  const width = mini ? "max-w-[118px]" : compact ? "max-w-[140px]" : "min-w-[140px]";
+  const numberSize = mini ? "text-2xl" : compact ? "text-3xl" : "text-5xl";
+  const dividerSpacing = mini ? "mt-1.5 pt-1.5" : compact ? "mt-2 pt-2" : "mt-4 pt-4";
+
+  return (
+    <div className={`rounded-sm border border-[#E8E2D9] text-center ${width} ${padding} ${className}`}>
+      <p className={`font-bold text-stone-900 ${numberSize}`}>12</p>
+      <p className={`font-medium tracking-wider text-[#C4956A] ${mini ? "mt-0.5 text-[10px]" : "mt-1 text-xs"}`}>
+        НЕДЕЛЬ
+      </p>
+      {!mini && (
+        <>
+          <p className="mt-1 text-xs leading-snug text-stone-400">пошаговая<br />трансформация</p>
+          <div className={`border-t border-[#E8E2D9] ${dividerSpacing}`}>
+            <p className="text-xs leading-snug text-stone-500">
+              Дома и в зале<br />
+              <span className="font-medium text-stone-700">Вы выбираете<br />свой формат</span>
+            </p>
+          </div>
+        </>
+      )}
+      {mini && (
+        <p className="mt-1 text-[9px] leading-snug text-stone-500">дома и в зале</p>
+      )}
     </div>
   );
 }
@@ -38,12 +151,12 @@ const results12 = [
   "Понимание своего тела и прогресса",
 ];
 
-const modules = [
-  { n: "01", title: "Тренировки\n(дом + зал)", desc: "Пошаговые тренировки для любого уровня подготовки. Можно заниматься дома или в зале." },
-  { n: "02", title: "Питание без подсчёта калорий", desc: "Простая и гибкая система питания, без жёстких ограничений." },
-  { n: "03", title: "Пошаговый план на 12 недель", desc: "Понятные этапы, которые помогут вам двигаться вперёд без откатов." },
-  { n: "04", title: "Видео-уроки и техника", desc: "Подробные видео и инструкции для правильного выполнения упражнений." },
-  { n: "05", title: "Поддержка и мотивация", desc: "Вы не одна. Поддержка тренера и коммьюнити на протяжении всей программы." },
+const modules: { n: string; title: string; desc: string; icon: ReactNode }[] = [
+  { n: "01", title: "Тренировки\n(дом + зал)", desc: "Пошаговые тренировки для любого уровня подготовки. Можно заниматься дома или в зале.", icon: <IconWorkouts /> },
+  { n: "02", title: "Питание без подсчёта калорий", desc: "Простая и гибкая система питания, без жёстких ограничений.", icon: <IconNutrition /> },
+  { n: "03", title: "Пошаговый план на 12 недель", desc: "Понятные этапы, которые помогут вам двигаться вперёд без откатов.", icon: <IconCalendar /> },
+  { n: "04", title: "Видео-уроки и техника", desc: "Подробные видео и инструкции для правильного выполнения упражнений.", icon: <IconVideo /> },
+  { n: "05", title: "Поддержка и мотивация", desc: "Вы не одна. Поддержка тренера и коммьюнити на протяжении всей программы.", icon: <IconSupport /> },
 ];
 
 const whyWorks = [
@@ -59,10 +172,10 @@ export default function DomVZalPage() {
     <LandingChrome>
 
       {/* ─── HERO ─── */}
-      <section className="bg-[#FAF8F4] overflow-hidden">
+      <section className="overflow-hidden bg-[#FAF8F4]">
         <div className="mx-auto max-w-6xl px-6 py-16 lg:py-24">
-          <div className="grid gap-10 lg:grid-cols-[1fr_auto] lg:items-start">
-            <div>
+          <div className="grid gap-10 md:grid-cols-2 md:items-stretch">
+            <div className="flex min-w-0 flex-col">
               <h1 className="text-5xl font-bold text-stone-900 leading-tight sm:text-6xl lg:text-7xl">
                 Из дома<br />в зал
               </h1>
@@ -70,7 +183,30 @@ export default function DomVZalPage() {
               <p className="mt-4 max-w-lg text-base text-stone-500 leading-relaxed">
                 Пошаговая программа для женщин, которые хотят начать тренироваться, похудеть, подтянуть тело и обрести уверенность — без стресса, диет и крайностей.
               </p>
-              <div className="mt-8 flex flex-wrap items-center gap-4">
+              <div className="mt-8 hidden flex-wrap items-center gap-4 md:flex">
+                <Link href="/checkout/self" className="rounded-sm bg-[#C4956A] px-8 py-3.5 text-sm font-semibold tracking-wider text-white hover:bg-[#B07D54] transition-colors">
+                  ХОЧУ В ПРОГРАММУ
+                </Link>
+                <button className="flex items-center gap-2 text-sm text-stone-500 hover:text-stone-700 transition-colors">
+                  <span className="flex h-10 w-10 items-center justify-center rounded-full border border-stone-300 text-xs">▶</span>
+                  <span className="text-left">СМОТРЕТЬ ВИДЕО<br /><span className="text-xs font-normal">о программе (1 мин)</span></span>
+                </button>
+              </div>
+              <div className="relative mt-8 h-[min(68vw,400px)] w-full overflow-hidden rounded-sm md:hidden">
+                <Image
+                  src={katyaHero}
+                  alt="Катя — фитнес-тренер KATY D."
+                  fill
+                  className="object-cover object-[right_50%]"
+                  sizes="100vw"
+                  priority
+                />
+                <HeroPhotoGradient />
+                <div className="absolute bottom-2 left-2 z-10 max-w-[42%]">
+                  <WeeksCard mini className="w-full bg-[#FAF8F4]/88 backdrop-blur-sm" />
+                </div>
+              </div>
+              <div className="mt-6 flex flex-wrap items-center gap-4 md:hidden">
                 <Link href="/checkout/self" className="rounded-sm bg-[#C4956A] px-8 py-3.5 text-sm font-semibold tracking-wider text-white hover:bg-[#B07D54] transition-colors">
                   ХОЧУ В ПРОГРАММУ
                 </Link>
@@ -80,13 +216,20 @@ export default function DomVZalPage() {
                 </button>
               </div>
             </div>
-            {/* Stats card */}
-            <div className="rounded-sm border border-[#E8E2D9] bg-white p-6 text-center min-w-[140px]">
-              <p className="text-5xl font-bold text-stone-900">12</p>
-              <p className="text-xs font-medium text-[#C4956A] tracking-wider mt-1">НЕДЕЛЬ</p>
-              <p className="text-xs text-stone-400 mt-1 leading-snug">пошаговая<br />трансформация</p>
-              <div className="border-t border-[#E8E2D9] mt-4 pt-4">
-                <p className="text-xs text-stone-500 leading-snug">Дома и в зале<br /><span className="font-medium text-stone-700">Вы выбираете<br />свой формат</span></p>
+            <div className="relative hidden min-h-0 md:block">
+              <div className="relative h-full w-full overflow-hidden rounded-sm">
+                <Image
+                  src={katyaHero}
+                  alt="Катя — фитнес-тренер KATY D."
+                  fill
+                  className="object-cover object-[right_50%]"
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  priority
+                />
+                <HeroPhotoGradient />
+                <div className="absolute bottom-3 left-3 z-10 max-w-[38%]">
+                  <WeeksCard compact className="w-full bg-[#FAF8F4]/88 backdrop-blur-sm" />
+                </div>
               </div>
             </div>
           </div>
@@ -126,16 +269,14 @@ export default function DomVZalPage() {
           <h2 className="text-3xl font-bold text-stone-900 text-center sm:text-4xl">Что входит в программу</h2>
           <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
             {modules.map((m) => (
-              <div key={m.n} className="rounded-sm bg-white border border-[#E8E2D9] overflow-hidden">
-                <div className="aspect-square bg-stone-200 relative flex items-center justify-center">
-                  <div className="absolute top-3 left-3 flex h-7 w-7 items-center justify-center rounded-full bg-[#C4956A] text-white text-xs font-bold">
+              <div key={m.n} className="rounded-sm border border-[#E8E2D9] bg-white">
+                <div className="flex flex-col p-4">
+                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#C4956A] text-xs font-bold text-white">
                     {m.n}
                   </div>
-                  <p className="text-stone-300 text-2xl">📷</p>
-                </div>
-                <div className="p-4">
-                  <p className="text-sm font-semibold text-stone-900 whitespace-pre-line">{m.title}</p>
-                  <p className="mt-2 text-xs text-stone-500 leading-relaxed">{m.desc}</p>
+                  <div className="mt-4 flex justify-center">{m.icon}</div>
+                  <p className="mt-4 text-sm font-semibold text-stone-900 whitespace-pre-line">{m.title}</p>
+                  <p className="mt-2 text-xs leading-relaxed text-[#6b5e52]">{m.desc}</p>
                 </div>
               </div>
             ))}
