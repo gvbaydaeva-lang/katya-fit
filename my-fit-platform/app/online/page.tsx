@@ -102,8 +102,8 @@ export default function OnlinePage() {
       <section id="pricing" className="bg-white py-20">
         <div className="mx-auto max-w-6xl px-6">
           <h2 className="text-3xl font-bold text-stone-900 sm:text-4xl text-center">Тарифы</h2>
-          <div className="mt-12 grid gap-6 lg:grid-cols-2">
-            <article className="rounded-sm border border-[#E8E2D9] bg-[#FAF8F4] p-8">
+          <div className="mt-12 grid items-stretch gap-6 lg:grid-cols-2">
+            <article className="flex h-full flex-col rounded-sm border border-[#E8E2D9] bg-[#FAF8F4] p-8">
               <h3 className="text-xl font-bold text-stone-900">Персональный старт</h3>
               <p className="text-sm text-stone-400 mt-1">12 недель персональной работы</p>
               <ul className="mt-6 space-y-3">
@@ -111,15 +111,18 @@ export default function OnlinePage() {
                   <li key={f} className="flex gap-3 text-sm text-stone-600"><Check />{f}</li>
                 ))}
               </ul>
-              <div className="mt-8 flex items-baseline gap-2">
-                <span className="text-4xl font-bold text-stone-900">$149</span>
-                <span className="text-sm text-stone-400">/ 12 недель</span>
+              <div className="mt-auto pt-8">
+                <p className="text-xl text-[#9ca3af] line-through">$209</p>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-4xl font-bold text-stone-900">$149</span>
+                  <span className="text-sm text-stone-400">/ 12 недель</span>
+                </div>
               </div>
               <Link href="/checkout/coached" className="mt-4 inline-flex w-full justify-center rounded-sm bg-[#C4956A] px-5 py-3 text-sm font-semibold tracking-wider text-white hover:bg-[#B07D54] transition-colors">
                 КУПИТЬ
               </Link>
             </article>
-            <article className="rounded-sm border border-[#E8E2D9] bg-[#FAF8F4] p-8">
+            <article className="flex h-full flex-col rounded-sm border border-[#E8E2D9] bg-[#FAF8F4] p-8">
               <h3 className="text-xl font-bold text-stone-900">Вместе</h3>
               <p className="text-sm text-stone-400 mt-1">Полное онлайн сопровождение</p>
               <ul className="mt-6 space-y-3">
@@ -127,7 +130,7 @@ export default function OnlinePage() {
                   <li key={f} className="flex gap-3 text-sm text-stone-600"><Check />{f}</li>
                 ))}
               </ul>
-              <div className="mt-8 rounded-sm bg-stone-100 p-4 text-center">
+              <div className="mt-auto rounded-sm bg-stone-100 p-4 text-center">
                 <p className="text-sm text-stone-600">Индивидуальные условия. Заполните анкету, чтобы обсудить детали.</p>
               </div>
               <Link href="#" className="mt-4 inline-flex w-full justify-center rounded-sm bg-[#C4956A] px-5 py-3 text-sm font-semibold tracking-wider text-white hover:bg-[#B07D54] transition-colors">
