@@ -53,11 +53,11 @@ export default function FaqSection() {
               value={`faq-${index}`}
               className="!rounded-none !border-none !bg-transparent !shadow-none border-b border-[#E8E2D9]"
             >
-              <AccordionTrigger className="px-0 py-4 text-left text-sm font-medium text-[#1c1917] hover:bg-transparent focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 [&_svg]:text-[#C4956A]">
+              <AccordionTrigger className="!text-base px-0 py-4 text-left font-medium text-[#1c1917] hover:bg-transparent focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 [&_svg]:text-[#C4956A]">
                 {item.q}
               </AccordionTrigger>
-              <AccordionContent>
-                <p className="pt-1 pb-4 text-sm leading-relaxed text-[#6b5e54]">
+              <AccordionContent className="!text-sm">
+                <p className="pb-4 pt-1 !text-sm leading-relaxed text-[#6b5e54]">
                   {item.a}
                 </p>
               </AccordionContent>

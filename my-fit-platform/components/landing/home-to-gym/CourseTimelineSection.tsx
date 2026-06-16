@@ -1,4 +1,8 @@
-type IllustrationKind = "dumbbells" | "notebook" | "photo";
+import Image from "next/image";
+import type { StaticImageData } from "next/image";
+import programTrainingImage from "@/public/images/program-training-dom-zal.webp";
+
+type IllustrationKind = "notebook" | "photo";
 
 type ProgramCard = {
   number: string;
@@ -6,6 +10,7 @@ type ProgramCard = {
   description: string;
   illustration: IllustrationKind;
   imageSrc?: string;
+  localImage?: StaticImageData;
   imageAlt?: string;
   imageClassName?: string;
   mediaClassName?: string;
@@ -17,7 +22,10 @@ const programCards: readonly ProgramCard[] = [
     title: "Тренировки (дом + зал)",
     description:
       "Пошаговые тренировки для любого уровня. Можно заниматься дома или в зале.",
-    illustration: "dumbbells",
+    illustration: "photo",
+    localImage: programTrainingImage,
+    imageAlt: "Тренировки дома и в зале",
+    imageClassName: "object-contain object-center",
   },
   {
     number: "02",
@@ -58,118 +66,6 @@ const programCards: readonly ProgramCard[] = [
     imageAlt: "Чашка кофе и дневник",
   },
 ];
-
-function DumbbellsSceneIllustration() {
-  return (
-    <div className="relative h-full w-full overflow-hidden" style={{ background: "#2c2420" }}>
-      <svg viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg" className="h-full w-full">
-        <defs>
-          <radialGradient id="bg1" cx="30%" cy="40%" r="50%">
-            <stop offset="0%" stopColor="#3d2e28" />
-            <stop offset="100%" stopColor="#1a1210" />
-          </radialGradient>
-          <radialGradient id="dumbbellShine" cx="30%" cy="30%" r="70%">
-            <stop offset="0%" stopColor="#e8c080" />
-            <stop offset="50%" stopColor="#C4956A" />
-            <stop offset="100%" stopColor="#8a5c30" />
-          </radialGradient>
-          <radialGradient id="matGrad" cx="50%" cy="0%" r="100%">
-            <stop offset="0%" stopColor="#2a7a5a" />
-            <stop offset="100%" stopColor="#0f4030" />
-          </radialGradient>
-          <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-            <feDropShadow dx="0" dy="8" stdDeviation="6" floodColor="#000" floodOpacity="0.5" />
-          </filter>
-          <filter id="softglow">
-            <feGaussianBlur stdDeviation="8" result="blur" />
-            <feMerge>
-              <feMergeNode in="blur" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
-        </defs>
-
-        <rect width="400" height="260" fill="url(#bg1)" />
-
-        <circle cx="50" cy="50" r="45" fill="#C4956A" opacity="0.08" />
-        <circle cx="360" cy="40" r="60" fill="#C4956A" opacity="0.05" />
-        <circle cx="320" cy="200" r="35" fill="#C4956A" opacity="0.06" />
-        <circle cx="80" cy="210" r="25" fill="#fff" opacity="0.02" />
-
-        <ellipse cx="200" cy="210" rx="185" ry="28" fill="#000" opacity="0.4" />
-        <path d="M20 185 Q200 175 380 185 L370 215 Q200 225 30 215 Z" fill="url(#matGrad)" opacity="0.95" />
-        <path d="M60 175 L55 220" stroke="#1a9060" strokeWidth="0.8" opacity="0.5" />
-        <path d="M90 174 L86 220" stroke="#1a9060" strokeWidth="0.8" opacity="0.5" />
-        <path d="M120 173 L117 220" stroke="#1a9060" strokeWidth="0.8" opacity="0.5" />
-        <path d="M150 172 L148 220" stroke="#1a9060" strokeWidth="0.8" opacity="0.5" />
-        <path d="M180 172 L178 220" stroke="#1a9060" strokeWidth="0.8" opacity="0.5" />
-        <path d="M210 172 L208 220" stroke="#1a9060" strokeWidth="0.8" opacity="0.5" />
-        <path d="M240 172 L238 220" stroke="#1a9060" strokeWidth="0.8" opacity="0.5" />
-        <path d="M270 173 L268 220" stroke="#1a9060" strokeWidth="0.8" opacity="0.5" />
-        <path d="M300 174 L298 220" stroke="#1a9060" strokeWidth="0.8" opacity="0.5" />
-        <path d="M330 175 L328 220" stroke="#1a9060" strokeWidth="0.8" opacity="0.5" />
-        <path d="M355 177 L353 218" stroke="#1a9060" strokeWidth="0.8" opacity="0.5" />
-        <path d="M20 185 Q200 175 380 185" fill="none" stroke="#2aaa70" strokeWidth="2" opacity="0.6" />
-        <path d="M30 215 Q200 225 370 215" fill="none" stroke="#0a3025" strokeWidth="2" opacity="0.6" />
-
-        <ellipse cx="118" cy="192" rx="70" ry="9" fill="#000" opacity="0.35" />
-        <ellipse cx="282" cy="185" rx="70" ry="9" fill="#000" opacity="0.35" />
-
-        <g transform="rotate(-20, 118, 155)" filter="url(#shadow)">
-          <rect x="42" y="130" width="22" height="50" rx="5" fill="#7a5020" />
-          <rect x="44" y="131" width="18" height="48" rx="4" fill="url(#dumbbellShine)" />
-          <rect x="44" y="131" width="6" height="48" rx="3" fill="#e8c080" opacity="0.25" />
-          <rect x="58" y="131" width="2" height="48" fill="#6a4010" opacity="0.3" />
-          <rect x="64" y="136" width="14" height="38" rx="3" fill="#8a5828" />
-          <rect x="65" y="137" width="12" height="36" rx="2" fill="#C4956A" />
-          <rect x="65" y="137" width="4" height="36" rx="2" fill="#e0a860" opacity="0.3" />
-          <rect x="78" y="143" width="76" height="18" rx="4" fill="#5a3a18" />
-          <rect x="79" y="144" width="74" height="16" rx="3" fill="#7a5228" />
-          <rect x="88" y="144" width="3" height="16" rx="1" fill="#4a2a10" opacity="0.7" />
-          <rect x="98" y="144" width="3" height="16" rx="1" fill="#4a2a10" opacity="0.7" />
-          <rect x="108" y="144" width="3" height="16" rx="1" fill="#4a2a10" opacity="0.7" />
-          <rect x="118" y="144" width="3" height="16" rx="1" fill="#4a2a10" opacity="0.7" />
-          <rect x="128" y="144" width="3" height="16" rx="1" fill="#4a2a10" opacity="0.7" />
-          <rect x="138" y="144" width="3" height="16" rx="1" fill="#4a2a10" opacity="0.7" />
-          <rect x="148" y="144" width="3" height="16" rx="1" fill="#4a2a10" opacity="0.7" />
-          <rect x="79" y="144" width="74" height="4" rx="2" fill="#c09050" opacity="0.2" />
-          <rect x="154" y="136" width="14" height="38" rx="3" fill="#8a5828" />
-          <rect x="155" y="137" width="12" height="36" rx="2" fill="#C4956A" />
-          <rect x="155" y="137" width="4" height="36" rx="2" fill="#e0a860" opacity="0.3" />
-          <rect x="168" y="130" width="22" height="50" rx="5" fill="#7a5020" />
-          <rect x="169" y="131" width="18" height="48" rx="4" fill="url(#dumbbellShine)" />
-          <rect x="169" y="131" width="6" height="48" rx="3" fill="#e8c080" opacity="0.2" />
-        </g>
-
-        <g transform="rotate(18, 282, 140)" filter="url(#shadow)">
-          <rect x="206" y="112" width="22" height="50" rx="5" fill="#7a5020" />
-          <rect x="208" y="113" width="18" height="48" rx="4" fill="url(#dumbbellShine)" />
-          <rect x="208" y="113" width="6" height="48" rx="3" fill="#e8c080" opacity="0.25" />
-          <rect x="222" y="113" width="2" height="48" fill="#6a4010" opacity="0.3" />
-          <rect x="228" y="118" width="14" height="38" rx="3" fill="#8a5828" />
-          <rect x="229" y="119" width="12" height="36" rx="2" fill="#C4956A" />
-          <rect x="229" y="119" width="4" height="36" rx="2" fill="#e0a860" opacity="0.3" />
-          <rect x="242" y="125" width="76" height="18" rx="4" fill="#5a3a18" />
-          <rect x="243" y="126" width="74" height="16" rx="3" fill="#7a5228" />
-          <rect x="252" y="126" width="3" height="16" rx="1" fill="#4a2a10" opacity="0.7" />
-          <rect x="262" y="126" width="3" height="16" rx="1" fill="#4a2a10" opacity="0.7" />
-          <rect x="272" y="126" width="3" height="16" rx="1" fill="#4a2a10" opacity="0.7" />
-          <rect x="282" y="126" width="3" height="16" rx="1" fill="#4a2a10" opacity="0.7" />
-          <rect x="292" y="126" width="3" height="16" rx="1" fill="#4a2a10" opacity="0.7" />
-          <rect x="302" y="126" width="3" height="16" rx="1" fill="#4a2a10" opacity="0.7" />
-          <rect x="312" y="126" width="3" height="16" rx="1" fill="#4a2a10" opacity="0.7" />
-          <rect x="243" y="126" width="74" height="4" rx="2" fill="#c09050" opacity="0.2" />
-          <rect x="318" y="118" width="14" height="38" rx="3" fill="#8a5828" />
-          <rect x="319" y="119" width="12" height="36" rx="2" fill="#C4956A" />
-          <rect x="319" y="119" width="4" height="36" rx="2" fill="#e0a860" opacity="0.3" />
-          <rect x="332" y="112" width="22" height="50" rx="5" fill="#7a5020" />
-          <rect x="333" y="113" width="18" height="48" rx="4" fill="url(#dumbbellShine)" />
-          <rect x="333" y="113" width="6" height="48" rx="3" fill="#e8c080" opacity="0.2" />
-        </g>
-      </svg>
-    </div>
-  );
-}
 
 function NotebookIllustration() {
   return (
@@ -238,22 +134,31 @@ function NotebookIllustration() {
 
 function CardMedia({ card }: { card: ProgramCard }) {
   const mediaClass = card.mediaClassName ?? "bg-[#E8E2D9]";
+  const imageClass = card.imageClassName ?? "object-cover";
 
   return (
     <div className={`relative aspect-[4/3] overflow-hidden ${mediaClass}`}>
-      {card.illustration === "dumbbells" && <DumbbellsSceneIllustration />}
       {card.illustration === "notebook" && (
         <div className="flex h-full w-full items-center justify-center p-6">
           <NotebookIllustration />
         </div>
       )}
-      {card.illustration === "photo" && card.imageSrc && (
+      {card.illustration === "photo" && card.localImage && (
+        <Image
+          src={card.localImage}
+          alt={card.imageAlt ?? ""}
+          fill
+          className={imageClass}
+          sizes="(max-width: 1024px) 50vw, 20vw"
+        />
+      )}
+      {card.illustration === "photo" && card.imageSrc && !card.localImage && (
         <>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={card.imageSrc}
             alt={card.imageAlt ?? ""}
-            className={`h-full w-full ${card.imageClassName ?? "object-cover"}`}
+            className={`h-full w-full ${imageClass}`}
             loading="lazy"
           />
           <div
@@ -262,7 +167,7 @@ function CardMedia({ card }: { card: ProgramCard }) {
           />
         </>
       )}
-      <span className="absolute left-3 top-3 rounded-sm bg-white/75 px-1.5 py-0.5 text-xs font-medium tracking-wider text-[#C4956A] backdrop-blur-[2px]">
+      <span className="absolute left-3 top-3 z-10 rounded-sm bg-white/75 px-1.5 py-0.5 text-xs font-medium tracking-wider text-[#C4956A] backdrop-blur-[2px]">
         {card.number}
       </span>
     </div>
