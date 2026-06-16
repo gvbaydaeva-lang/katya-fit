@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { WhatYouGetSection } from "@/components/landing/coaching/WhatYouGetSection";
 import { LandingChrome } from "@/components/landing/LandingChrome";
 
 export const metadata = {
@@ -34,15 +35,6 @@ const forWhom = [
   "Для женщин в эмиграции",
   "Для тех, кто устал от диет и срывов",
   "Для тех, кто хочет устойчивый результат",
-];
-
-const benefits = [
-  { icon: "📋", title: "Индивидуальный план питания", desc: "Рассчитывается под ваш образ жизни, предпочтения и цели" },
-  { icon: "🏋️", title: "Индивидуальный план тренировок", desc: "С учётом вашего уровня, оборудования и целей" },
-  { icon: "📈", title: "Регулярные корректировки", desc: "Мы адаптируем план под ваш прогресс каждые 1–2 недели" },
-  { icon: "💬", title: "Поддержка 24/7", desc: "Я всегда на связи и отвечаю на ваши вопросы" },
-  { icon: "🤝", title: "Помощь при срывах и плато", desc: "Вы получаете стратегию, а не осуждение" },
-  { icon: "📚", title: "Обучение и рекомендации", desc: "Вы поймёте, как работает ваше тело и питание" },
 ];
 
 const steps = [
@@ -109,21 +101,7 @@ export default function OnlinePage() {
         </div>
       </section>
 
-      {/* ─── ЧТО ПОЛУЧАЕТЕ ─── */}
-      <section className="bg-white py-20">
-        <div className="mx-auto max-w-6xl px-6">
-          <h2 className="text-3xl font-bold text-stone-900 sm:text-4xl text-center">Что вы получаете</h2>
-          <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {benefits.map((b) => (
-              <div key={b.title} className="rounded-sm border border-[#E8E2D9] bg-[#FAF8F4] p-6">
-                <div className="text-3xl">{b.icon}</div>
-                <p className="mt-3 text-sm font-semibold text-stone-900">{b.title}</p>
-                <p className="mt-2 text-xs text-stone-500 leading-relaxed">{b.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <WhatYouGetSection />
 
       {/* ─── КАК ПРОХОДИТ РАБОТА ─── */}
       <section className="bg-[#FAF8F4] py-20">

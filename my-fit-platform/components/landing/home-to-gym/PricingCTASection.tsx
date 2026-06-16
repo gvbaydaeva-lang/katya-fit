@@ -1,22 +1,18 @@
 import { ButtonLink } from "@/components/ui/Button";
 
-const LEFT_COLUMN = [
-  "Личный кабинет",
-  "Видеоуроки",
-  "Видео техники",
+const INCLUDED_ITEMS = [
+  "Видеоуроки с разбором техники",
   "Тренировки дома",
-] as const;
-
-const RIGHT_COLUMN = [
   "Тренировки в зале",
   "Материалы по питанию",
+  "Личный кабинет",
   "Доступ навсегда",
 ] as const;
 
 function CheckItem({ children }: { children: string }) {
   return (
-    <li className="flex items-center gap-2 text-sm text-[#1c1917]">
-      <span className="font-medium text-[#C4956A]">✓</span>
+    <li className="flex items-center gap-3 whitespace-nowrap text-lg font-medium text-[#1c1917]">
+      <div className="h-1.5 w-1.5 flex-shrink-0 rounded-full bg-[#C4956A]" aria-hidden />
       {children}
     </li>
   );
@@ -28,28 +24,31 @@ type PricingCTASectionProps = {
 
 export function PricingCTASection({ checkoutHref }: PricingCTASectionProps) {
   return (
-    <section className="bg-[#FAF8F4] py-16">
-      <div className="mx-auto max-w-lg">
-        <h2 className="mb-10 text-center text-2xl font-bold uppercase tracking-widest text-[#1c1917]">
+    <section className="bg-[#FAF8F4] py-16 text-center">
+      <div className="mx-auto max-w-3xl px-6">
+        <h2 className="mb-10 text-2xl font-bold uppercase tracking-widest text-[#1c1917]">
           Что вы получите
         </h2>
 
-        <ul className="grid grid-cols-2 gap-x-8 gap-y-3">
-          {LEFT_COLUMN.map((item) => (
-            <CheckItem key={item}>{item}</CheckItem>
-          ))}
-          {RIGHT_COLUMN.map((item) => (
+        <ul className="mx-auto grid w-fit max-w-full grid-cols-1 justify-center gap-y-4 sm:grid-cols-[max-content_max-content] sm:gap-x-20 sm:gap-y-4">
+          {INCLUDED_ITEMS.map((item) => (
             <CheckItem key={item}>{item}</CheckItem>
           ))}
         </ul>
 
-        <div className="mt-8 border-t border-[#E8E2D9] pt-6">
-          <p className="text-center text-sm font-medium text-[#C4956A]">
-            🎁 Бонус: Меню на 3 дня без подсчёта калорий
+        <div className="mx-auto mt-8 max-w-md rounded-sm border border-[#C4956A]/40 bg-[#C4956A]/10 px-6 py-3">
+          <p className="text-base font-semibold text-[#1c1917]">
+            <span className="text-lg">🎁</span> Бонус: Меню на 3 дня без подсчёта калорий
           </p>
         </div>
 
-        <p className="mt-8 text-center text-5xl font-bold text-[#1c1917]">$79</p>
+        <div className="mt-8">
+          <p className="text-xl text-stone-400 line-through">$109</p>
+          <span className="mb-2 mt-2 inline-block rounded-sm bg-[#C4956A] px-3 py-1 text-xs font-semibold text-white">
+            ЭКОНОМИЯ $30
+          </span>
+          <p className="text-5xl font-bold text-[#1c1917]">$79</p>
+        </div>
 
         <div className="mt-6 flex justify-center">
           <ButtonLink
