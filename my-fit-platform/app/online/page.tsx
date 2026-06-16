@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { HowItWorksSection } from "@/components/landing/coaching/HowItWorksSection";
 import { WhatYouGetSection } from "@/components/landing/coaching/WhatYouGetSection";
 import { LandingChrome } from "@/components/landing/LandingChrome";
 
@@ -35,14 +36,6 @@ const forWhom = [
   "Для женщин в эмиграции",
   "Для тех, кто устал от диет и срывов",
   "Для тех, кто хочет устойчивый результат",
-];
-
-const steps = [
-  { n: "01", title: "Знакомство и заполнение анкеты", desc: "Вы заполняете анкету, я изучаю вашу ситуацию и цели." },
-  { n: "02", title: "Анализ и план", desc: "Я составляю для вас индивидуальный план питания и тренировок." },
-  { n: "03", title: "Вы начинаете", desc: "Вы получаете все материалы и рекомендации, мы начинаем работать." },
-  { n: "04", title: "Поддержка и контроль", desc: "Я сопровождаю вас каждый день, вы присылаете отчёты, мы корректируем план." },
-  { n: "05", title: "Результат", desc: "Вы меняете не только тело, но и образ жизни навсегда." },
 ];
 
 const faqItems = [
@@ -103,28 +96,7 @@ export default function OnlinePage() {
 
       <WhatYouGetSection />
 
-      {/* ─── КАК ПРОХОДИТ РАБОТА ─── */}
-      <section className="bg-[#FAF8F4] py-20">
-        <div className="mx-auto max-w-6xl px-6">
-          <h2 className="text-3xl font-bold text-stone-900 sm:text-4xl text-center">Как проходит работа</h2>
-          <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
-            {steps.map((s) => (
-              <div key={s.n} className="rounded-sm bg-white border border-[#E8E2D9] overflow-hidden">
-                <div className="aspect-square bg-stone-200 relative flex items-center justify-center">
-                  <div className="absolute top-3 left-3 flex h-7 w-7 items-center justify-center rounded-full bg-[#C4956A] text-white text-xs font-bold">
-                    {s.n}
-                  </div>
-                  <p className="text-stone-300 text-2xl">📷</p>
-                </div>
-                <div className="p-4">
-                  <p className="text-sm font-semibold text-stone-900">{s.title}</p>
-                  <p className="mt-2 text-xs text-stone-500 leading-relaxed">{s.desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <HowItWorksSection />
 
       {/* ─── ТАРИФЫ ─── */}
       <section id="pricing" className="bg-white py-20">
