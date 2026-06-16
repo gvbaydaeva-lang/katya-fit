@@ -27,12 +27,12 @@ export function AccordionTrigger({
   return (
     <AccordionPrimitive.Header>
       <AccordionPrimitive.Trigger
-        className={`group flex w-full items-center justify-between px-4 py-3 text-left text-sm font-medium text-ds-text transition-colors hover:bg-ds-hover/60 ${className}`}
+        className={`group flex w-full items-center justify-between px-4 py-3 text-left text-sm font-medium text-[#1c1917] transition-colors hover:bg-ds-hover/60 focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 ${className}`}
         {...props}
       >
         {children}
         <ChevronDown
-          className="h-5 w-5 shrink-0 text-ds-muted transition-transform duration-200 group-data-[state=closed]:-rotate-90 group-data-[state=open]:rotate-0"
+          className="h-5 w-5 shrink-0 text-ds-muted transition-transform duration-200 group-data-[state=open]:rotate-180"
           aria-hidden
         />
       </AccordionPrimitive.Trigger>
@@ -46,7 +46,7 @@ export function AccordionContent({
 }: ComponentProps<typeof AccordionPrimitive.Content>) {
   return (
     <AccordionPrimitive.Content
-      className={`overflow-hidden data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down ${className}`}
+      className={`overflow-hidden text-sm leading-relaxed text-[#6b5e54] data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down ${className}`}
       {...props}
     />
   );

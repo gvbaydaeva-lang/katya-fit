@@ -1,10 +1,11 @@
 /** ID секций на главной (якорная навигация) */
 export const LANDING_SECTIONS = {
   hero: "hero",
-  about: "about",
+  about: "my-story",
   programs: "programs",
   results: "results",
   pricing: "pricing",
+  contact: "contact",
 } as const;
 
 export type LandingSectionId =

@@ -1,5 +1,6 @@
 import Image from "next/image";
-import { ButtonLink } from "@/components/ui/Button";
+import { AnchorLink } from "@/components/public/AnchorLink";
+import { LANDING_SECTIONS } from "@/lib/landing/anchors";
 import katyaHero from "@/public/images/hero-katya.jpg";
 
 const TRUST_ITEMS = [
@@ -30,18 +31,18 @@ export function HeroSection() {
           </p>
 
           <div className="mt-8 flex flex-wrap gap-3">
-            <ButtonLink
-              href="/online"
-              className="inline-flex items-center gap-2 rounded-sm bg-[#C4956A] px-6 py-3 text-sm font-semibold uppercase tracking-widest text-white transition-colors hover:bg-[#B07D54]"
+            <AnchorLink
+              sectionId={LANDING_SECTIONS.programs}
+              className="inline-flex items-center rounded-sm bg-[#C4956A] px-6 py-3 text-sm font-semibold uppercase tracking-widest text-white transition-colors hover:bg-[#B07D54]"
             >
-              ❤️ Онлайн сопровождение
-            </ButtonLink>
-            <ButtonLink
-              href="/dom-v-zal"
-              className="inline-flex items-center gap-2 rounded-sm border border-[#E8E2D9] bg-transparent px-6 py-3 text-sm font-semibold uppercase tracking-widest text-[#1c1917] transition-colors hover:bg-[#F0EBE3]"
+              Мои программы
+            </AnchorLink>
+            <AnchorLink
+              sectionId={LANDING_SECTIONS.about}
+              className="inline-flex items-center rounded-sm border border-[#E8E2D9] bg-transparent px-6 py-3 text-sm font-semibold uppercase tracking-widest text-[#1c1917] transition-colors hover:bg-[#F0EBE3]"
             >
-              💪 Из дома в зал
-            </ButtonLink>
+              Обо мне
+            </AnchorLink>
           </div>
 
           <ul className="mt-8 flex flex-col gap-2.5 border-t border-[#E8E2D9] pt-8">

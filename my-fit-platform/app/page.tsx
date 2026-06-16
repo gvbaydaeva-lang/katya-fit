@@ -161,7 +161,7 @@ export default function HomePage() {
       <PainPointsSection />
 
       {/* ─── МОЯ ИСТОРИЯ ─── */}
-      <section id="about" className="bg-white py-20 lg:py-28">
+      <section id="my-story" className="bg-white py-20 lg:py-28">
         <div className="mx-auto max-w-6xl px-6">
           <div className="grid gap-16 lg:grid-cols-2 lg:items-center">
             <div className="w-full min-w-0">

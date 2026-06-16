@@ -31,7 +31,7 @@ const nextConfig: NextConfig = {
     return [
       { source: "/home-to-gym", destination: "/dom-v-zal", permanent: true },
       { source: "/coaching", destination: "/online", permanent: true },
-      { source: "/about", destination: "/#about", permanent: false },
+      { source: "/about", destination: "/#my-story", permanent: false },
       { source: "/workouts", destination: "/#programs", permanent: false },
       { source: "/results", destination: "/#results", permanent: false },
       { source: "/pricing", destination: "/#pricing", permanent: false },

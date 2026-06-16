@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export function PublicFooter() {
   return (
-    <footer className="border-t border-[#E8E2D9] bg-[#FAF8F4]">
+    <footer id="contact" className="scroll-mt-20 border-t border-[#E8E2D9] bg-[#FAF8F4]">
       <div className="mx-auto max-w-6xl px-6 py-12">
         <div className="flex flex-col items-start gap-8 sm:flex-row sm:items-center sm:justify-between">
           {/* Logo */}
@@ -13,7 +13,7 @@ export function PublicFooter() {
 
           {/* Nav */}
           <div className="flex flex-wrap gap-6 text-xs text-stone-500 tracking-wider">
-            <Link href="/#about" className="hover:text-stone-900 transition-colors">Обо мне</Link>
+            <Link href="/#my-story" className="hover:text-stone-900 transition-colors">Обо мне</Link>
             <Link href="/#programs" className="hover:text-stone-900 transition-colors">Программы</Link>
             <Link href="/#results" className="hover:text-stone-900 transition-colors">Отзывы</Link>
             <Link href="/#contact" className="hover:text-stone-900 transition-colors">Контакты</Link>

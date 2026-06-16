@@ -90,9 +90,14 @@ const results12 = [
   "Понимание своего тела и прогресса",
 ];
 
+const DOM_V_ZAL_NAV_OVERRIDES = [
+  { label: "ОБО МНЕ", href: "/#my-story", target: "_blank" },
+  { label: "ОТЗЫВЫ", href: "/#results", target: "_blank" },
+];
+
 export default function DomVZalPage() {
   return (
-    <LandingChrome>
+    <LandingChrome navOverrides={DOM_V_ZAL_NAV_OVERRIDES}>
 
       {/* ─── HERO ─── */}
       <section className="overflow-hidden bg-[#FAF8F4]">
@@ -182,36 +187,6 @@ export default function DomVZalPage() {
               </ul>
             </div>
             <PhotoSlot label="фото" className="hidden lg:flex aspect-[2/3] rounded-sm" />
-          </div>
-        </div>
-      </section>
-
-      {/* ─── МОЯ ИСТОРИЯ ─── */}
-      <section className="bg-[#FAF8F4] py-20">
-        <div className="mx-auto max-w-6xl px-6">
-          <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
-            <div className="min-w-0">
-              <h2 className="text-3xl font-bold text-stone-900 sm:text-4xl">Моя история</h2>
-              <div className="mt-6 space-y-4 text-base leading-relaxed text-stone-500">
-                <p>
-                  Когда я только начинала возвращаться к себе после родов и переезда в США, у меня не было
-                  идеальных условий.
-                </p>
-                <p>Я начинала с коротких домашних тренировок по 20–30 минут.</p>
-                <p>Потом появились резинки.</p>
-                <p>Потом первый поход в тренажёрный зал.</p>
-                <p>
-                  И я очень хорошо помню чувство растерянности: что делать, куда идти и как пользоваться всеми
-                  этими тренажёрами.
-                </p>
-                <p>Именно поэтому появилась программа «Из дома в зал».</p>
-                <p>
-                  Чтобы вы не гадали, с чего начать, а получили понятный пошаговый путь от домашних
-                  тренировок до уверенности в тренажёрном зале.
-                </p>
-              </div>
-            </div>
-            <PhotoSlot label="Фото для секции «Моя история»" className="aspect-[3/4] w-full rounded-sm" />
           </div>
         </div>
       </section>
