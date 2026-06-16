@@ -161,7 +161,8 @@ export default function HomePage() {
       <PainPointsSection />
 
       {/* ─── МОЯ ИСТОРИЯ ─── */}
-      <section id="my-story" className="bg-white py-20 lg:py-28">
+      <div id="my-story" className="scroll-mt-20">
+      <section className="bg-white py-20 lg:py-28">
         <div className="mx-auto max-w-6xl px-6">
           <div className="grid gap-16 lg:grid-cols-2 lg:items-center">
             <div className="w-full min-w-0">
@@ -193,9 +194,11 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+      </div>
 
       {/* ─── РЕЗУЛЬТАТЫ ─── */}
-      <section id="results" className="bg-white py-20 lg:py-28">
+      <div id="results" className="scroll-mt-20">
+      <section className="bg-white py-20 lg:py-28">
         <div className="mx-auto max-w-6xl px-6">
           <h2 className="text-3xl font-bold text-stone-900 sm:text-4xl text-center">Результаты моих клиенток</h2>
           <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4 lg:items-stretch">
@@ -217,6 +220,7 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+      </div>
 
       {/* ─── МОИ ПРОГРАММЫ ─── */}
       <section id="programs" className="bg-[#FAF8F4] py-20 lg:py-28">
