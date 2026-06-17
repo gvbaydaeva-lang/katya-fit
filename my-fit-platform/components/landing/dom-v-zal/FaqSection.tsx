@@ -2,7 +2,7 @@
 
 import * as Accordion from "@radix-ui/react-accordion";
 import { ChevronDown } from "lucide-react";
-import { ButtonLink } from "@/components/ui/Button";
+import { Button } from "@/components/ui/Button";
 
 const faqItems = [
   {
@@ -40,10 +40,10 @@ const faqItems = [
 ] as const;
 
 type FaqSectionProps = {
-  checkoutHref: string;
+  onCheckout: () => void;
 };
 
-export function FaqSection({ checkoutHref }: FaqSectionProps) {
+export function FaqSection({ onCheckout }: FaqSectionProps) {
   return (
     <section className="bg-white py-20">
       <div className="mx-auto max-w-3xl px-6">
@@ -71,12 +71,13 @@ export function FaqSection({ checkoutHref }: FaqSectionProps) {
         </Accordion.Root>
 
         <div className="mt-10 flex justify-center">
-          <ButtonLink
-            href={checkoutHref}
+          <Button
+            type="button"
+            onClick={onCheckout}
             className="w-fit rounded-sm !bg-[#C4956A] px-10 py-3.5 text-sm font-semibold uppercase tracking-widest text-white transition-colors hover:!bg-[#B07D54]"
           >
             ПОЛУЧИТЬ ДОСТУП
-          </ButtonLink>
+          </Button>
         </div>
       </div>
     </section>

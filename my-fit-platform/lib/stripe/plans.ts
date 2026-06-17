@@ -1,61 +1,36 @@
 export type PlanId = "self" | "coached" | "platform";
 
-export type Plan = {
-  id: PlanId;
-  name: string;
-  price: string;
-  amountCents: number;
-  period: string;
-  description: string;
-  features: string[];
-  highlighted?: boolean;
-};
-
-export const PLANS: Plan[] = [
+export const PLANS = [
   {
     id: "self",
     name: "Самостоятельно",
-    price: "2 990",
-    amountCents: 299000,
-    period: "мес",
+    price: "$79",
+    amountCents: 7900,
     description:
       "Готовая программа тренировок и материалы — вы занимаетесь в своём темпе.",
-    features: [
-      "План на 4 недели с прогрессией",
-      "Видео с разбором техники",
-      "Чек-листы и шаблоны",
-    ],
   },
   {
     id: "coached",
     name: "С личным сопровождением",
-    price: "6 990",
-    amountCents: 699000,
-    period: "мес",
+    price: "$199",
+    amountCents: 19900,
     description:
-      "Персональная программа и еженедельная обратная связь от тренера.",
-    features: [
-      "Корректировки плана каждую неделю",
-      "Разбор техники и питания",
-      "Приоритетный чат с Катей",
-    ],
-    highlighted: true,
+      "Персональный контроль тренера, обратная связь и корректировка программы.",
   },
   {
     id: "platform",
-    name: "Доступ к платформе без тренера",
-    price: "1 990",
-    amountCents: 199000,
-    period: "мес",
+    name: "Доступ к платформе",
+    price: "$49",
+    amountCents: 4900,
     description:
-      "Библиотека тренировок и записи эфиров — без индивидуального ведения.",
-    features: [
-      "Полный архив видео",
-      "Новые записи каждую неделю",
-      "Доступ с любого устройства",
-    ],
+      "Доступ ко всем урокам платформы без личного сопровождения.",
   },
-];
+] as const;
+
+export type Plan = (typeof PLANS)[number] & {
+  period?: string;
+  features?: string[];
+};
 
 export function getPlanById(planId: string): Plan | undefined {
   return PLANS.find((p) => p.id === planId);

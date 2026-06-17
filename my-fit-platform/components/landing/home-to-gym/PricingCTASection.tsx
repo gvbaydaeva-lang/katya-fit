@@ -1,4 +1,6 @@
-import { ButtonLink } from "@/components/ui/Button";
+"use client";
+
+import { Button } from "@/components/ui/Button";
 
 const INCLUDED_ITEMS = [
   "Видеоуроки с разбором техники",
@@ -19,10 +21,10 @@ function CheckItem({ children }: { children: string }) {
 }
 
 type PricingCTASectionProps = {
-  checkoutHref: string;
+  onCheckout: () => void;
 };
 
-export function PricingCTASection({ checkoutHref }: PricingCTASectionProps) {
+export function PricingCTASection({ onCheckout }: PricingCTASectionProps) {
   return (
     <section className="bg-[#FAF8F4] py-16 text-center">
       <div className="mx-auto max-w-3xl px-6">
@@ -51,12 +53,13 @@ export function PricingCTASection({ checkoutHref }: PricingCTASectionProps) {
         </div>
 
         <div className="mt-6 flex justify-center">
-          <ButtonLink
-            href={checkoutHref}
+          <Button
+            type="button"
+            onClick={onCheckout}
             className="w-fit rounded-sm !bg-[#C4956A] px-10 py-4 text-sm font-medium uppercase tracking-widest text-white transition-colors hover:!bg-[#B07D54]"
           >
             ПОЛУЧИТЬ ДОСТУП
-          </ButtonLink>
+          </Button>
         </div>
       </div>
     </section>

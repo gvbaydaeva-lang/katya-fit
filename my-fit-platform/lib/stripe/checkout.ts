@@ -7,6 +7,7 @@ type CreateCheckoutParams = {
   planName: string;
   amountCents: number;
   email?: string;
+  phone?: string;
 };
 
 export async function createCheckoutSession(
@@ -26,7 +27,7 @@ export async function createCheckoutSession(
     line_items: [
       {
         price_data: {
-          currency: "rub",
+          currency: "usd",
           unit_amount: params.amountCents,
           product_data: {
             name: params.planName,
@@ -36,7 +37,12 @@ export async function createCheckoutSession(
         quantity: 1,
       },
     ],
-    metadata: { planId: params.planId },
+    metadata: {
+      plan_id: params.planId,
+      planId: params.planId,
+      email: params.email ?? "",
+      phone: params.phone ?? "",
+    },
     success_url: `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${origin}/#pricing`,
   });
@@ -59,7 +65,8 @@ export async function grantAccessFromStripeSession(
     session.customer_details?.email ??
     session.customer_email ??
     "";
-  const planId = session.metadata?.planId ?? "";
+  const planId =
+    session.metadata?.plan_id ?? session.metadata?.planId ?? "";
 
   if (!email || !isValidPlanId(planId)) return null;
 
