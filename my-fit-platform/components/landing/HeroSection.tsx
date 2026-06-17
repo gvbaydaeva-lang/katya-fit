@@ -1,7 +1,23 @@
 import Image from "next/image";
+import type { CSSProperties } from "react";
 import { AnchorLink } from "@/components/public/AnchorLink";
 import { LANDING_SECTIONS } from "@/lib/landing/anchors";
 import katyaHero from "@/public/images/hero-katya.jpg";
+
+const HERO_IMAGE_MASK: CSSProperties = {
+  WebkitMaskImage: [
+    "linear-gradient(to right, transparent 0%, black 25%)",
+    "linear-gradient(to bottom, transparent 0%, black 4%, black 92%, transparent 100%)",
+    "linear-gradient(to left, transparent 0%, black 4%)",
+  ].join(", "),
+  maskImage: [
+    "linear-gradient(to right, transparent 0%, black 25%)",
+    "linear-gradient(to bottom, transparent 0%, black 4%, black 92%, transparent 100%)",
+    "linear-gradient(to left, transparent 0%, black 4%)",
+  ].join(", "),
+  WebkitMaskComposite: "source-in",
+  maskComposite: "intersect",
+};
 
 const TRUST_ITEMS = [
   "Минус 20 кг после родов и эмиграции",
@@ -56,12 +72,13 @@ export function HeroSection() {
         </div>
 
         <div className="relative mx-auto w-full max-w-md lg:max-w-none">
-          <div className="relative aspect-[3/4] overflow-hidden rounded-sm bg-[#E8E2D9]">
+          <div className="relative aspect-[3/4]">
             <Image
               src={katyaHero}
               alt="Катя — фитнес-тренер KATY D."
               fill
               className="object-cover object-top"
+              style={HERO_IMAGE_MASK}
               priority
               sizes="(max-width: 1024px) 100vw, 28rem"
             />
