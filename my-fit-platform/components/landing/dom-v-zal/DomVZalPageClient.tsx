@@ -7,6 +7,7 @@ import { CourseTimelineSection } from "@/components/landing/home-to-gym/CourseTi
 import { PricingCTASection } from "@/components/landing/home-to-gym/PricingCTASection";
 import { FaqSection } from "@/components/landing/dom-v-zal/FaqSection";
 import CheckoutModal from "@/components/public/CheckoutModal";
+import domVZalForWhom from "@/public/images/dom-v-zal-for-whom.webp";
 import katyaHero from "@/public/images/katya-hero.webp";
 
 const DOM_V_ZAL_CHECKOUT_PLAN = {
@@ -31,14 +32,6 @@ function Check() {
 function HeroPhotoGradient() {
   return (
     <div className="pointer-events-none absolute inset-y-0 left-0 z-[1] w-[48%] bg-gradient-to-r from-[#FAF8F4] from-5% via-[#FAF8F4]/75 via-35% to-transparent" />
-  );
-}
-
-function PhotoSlot({ label, className = "" }: { label: string; className?: string }) {
-  return (
-    <div className={`flex items-center justify-center bg-stone-200 ${className}`}>
-      <p className="text-stone-400 text-xs text-center px-3 leading-relaxed">📷 {label}</p>
-    </div>
   );
 }
 
@@ -180,8 +173,16 @@ export function DomVZalPageClient() {
 
       <section className="bg-white py-20">
         <div className="mx-auto max-w-6xl px-6">
-          <div className="grid gap-8 lg:grid-cols-[160px_1fr_1px_1fr_160px] lg:items-start">
-            <PhotoSlot label="фото" className="hidden lg:flex aspect-[2/3] rounded-sm" />
+          <div className="grid gap-8 lg:grid-cols-[160px_1fr_1px_1fr_160px] lg:items-stretch">
+            <div className="relative hidden aspect-[3/4] h-full w-full overflow-hidden rounded-sm lg:block">
+              <Image
+                src={domVZalForWhom}
+                alt="Эта программа для вас"
+                fill
+                className="object-cover object-center"
+                sizes="160px"
+              />
+            </div>
             <div>
               <h3 className="text-xl font-bold text-stone-900">Эта программа для вас, если вы:</h3>
               <ul className="mt-6 space-y-3">
@@ -199,7 +200,15 @@ export function DomVZalPageClient() {
                 ))}
               </ul>
             </div>
-            <PhotoSlot label="фото" className="hidden lg:flex aspect-[2/3] rounded-sm" />
+            <div className="relative hidden aspect-[3/4] h-full w-full overflow-hidden rounded-sm lg:block">
+              <Image
+                src="/images/katya-result.jpg"
+                alt="Катя — результат программы"
+                fill
+                className="object-cover object-top"
+                sizes="160px"
+              />
+            </div>
           </div>
         </div>
       </section>

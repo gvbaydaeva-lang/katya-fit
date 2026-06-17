@@ -47,7 +47,7 @@ const BENEFITS: {
 
 export function WhatYouGetSection() {
   return (
-    <section className="bg-[#FAF8F4] py-20">
+    <section className="bg-white py-20">
       <div className="mx-auto max-w-6xl px-6">
         <h2 className="text-center text-3xl font-bold text-stone-900 sm:text-4xl">
           Что вы получаете

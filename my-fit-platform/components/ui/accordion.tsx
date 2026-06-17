@@ -46,7 +46,7 @@ export function AccordionContent({
 }: ComponentProps<typeof AccordionPrimitive.Content>) {
   return (
     <AccordionPrimitive.Content
-      className={`overflow-hidden text-sm leading-relaxed text-[#6b5e54] data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down ${className}`}
+      className={`overflow-hidden px-0 text-sm leading-relaxed text-[#6b5e54] data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down ${className}`}
       {...props}
     />
   );

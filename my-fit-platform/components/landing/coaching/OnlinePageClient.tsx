@@ -1,11 +1,35 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
+import type { CSSProperties } from "react";
 import { useState } from "react";
 import { HowItWorksSection } from "@/components/landing/coaching/HowItWorksSection";
 import { WhatYouGetSection } from "@/components/landing/coaching/WhatYouGetSection";
 import { LandingChrome } from "@/components/landing/LandingChrome";
 import CheckoutModal from "@/components/public/CheckoutModal";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import onlineHero from "@/public/images/online-hero.webp";
+
+const ONLINE_HERO_MASK: CSSProperties = {
+  WebkitMaskImage: [
+    "linear-gradient(to right, transparent 0%, black 4%)",
+    "linear-gradient(to right, black 0%, black 90%, transparent 100%)",
+    "linear-gradient(to bottom, transparent 0%, black 4%, black 96%, transparent 100%)",
+  ].join(", "),
+  maskImage: [
+    "linear-gradient(to right, transparent 0%, black 4%)",
+    "linear-gradient(to right, black 0%, black 90%, transparent 100%)",
+    "linear-gradient(to bottom, transparent 0%, black 4%, black 96%, transparent 100%)",
+  ].join(", "),
+  WebkitMaskComposite: "source-in",
+  maskComposite: "intersect",
+};
 
 const COACHED_CHECKOUT_PLAN = {
   id: "coached",
@@ -18,14 +42,6 @@ function Check() {
     <svg className="h-4 w-4 text-[#C4956A] shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
       <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
     </svg>
-  );
-}
-
-function PhotoSlot({ label, className = "" }: { label: string; className?: string }) {
-  return (
-    <div className={`flex items-center justify-center bg-stone-200 ${className}`}>
-      <p className="text-stone-400 text-xs text-center px-3 leading-relaxed">📷 {label}</p>
-    </div>
   );
 }
 
@@ -44,13 +60,13 @@ const forWhom = [
 ];
 
 const faqItems = [
-  { q: "Что делать, если у меня был неудачный опыт похудения раньше?", a: "Мы строим систему, которую можно соблюдать долго, а не очередную краткосрочную диету." },
-  { q: "Нужно ли покупать спортивное питание?", a: "Нет." },
-  { q: "Нужно ли полностью отказаться от любимых продуктов?", a: "Нет." },
-  { q: "Можно ли совмещать программу с семейным питанием?", a: "Да." },
-  { q: "Что будет после завершения программы?", a: "Вы получите понимание, как поддерживать результат самостоятельно." },
-  { q: "Что если я пропущу тренировку или собьюсь с плана?", a: "Это нормально. Главное — вернуться к системе и продолжать движение дальше." },
-  { q: "Через сколько я увижу первые изменения?", a: "Первые изменения обычно заметны уже через несколько недель регулярной работы." },
+  { q: "Что делать, если у меня был неудачный опыт похудения раньше?", a: "Я это слышу очень часто  и понимаю. Мы не строим очередную диету, мы выстраиваем систему, которую комфортно соблюдать каждый день. Без срывов и чувства вины." },
+  { q: "Нужно ли покупать спортивное питание?", a: "Нет. Никаких обязательных добавок, только еда, движение и режим. Всё, что нужно, уже есть в программе." },
+  { q: "Нужно ли полностью отказаться от любимых продуктов?", a: "Нет, и это принципиально. Запреты не работают долго. Мы учимся встраивать любимое в рацион так, чтобы это не мешало результату." },
+  { q: "Можно ли совмещать программу с семейным питанием?", a: "Да. Программа не требует готовить отдельно, принципы питания подходят для всей семьи." },
+  { q: "Что будет после завершения программы?", a: "У вас останется понимание, как поддерживать результат самостоятельно. Плюс — доступ к материалам, чтобы вернуться и освежить при необходимости." },
+  { q: "Что если я пропущу тренировку или собьюсь с плана?", a: "Это нормально. Главное не перфекционизм, а возвращение. Программа построена так, чтобы легко войти обратно в ритм." },
+  { q: "Через сколько я увижу первые изменения?", a: "Многие замечают разницу уже в первые 2–3 недели, в энергии, сне, самочувствии. Внешние изменения приходят чуть позже, но стабильно." },
 ];
 
 export function OnlinePageClient() {
@@ -71,7 +87,19 @@ export function OnlinePageClient() {
       <section className="bg-[#FAF8F4] overflow-hidden">
         <div className="mx-auto max-w-6xl px-6 py-16 lg:py-24">
           <div className="grid gap-12 lg:grid-cols-2 lg:items-start">
-            <PhotoSlot label="Фото Кати за работой" className="aspect-[3/4] rounded-sm" />
+            <div className="relative mx-auto w-full max-w-md lg:max-w-none">
+              <div className="relative aspect-[3/4]">
+                <Image
+                  src={onlineHero}
+                  alt="Катя — онлайн сопровождение"
+                  fill
+                  className="object-cover object-[62%_top]"
+                  style={ONLINE_HERO_MASK}
+                  priority
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                />
+              </div>
+            </div>
             <div>
               <h1 className="text-4xl font-bold text-stone-900 leading-tight sm:text-5xl">
                 Онлайн<br />сопровождение
@@ -159,16 +187,29 @@ export function OnlinePageClient() {
       </section>
 
       <section className="bg-[#FAF8F4] py-20">
-        <div className="mx-auto max-w-3xl px-6">
-          <h2 className="text-3xl font-bold text-stone-900 sm:text-4xl text-center">Частые вопросы</h2>
-          <dl className="mt-12 space-y-4">
-            {faqItems.map((item) => (
-              <div key={item.q} className="rounded-sm border border-[#E8E2D9] bg-white p-6">
-                <dt className="text-sm font-semibold text-stone-900">{item.q}</dt>
-                <dd className="mt-2 text-sm text-stone-500">{item.a}</dd>
-              </div>
+        <div className="mx-auto max-w-2xl px-6">
+          <h2 className="mb-12 text-center text-3xl font-semibold text-[#1c1917] md:text-4xl">
+            Частые вопросы
+          </h2>
+
+          <Accordion type="single" collapsible>
+            {faqItems.map((item, index) => (
+              <AccordionItem
+                key={item.q}
+                value={`faq-${index}`}
+                className="!rounded-none !border-none !bg-transparent !shadow-none border-b border-[#E8E2D9]"
+              >
+                <AccordionTrigger className="!text-base px-0 py-4 text-left font-medium text-[#1c1917] hover:bg-transparent focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 [&_svg]:text-[#C4956A]">
+                  {item.q}
+                </AccordionTrigger>
+                <AccordionContent className="!text-sm">
+                  <p className="pb-4 pt-1 !text-sm leading-relaxed text-[#6b5e54]">
+                    {item.a}
+                  </p>
+                </AccordionContent>
+              </AccordionItem>
             ))}
-          </dl>
+          </Accordion>
         </div>
       </section>
 

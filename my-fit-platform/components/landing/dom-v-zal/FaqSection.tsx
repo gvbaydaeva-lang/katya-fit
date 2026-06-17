@@ -1,41 +1,45 @@
 "use client";
 
-import * as Accordion from "@radix-ui/react-accordion";
-import { ChevronDown } from "lucide-react";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Button } from "@/components/ui/Button";
 
 const faqItems = [
   {
     q: "Подойдет ли программа новичку?",
-    a: "Да. Она создана именно для новичков.",
+    a: "Да. Программа начинается с базы и постепенно усложняется. Вы войдёте в ритм без перегрузок и стресса.",
   },
   {
     q: "Нужен ли опыт тренировок?",
-    a: "Нет.",
+    a: "Нет, опыт не нужен. Все упражнения объясняются с техникой и альтернативами, справится любой.",
   },
   {
     q: "Нужен ли инвентарь дома?",
-    a: "Желательно иметь резинки и коврик.",
+    a: "Минимальный — коврик и пара гантелей. Если их нет, в программе есть варианты без оборудования.",
   },
   {
     q: "Что если я ни разу не была в зале?",
-    a: "Программа как раз создана для такого старта.",
+    a: "Это не проблема. Программа как раз для тех, кто делает первые шаги. Я проведу вас через весь путь от нуля.",
   },
   {
     q: "Будет ли питание?",
-    a: "Да. Есть отдельный модуль по питанию и бонусное меню.",
+    a: "Да. В программе есть блок по питанию- без жёстких диет, с фокусом на то, что реально работает в долгую.",
   },
   {
     q: "Будет ли обратная связь?",
-    a: "Нет. Это самостоятельный продукт.",
+    a: "Зависит от тарифа. С личным сопровождением я на связи и отвечаю на вопросы по ходу программы.",
   },
   {
     q: "Как я получу доступ?",
-    a: "Сразу после оплаты.",
+    a: "Сразу после оплаты вам придёт письмо с логином и паролем. Заходите, и всё уже будет внутри.",
   },
   {
     q: "На сколько сохраняется доступ?",
-    a: "Навсегда.",
+    a: "Доступ к материалам остаётся у вас навсегда, можно возвращаться и повторять в любое время.",
   },
 ] as const;
 
@@ -45,30 +49,30 @@ type FaqSectionProps = {
 
 export function FaqSection({ onCheckout }: FaqSectionProps) {
   return (
-    <section className="bg-white py-20">
-      <div className="mx-auto max-w-3xl px-6">
-        <h2 className="text-center text-3xl font-bold text-stone-900 sm:text-4xl">FAQ</h2>
+    <section className="bg-[#FAF8F4] py-20">
+      <div className="mx-auto max-w-2xl px-6">
+        <h2 className="mb-12 text-center text-3xl font-semibold text-[#1c1917] md:text-4xl">
+          Частые вопросы
+        </h2>
 
-        <Accordion.Root type="single" collapsible className="mt-10 space-y-2">
+        <Accordion type="single" collapsible>
           {faqItems.map((item, index) => (
-            <Accordion.Item key={item.q} value={`faq-${index}`}>
-              <Accordion.Header>
-                <Accordion.Trigger className="group flex w-full items-center justify-between gap-4 rounded-sm border border-[#E8E2D9] bg-white px-5 py-4 text-left text-sm font-semibold text-[#1c1917] transition-colors hover:text-[#C4956A]">
-                  <span>{item.q}</span>
-                  <ChevronDown
-                    className="h-4 w-4 shrink-0 text-[#C4956A] transition-transform duration-200 group-data-[state=open]:rotate-180"
-                    aria-hidden
-                  />
-                </Accordion.Trigger>
-              </Accordion.Header>
-              <Accordion.Content className="overflow-hidden data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down">
-                <p className="px-4 py-3 text-sm leading-relaxed text-stone-500">
+            <AccordionItem
+              key={item.q}
+              value={`faq-${index}`}
+              className="!rounded-none !border-none !bg-transparent !shadow-none border-b border-[#E8E2D9]"
+            >
+              <AccordionTrigger className="!text-base px-0 py-4 text-left font-medium text-[#1c1917] hover:bg-transparent focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 [&_svg]:text-[#C4956A]">
+                {item.q}
+              </AccordionTrigger>
+              <AccordionContent className="!text-sm">
+                <p className="pb-4 pt-1 !text-sm leading-relaxed text-[#6b5e54]">
                   {item.a}
                 </p>
-              </Accordion.Content>
-            </Accordion.Item>
+              </AccordionContent>
+            </AccordionItem>
           ))}
-        </Accordion.Root>
+        </Accordion>
 
         <div className="mt-10 flex justify-center">
           <Button
