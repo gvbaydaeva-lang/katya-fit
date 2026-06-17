@@ -2,22 +2,20 @@ import { redirect } from "next/navigation";
 import { AUTH_ROUTES } from "@/lib/auth/routes";
 import { getAuthUser } from "@/lib/auth/session";
 
-/** UUID тренера из Supabase Authentication → Users */
-export function getTrainerUserId(): string | undefined {
-  const id = process.env.TRAINER_USER_ID?.trim();
-  return id || undefined;
-}
+/** Единственный тренер с доступом в /admin */
+const TRAINER_EMAIL = "gv.baydaeva@gmail.com";
 
-export function isTrainerUser(userId: string): boolean {
-  const trainerId = getTrainerUserId();
-  return Boolean(trainerId && userId === trainerId);
+/** Доступ в /admin — только по email тренера */
+export function isTrainerUser(email?: string | null): boolean {
+  if (!email?.trim()) return false;
+  return email.trim().toLowerCase() === TRAINER_EMAIL;
 }
 
 export function isTrainerConfigured(): boolean {
-  return Boolean(getTrainerUserId());
+  return true;
 }
 
-/** Редирект, если не тренер. Возвращает user id тренера. */
+/** Редирект, если не тренер. Возвращает user id. */
 export async function requireTrainer(): Promise<string> {
   const user = await getAuthUser();
 
@@ -25,7 +23,7 @@ export async function requireTrainer(): Promise<string> {
     redirect(`${AUTH_ROUTES.login}?callbackUrl=/admin/clients`);
   }
 
-  if (!isTrainerUser(user.id)) {
+  if (!isTrainerUser(user.email)) {
     redirect("/?adminDenied=1");
   }
 

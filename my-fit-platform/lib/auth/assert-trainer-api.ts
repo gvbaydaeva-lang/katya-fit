@@ -14,7 +14,7 @@ export async function assertTrainerApi(): Promise<
     return NextResponse.json({ error: "Не авторизован" }, { status: 401 });
   }
 
-  if (!isTrainerUser(user.id)) {
+  if (!isTrainerUser(user.email)) {
     return NextResponse.json({ error: "Доступ запрещён" }, { status: 403 });
   }
 

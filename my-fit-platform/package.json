@@ -3,12 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --hostname 127.0.0.1",
+    "dev": "node scripts/verify-supabase-env.mjs && next dev",
     "build": "next build",
     "export": "node scripts/build-github-pages.mjs",
     "build:pages": "node scripts/build-github-pages.mjs",
     "start": "next start",
     "lint": "eslint",
+    "db:setup-workouts": "node scripts/apply-workouts-schema.mjs",
     "pages:build": "opennextjs-cloudflare build --config ../wrangler.toml && node scripts/prepare-pages-deploy.mjs"
   },
   "dependencies": {
@@ -27,10 +28,12 @@
     "@opennextjs/cloudflare": "^1.19.11",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
+    "@types/pg": "^8.20.0",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.2.6",
+    "pg": "^8.21.0",
     "tailwindcss": "^4",
     "typescript": "^5",
     "wrangler": "^4.98.0"

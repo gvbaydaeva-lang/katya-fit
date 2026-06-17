@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import type { PlanId } from "@/lib/stripe/plans";
 import { getPlanById } from "@/lib/stripe/plans";
+import { isTrainerUser } from "@/lib/auth/admin";
 import { getActiveSubscription } from "@/lib/auth/subscription";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { createClient } from "@/lib/supabase/server";
@@ -37,6 +38,16 @@ export async function getSession(): Promise<Session | null> {
   } = await supabase.auth.getUser();
 
   if (!user?.email) return null;
+
+  if (isTrainerUser(user.email)) {
+    const plan = getPlanById("coached");
+    return {
+      userId: user.id,
+      email: user.email,
+      planId: (plan?.id ?? "coached") as PlanId,
+      planName: plan?.name ?? "Сопровождение",
+    };
+  }
 
   const subscription = await getActiveSubscription(user.id);
   if (!subscription) return null;

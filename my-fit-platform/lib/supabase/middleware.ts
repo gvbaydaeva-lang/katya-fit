@@ -10,6 +10,7 @@ import {
   isSupabaseConfigured,
 } from "@/lib/supabase/env";
 import { isTrainerUser } from "@/lib/auth/admin";
+import { resolvePostLoginPath } from "@/lib/auth/post-login";
 import {
   AUTH_ROUTES,
   isAdminPath,
@@ -61,13 +62,16 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
+  // Обновляем сессию в cookies, чтобы не выбрасывало на /login между страницами
+  await supabase.auth.getSession();
+
   if (isAdminPath(pathname)) {
     if (!user) {
       const loginUrl = new URL(AUTH_ROUTES.login, request.url);
       loginUrl.searchParams.set("callbackUrl", pathname);
       return NextResponse.redirect(loginUrl);
     }
-    if (!isTrainerUser(user.id)) {
+    if (!isTrainerUser(user.email)) {
       const homeUrl = new URL("/", request.url);
       homeUrl.searchParams.set("adminDenied", "1");
       return NextResponse.redirect(homeUrl);
@@ -83,6 +87,11 @@ export async function updateSession(request: NextRequest) {
       const loginUrl = new URL(AUTH_ROUTES.login, request.url);
       loginUrl.searchParams.set("callbackUrl", pathname);
       return NextResponse.redirect(loginUrl);
+    }
+
+    // Тренер имеет доступ в /app без подписки
+    if (isTrainerUser(user.email)) {
+      return response;
     }
 
     const diagnosis = await diagnoseSubscriptionAccess(user.id, supabase);
@@ -107,12 +116,21 @@ export async function updateSession(request: NextRequest) {
   }
 
   if (isAuthPath(pathname) && user) {
+    if (isTrainerUser(user.email)) {
+      const callbackUrl = request.nextUrl.searchParams.get("callbackUrl");
+      const target = resolvePostLoginPath(callbackUrl, { isTrainer: true });
+      return NextResponse.redirect(new URL(target, request.url));
+    }
+
     const diagnosis = await diagnoseSubscriptionAccess(user.id, supabase);
     if (diagnosis.hasAccess) {
-      return NextResponse.redirect(
-        new URL(STUDENT_ROUTES.dashboard, request.url),
-      );
+      const callbackUrl = request.nextUrl.searchParams.get("callbackUrl");
+      const target = resolvePostLoginPath(callbackUrl, { isTrainer: false });
+      return NextResponse.redirect(new URL(target, request.url));
     }
+
+    // Авторизован, но без подписки — остаётся на /login (не зацикливаем редирект)
+    return response;
   }
 
   return response;

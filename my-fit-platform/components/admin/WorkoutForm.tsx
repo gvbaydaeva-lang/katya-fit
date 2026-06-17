@@ -1,31 +1,21 @@
 "use client";
 
-import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useId, useState } from "react";
 import { WorkoutFormFields } from "@/components/admin/WorkoutFormFields";
-import {
-  WORKOUT_BUILDER_BODY_CLASS,
-  WORKOUT_BUILDER_DIALOG_CLASS,
-} from "@/components/admin/workout-dialog-styles";
 import { Button } from "@/components/ui/Button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { prepareWorkoutBlocksForSave } from "@/lib/admin/upload-content-blocks";
 import type { PendingBlockFilesMap } from "@/lib/admin/pending-block-files";
 import { isValidPlanId, PLANS } from "@/lib/stripe/plans";
 import type { WorkoutContentBlock } from "@/lib/workouts/content-blocks";
 
-export function WorkoutForm() {
+type WorkoutFormProps = {
+  onSaved?: () => void;
+};
+
+export function WorkoutForm({ onSaved }: WorkoutFormProps) {
   const router = useRouter();
   const formId = useId();
-  const [open, setOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
   const [contentBlocks, setContentBlocks] = useState<WorkoutContentBlock[]>([]);
@@ -105,7 +95,7 @@ export function WorkoutForm() {
       }
 
       resetForm();
-      setOpen(false);
+      onSaved?.();
       router.refresh();
     } catch {
       setError("Ошибка сети");
@@ -115,74 +105,54 @@ export function WorkoutForm() {
   }
 
   return (
-    <>
-      <Button
-        type="button"
-        onClick={() => setOpen(true)}
-        className="gap-2 rounded-xl"
-      >
-        <Plus className="h-4 w-4" />
-        Добавить урок
-      </Button>
+    <div className="rounded-xl border border-stone-900/8 bg-ds-surface px-5 py-6 shadow-sm sm:px-6">
+      <div className="mb-6 border-b border-stone-900/8 pb-4">
+        <h2 className="text-lg font-semibold text-ds-heading">Новый урок</h2>
+        <p className="mt-1 text-sm text-ds-muted">
+          Заполните поля слева и соберите урок из блоков текста, видео и файлов
+          справа.
+        </p>
+      </div>
 
-      <Dialog
-        open={open}
-        onOpenChange={(next) => {
-          setOpen(next);
-          if (!next) setError(null);
-        }}
-      >
-        <DialogContent className={WORKOUT_BUILDER_DIALOG_CLASS}>
-          <DialogHeader className="shrink-0 border-b border-stone-900/8 px-6 py-4">
-            <DialogTitle>Новый урок</DialogTitle>
-            <DialogDescription>
-              Соберите урок из блоков контента. Порядок блоков сохранится в базе
-              данных.
-            </DialogDescription>
-          </DialogHeader>
-
-          <div className={WORKOUT_BUILDER_BODY_CLASS}>
-            <WorkoutFormFields
-              key={formKey}
-              formId={formId}
-              pending={pending}
-              contentBlocks={contentBlocks}
-              onContentBlocksChange={setContentBlocks}
-              onPendingFilesChange={setPendingFiles}
-              onMediaUploadingChange={setMediaUploading}
-              uploadingBlockIds={uploadingBlockIds}
-              saveDisabled={saveDisabled}
-              onSubmit={handleSubmit}
-              footer={
-                <>
-                  {error && (
-                    <p className="mt-4 text-sm text-red-600" role="alert">
-                      {error}
-                    </p>
-                  )}
-                  <DialogFooter className="mt-6 border-t border-stone-900/8 pt-4 sm:justify-end">
-                    <Button
-                      type="button"
-                      variant="secondary"
-                      disabled={saveDisabled}
-                      onClick={() => setOpen(false)}
-                    >
-                      Отмена
-                    </Button>
-                    <Button type="submit" form={formId} disabled={saveDisabled}>
-                      {mediaUploading || uploadingBlockIds.length > 0
-                        ? "Загрузка файлов…"
-                        : pending
-                          ? "Сохранение…"
-                          : "Сохранить урок"}
-                    </Button>
-                  </DialogFooter>
-                </>
-              }
-            />
-          </div>
-        </DialogContent>
-      </Dialog>
-    </>
+      <WorkoutFormFields
+        key={formKey}
+        formId={formId}
+        pending={pending}
+        contentBlocks={contentBlocks}
+        onContentBlocksChange={setContentBlocks}
+        onPendingFilesChange={setPendingFiles}
+        onMediaUploadingChange={setMediaUploading}
+        uploadingBlockIds={uploadingBlockIds}
+        saveDisabled={saveDisabled}
+        showTariffAccess
+        onSubmit={handleSubmit}
+        footer={
+          <>
+            {error && (
+              <p className="mt-4 text-sm text-red-600" role="alert">
+                {error}
+              </p>
+            )}
+            <div className="mt-6 flex flex-col-reverse gap-2 border-t border-stone-900/8 pt-4 sm:flex-row sm:justify-end">
+              <Button
+                type="button"
+                variant="secondary"
+                disabled={saveDisabled}
+                onClick={resetForm}
+              >
+                Очистить
+              </Button>
+              <Button type="submit" form={formId} disabled={saveDisabled}>
+                {mediaUploading || uploadingBlockIds.length > 0
+                  ? "Загрузка файлов…"
+                  : pending
+                    ? "Сохранение…"
+                    : "Сохранить урок"}
+              </Button>
+            </div>
+          </>
+        }
+      />
+    </div>
   );
 }

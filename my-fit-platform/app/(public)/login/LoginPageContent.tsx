@@ -7,7 +7,8 @@ import { PageHeading } from "@/components/ui/PageHeading";
 
 function LoginPageInner() {
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") ?? undefined;
+  const callbackUrl =
+    searchParams.get("callbackUrl") ?? "/admin/clients";
 
   return (
     <section className="mx-auto max-w-md px-4 py-16">

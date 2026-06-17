@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
-import { createRouteHandlerClient } from "@/lib/supabase/route-handler";
+import { isTrainerUser } from "@/lib/auth/admin";
+import { resolvePostLoginPath } from "@/lib/auth/post-login";
+import { createAuthRouteClientWithResponse } from "@/lib/supabase/auth-route";
 import { STUDENT_ROUTES } from "@/lib/auth/routes";
 
 export async function GET(request: Request) {
@@ -7,14 +9,24 @@ export async function GET(request: Request) {
   const code = searchParams.get("code");
   const next = searchParams.get("next") ?? STUDENT_ROUTES.dashboard;
 
-  if (code) {
-    const response = NextResponse.redirect(`${origin}${next}`);
-    const supabase = await createRouteHandlerClient(response);
-    const { error } = await supabase.auth.exchangeCodeForSession(code);
-    if (!error) {
-      return response;
-    }
+  if (!code) {
+    return NextResponse.redirect(`${origin}/login?error=auth_callback_failed`);
   }
 
-  return NextResponse.redirect(`${origin}/login?error=auth_callback_failed`);
+  const cookieJar = NextResponse.json({ ok: true });
+  const { supabase, applyCookiesTo } =
+    await createAuthRouteClientWithResponse(cookieJar);
+  const { data, error } = await supabase.auth.exchangeCodeForSession(code);
+
+  if (error || !data.user) {
+    return NextResponse.redirect(`${origin}/login?error=auth_callback_failed`);
+  }
+
+  const target = resolvePostLoginPath(next, {
+    isTrainer: isTrainerUser(data.user.email),
+  });
+
+  const redirect = NextResponse.redirect(`${origin}${target}`);
+  applyCookiesTo(redirect);
+  return redirect;
 }

@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { isTrainerUser } from "@/lib/auth/admin";
 import { createClient } from "@/lib/supabase/server";
 import {
   diagnoseSubscriptionAccess,
@@ -27,6 +28,7 @@ export async function GET() {
   return NextResponse.json({
     loggedIn: true,
     email: user.email,
+    isTrainer: isTrainerUser(user.email),
     hasActiveSubscription: diagnosis.hasAccess,
     summary: diagnosis.hasAccess
       ? "Подписка найдена — /app должен открываться"

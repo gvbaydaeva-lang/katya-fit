@@ -1,72 +1,48 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useState, Suspense } from "react";
-import { AUTH_ROUTES, STUDENT_ROUTES } from "@/lib/auth/routes";
+import { useSearchParams } from "next/navigation";
+import { useActionState, useEffect, Suspense } from "react";
+import { loginAction, type LoginState } from "@/app/(public)/login/actions";
+import { AUTH_ROUTES, ADMIN_ROUTES } from "@/lib/auth/routes";
 import { Button } from "@/components/ui/Button";
-import {
-  isStaticHosting,
-  setBrowserSession,
-} from "@/lib/auth/browser-session";
-import type { PlanId } from "@/lib/stripe/plans";
 
 type LoginFormProps = {
   callbackUrl?: string;
 };
 
+const initialState: LoginState = {};
+
 function LoginFormInner({ callbackUrl }: LoginFormProps) {
-  const router = useRouter();
   const searchParams = useSearchParams();
-  const [error, setError] = useState<string | null>(
-    searchParams.get("error") === "auth_callback_failed"
+  const [state, formAction, pending] = useActionState(loginAction, initialState);
+
+  const authError =
+    state.error ??
+    (searchParams.get("error") === "auth_callback_failed"
       ? "Не удалось подтвердить вход. Попробуйте снова."
-      : null,
-  );
-  const [loading, setLoading] = useState(false);
+      : null);
 
-  const target =
-    callbackUrl?.startsWith("/app") ? callbackUrl : STUDENT_ROUTES.dashboard;
+  const targetAfterLogin = callbackUrl ?? ADMIN_ROUTES.clients;
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setError(null);
-    setLoading(true);
-
-    const form = e.currentTarget;
-    const email = String(new FormData(form).get("email") ?? "").trim();
-    const password = String(new FormData(form).get("password") ?? "");
-    const planId = (String(new FormData(form).get("planId") ?? "coached") ||
-      "coached") as PlanId;
-
-    if (isStaticHosting()) {
-      setBrowserSession(email, planId);
-      router.push(target);
-      return;
+  // Убираем пароль из URL, если форма ушла нативным GET (без JS)
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    if (
+      url.searchParams.has("password") ||
+      url.searchParams.has("email") ||
+      url.searchParams.has("planId")
+    ) {
+      url.searchParams.delete("password");
+      url.searchParams.delete("email");
+      url.searchParams.delete("planId");
+      window.history.replaceState({}, "", `${url.pathname}${url.search}`);
     }
-
-    const res = await fetch("/api/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "same-origin",
-      body: JSON.stringify({ email, password, planId }),
-    });
-
-    const data = await res.json().catch(() => ({}));
-    setLoading(false);
-
-    if (!res.ok) {
-      setError(data.error ?? "Неверный email или пароль");
-      return;
-    }
-
-    router.push(target);
-    router.refresh();
-  }
+  }, []);
 
   return (
-    <form onSubmit={handleSubmit} className="mt-8 space-y-4">
-      <input type="hidden" name="planId" value="coached" />
+    <form action={formAction} className="mt-8 space-y-4">
+      <input type="hidden" name="callbackUrl" value={targetAfterLogin} />
       <label className="block text-sm font-medium text-zinc-700">
         Email
         <input
@@ -84,17 +60,17 @@ function LoginFormInner({ callbackUrl }: LoginFormProps) {
           name="password"
           className="mt-1.5 w-full rounded-xl border border-zinc-300 px-3 py-2.5 outline-none ring-rose-500 focus:ring-2"
           autoComplete="current-password"
-          required={!isStaticHosting()}
+          required
           minLength={6}
         />
       </label>
-      {error && (
+      {authError && (
         <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
-          {error}
+          {authError}
         </p>
       )}
-      <Button type="submit" className="w-full" disabled={loading}>
-        {loading ? "Вход…" : "Войти"}
+      <Button type="submit" className="w-full" disabled={pending}>
+        {pending ? "Вход…" : "Войти"}
       </Button>
       <p className="text-center text-sm text-zinc-600">
         Нет аккаунта?{" "}

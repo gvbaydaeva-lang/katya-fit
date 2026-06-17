@@ -1,5 +1,17 @@
 @import "tailwindcss";
 
+@theme {
+  --color-ds-bg: #fdfbf7;
+  --color-ds-surface: #ffffff;
+  --color-ds-surface-raised: #f8f5f0;
+  --color-ds-text: #1c1917;
+  --color-ds-heading: #1c1917;
+  --color-ds-muted: #78716c;
+  --color-ds-hover: #f5f0e8;
+  --color-ds-primary: #c4956a;
+  --color-ds-primary-hover: #b07d54;
+}
+
 :root {
   --background: #FAF8F4;
   --foreground: #1c1917;

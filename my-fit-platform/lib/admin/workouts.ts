@@ -11,6 +11,10 @@ import {
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { DbWorkout } from "@/lib/supabase/database.types";
 import { getServiceRoleKey } from "@/lib/supabase/env";
+import {
+  ensureWorkoutsSchema,
+  isWorkoutsTableMissingError,
+} from "@/lib/admin/ensure-workouts-schema";
 
 export type UpdateWorkoutInput = CreateWorkoutInput & {
   id: string;
@@ -73,9 +77,15 @@ function validateWorkoutFields(
   };
 }
 
-export async function listWorkouts(): Promise<DbWorkout[]> {
+export async function listWorkouts(): Promise<{
+  workouts: DbWorkout[];
+  error: string | null;
+}> {
   if (!getServiceRoleKey()) {
-    return [];
+    return {
+      workouts: [],
+      error: "SUPABASE_SERVICE_ROLE_KEY не задан — список уроков недоступен",
+    };
   }
 
   const admin = createAdminClient();
@@ -88,10 +98,17 @@ export async function listWorkouts(): Promise<DbWorkout[]> {
 
   if (error) {
     console.error("[listWorkouts]", error.message);
-    return [];
+    if (isWorkoutsTableMissingError(error.message)) {
+      return {
+        workouts: [],
+        error:
+          "Таблица workouts не найдена в базе. Нажмите «Создать таблицу уроков» выше или выполните SQL из supabase/setup-workouts-from-scratch.sql.",
+      };
+    }
+    return { workouts: [], error: error.message };
   }
 
-  return (data ?? []) as DbWorkout[];
+  return { workouts: (data ?? []) as DbWorkout[], error: null };
 }
 
 export async function createWorkout(
@@ -114,7 +131,7 @@ export async function createWorkout(
   const legacy = deriveLegacyFromBlocks(content_blocks);
 
   const admin = createAdminClient();
-  const { data, error } = await admin
+  let { data, error } = await admin
     .from("workouts")
     .insert({
       title,
@@ -131,14 +148,47 @@ export async function createWorkout(
     .select("id")
     .single();
 
-  if (error) {
-    return { ok: false, error: formatWorkoutDbError(error.message) };
+  if (error && isWorkoutsTableMissingError(error.message)) {
+    const ensured = await ensureWorkoutsSchema();
+    if (!ensured.ok) {
+      return { ok: false, error: ensured.error ?? error.message };
+    }
+    const retry = await admin
+      .from("workouts")
+      .insert({
+        title,
+        description: legacy.description,
+        module_name,
+        position,
+        is_published,
+        content_blocks,
+        video_url: legacy.video_url,
+        video_type: legacy.video_type,
+        tariffs,
+        materials: legacy.materials,
+      })
+      .select("id")
+      .single();
+    data = retry.data;
+    error = retry.error;
+  }
+
+  if (error || !data) {
+    return {
+      ok: false,
+      error: error
+        ? formatWorkoutDbError(error.message)
+        : "Не удалось сохранить урок",
+    };
   }
 
   return { ok: true, id: data.id as string };
 }
 
 function formatWorkoutDbError(message: string): string {
+  if (isWorkoutsTableMissingError(message)) {
+    return "Таблица workouts не создана в Supabase. Нажмите «Создать таблицу уроков» на странице Материал или выполните файл supabase/setup-workouts-from-scratch.sql в SQL Editor.";
+  }
   if (message.includes("materials")) {
     return `${message}. Выполните SQL из supabase/setup-workouts-content.sql в Supabase SQL Editor.`;
   }

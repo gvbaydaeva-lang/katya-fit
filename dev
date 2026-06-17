@@ -1,0 +1,25 @@
+> npm run dev --prefix my-fit-platform
+
+
+> katya-fit@0.1.0 dev
+> next dev --hostname 127.0.0.1
+
+⚠ Port 3000 is in use by process 75929, using available port 3001 i
+⚠ Port 3000 is in use by process 75929, using available port 3001 instead.
+▲ Next.js 16.2.6 (Turbopack)
+- Local:         http://127.0.0.1:3001
+- Network:       http://127.0.0.1:3001
+- Environments: .env.local
+✓ Ready in 334ms
+⨯ Another next dev server is already running.
+
+- Local:        http://localhost:3000
+- PID:          75929
+- Dir:          /Users/gilyana08/Desktop/Курсор проекты/Катя фит/my
+- Dir:          /Users/gilyana08/Desktop/Курсор проекты/Катя фит/my-fit-platform
+- Log:          .next/dev/logs/next-development.log
+
+Run kill 75929 to stop it.
+npm run dev
+killall node
+npm run dev
