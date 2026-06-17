@@ -40,7 +40,7 @@ const faqItems = [
 
 export default function FaqSection() {
   return (
-    <section className="bg-[#FAF8F4] px-4 py-20">
+    <section className="bg-white px-4 py-20">
       <div className="mx-auto max-w-2xl">
         <h2 className="mb-12 text-center text-3xl font-semibold text-[#1c1917] md:text-4xl">
           Частые вопросы
@@ -53,11 +53,11 @@ export default function FaqSection() {
               value={`faq-${index}`}
               className="!rounded-none !border-none !bg-transparent !shadow-none border-b border-[#E8E2D9]"
             >
-              <AccordionTrigger className="!text-base px-0 py-4 text-left font-medium text-[#1c1917] hover:bg-transparent focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 [&_svg]:text-[#C4956A]">
+              <AccordionTrigger className="!px-0 !pl-0 pr-8 !text-base py-4 text-left font-medium text-[#1c1917] hover:bg-transparent focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 [&_svg]:text-[#C4956A]">
                 {item.q}
               </AccordionTrigger>
-              <AccordionContent className="!text-sm">
-                <p className="pb-4 pt-1 !text-sm leading-relaxed text-[#6b5e54]">
+              <AccordionContent className="!px-0 !text-sm">
+                <p className="!px-0 pb-4 pt-1 pr-8 !text-sm leading-relaxed text-[#6b5e54]">
                   {item.a}
                 </p>
               </AccordionContent>

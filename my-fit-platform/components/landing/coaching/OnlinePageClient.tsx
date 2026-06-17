@@ -5,6 +5,7 @@ import Image from "next/image";
 import type { CSSProperties } from "react";
 import { useState } from "react";
 import { HowItWorksSection } from "@/components/landing/coaching/HowItWorksSection";
+import { ReadySection } from "@/components/landing/coaching/ReadySection";
 import { WhatYouGetSection } from "@/components/landing/coaching/WhatYouGetSection";
 import { LandingChrome } from "@/components/landing/LandingChrome";
 import CheckoutModal from "@/components/public/CheckoutModal";
@@ -186,7 +187,7 @@ export function OnlinePageClient() {
         </div>
       </section>
 
-      <section className="bg-[#FAF8F4] py-20">
+      <section className="bg-white py-20">
         <div className="mx-auto max-w-2xl px-6">
           <h2 className="mb-12 text-center text-3xl font-semibold text-[#1c1917] md:text-4xl">
             Частые вопросы
@@ -199,11 +200,11 @@ export function OnlinePageClient() {
                 value={`faq-${index}`}
                 className="!rounded-none !border-none !bg-transparent !shadow-none border-b border-[#E8E2D9]"
               >
-                <AccordionTrigger className="!text-base px-0 py-4 text-left font-medium text-[#1c1917] hover:bg-transparent focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 [&_svg]:text-[#C4956A]">
+                <AccordionTrigger className="!px-0 !pl-0 pr-8 !text-base py-4 text-left font-medium text-[#1c1917] hover:bg-transparent focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 [&_svg]:text-[#C4956A]">
                   {item.q}
                 </AccordionTrigger>
-                <AccordionContent className="!text-sm">
-                  <p className="pb-4 pt-1 !text-sm leading-relaxed text-[#6b5e54]">
+                <AccordionContent className="!px-0 !text-sm">
+                  <p className="!px-0 pb-4 pt-1 pr-8 !text-sm leading-relaxed text-[#6b5e54]">
                     {item.a}
                   </p>
                 </AccordionContent>
@@ -213,26 +214,7 @@ export function OnlinePageClient() {
         </div>
       </section>
 
-      <section className="bg-[#F0EAE0] py-20">
-        <div className="mx-auto max-w-6xl px-6">
-          <div className="grid gap-12 lg:grid-cols-2 items-center">
-            <div>
-              <h2 className="text-3xl font-bold text-stone-900 sm:text-4xl">Готовы изменить свою жизнь?</h2>
-              <p className="mt-4 text-stone-500 leading-relaxed">Запишитесь на бесплатную консультацию, и мы вместе разберём вашу ситуацию и подберём лучший формат работы.</p>
-              <Link href="#" className="mt-8 inline-flex rounded-sm bg-[#C4956A] px-8 py-3.5 text-sm font-semibold tracking-wider text-white hover:bg-[#B07D54] transition-colors">
-                ЗАПИСАТЬСЯ НА КОНСУЛЬТАЦИЮ
-              </Link>
-            </div>
-            <div className="grid grid-cols-3 gap-3">
-              {["-10 кг в среднем", "Улучшение качества тела", "Больше энергии и уверенности", "Привычки, которые остаются с вами", "Поддержка, которая меняет жизнь"].map((r, i) => (
-                <div key={r} className={`rounded-sm bg-white border border-[#E8E2D9] p-3 text-center ${i === 4 ? "col-span-3 sm:col-span-1" : ""}`}>
-                  <p className="text-xs text-stone-600 leading-tight">{r}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
+      <ReadySection />
 
       {selectedPlan && (
         <CheckoutModal
