@@ -7,6 +7,7 @@ type AnchorLinkProps = {
   sectionId: LandingSectionId;
   children: React.ReactNode;
   className?: string;
+  ariaLabel?: string;
   onNavigate?: () => void;
 };
 
@@ -14,6 +15,7 @@ export function AnchorLink({
   sectionId,
   children,
   className = "",
+  ariaLabel,
   onNavigate,
 }: AnchorLinkProps) {
   const href = sectionHref(sectionId);
@@ -31,7 +33,7 @@ export function AnchorLink({
   }
 
   return (
-    <a href={href} onClick={handleClick} className={className}>
+    <a href={href} onClick={handleClick} className={className} aria-label={ariaLabel}>
       {children}
     </a>
   );

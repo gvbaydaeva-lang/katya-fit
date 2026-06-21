@@ -27,12 +27,39 @@ const TRUST_ITEMS = [
   "Работаю с женщинами по всему миру",
 ];
 
+const primaryCtaClassName =
+  "inline-flex items-center rounded-sm bg-[#C4956A] px-6 py-3 text-sm font-semibold uppercase tracking-widest text-white transition-colors hover:bg-[#B07D54]";
+
+const secondaryButtonClassName =
+  "inline-flex items-center rounded-sm border border-[#E8E2D9] bg-transparent px-6 py-3 text-sm font-semibold uppercase tracking-widest text-[#1c1917] transition-colors hover:bg-[#F0EBE3]";
+
+const secondaryLinkClassName =
+  "inline-flex items-center gap-1 text-sm text-[#57534e] underline-offset-4 transition-colors hover:text-[#1c1917] hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C4956A]";
+
+function HeroPhoto() {
+  return (
+    <div className="relative mx-auto w-full max-w-md lg:max-w-none">
+      <div className="relative aspect-[3/4]">
+        <Image
+          src={katyaHero}
+          alt="Катя — фитнес-тренер KATY D."
+          fill
+          className="object-cover object-top"
+          style={HERO_IMAGE_MASK}
+          priority
+          sizes="(max-width: 1024px) 100vw, 28rem"
+        />
+      </div>
+    </div>
+  );
+}
+
 export function HeroSection() {
   return (
     <section className="relative overflow-hidden bg-[#FAF8F4]">
       <div className="mx-auto grid max-w-6xl gap-8 px-6 pt-24 pb-16 lg:grid-cols-2 lg:items-center lg:gap-16 lg:py-24">
 
-        <div className="flex flex-col">
+        <div className="order-2 flex flex-col lg:order-1">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#C4956A]">
             Для женщин в декрете и в эмиграции
           </p>
@@ -47,22 +74,26 @@ export function HeroSection() {
             себя уверенно в своём теле.
           </p>
 
-          <div className="mt-8 flex flex-wrap gap-3">
-            <AnchorLink
-              sectionId={LANDING_SECTIONS.programs}
-              className="inline-flex items-center rounded-sm bg-[#C4956A] px-6 py-3 text-sm font-semibold uppercase tracking-widest text-white transition-colors hover:bg-[#B07D54]"
-            >
+          <div className="mt-8 flex flex-col gap-4 lg:flex-row lg:flex-wrap lg:gap-3">
+            <AnchorLink sectionId={LANDING_SECTIONS.programs} className={primaryCtaClassName}>
               Мои программы
             </AnchorLink>
             <AnchorLink
               sectionId={LANDING_SECTIONS.about}
-              className="inline-flex items-center rounded-sm border border-[#E8E2D9] bg-transparent px-6 py-3 text-sm font-semibold uppercase tracking-widest text-[#1c1917] transition-colors hover:bg-[#F0EBE3]"
+              ariaLabel="Перейти к разделу обо мне"
+              className={`${secondaryLinkClassName} lg:hidden`}
+            >
+              Обо мне <span aria-hidden="true">→</span>
+            </AnchorLink>
+            <AnchorLink
+              sectionId={LANDING_SECTIONS.about}
+              className={`${secondaryButtonClassName} hidden lg:inline-flex`}
             >
               Обо мне
             </AnchorLink>
           </div>
 
-          <ul className="mt-8 flex flex-col gap-2.5 border-t border-[#E8E2D9] pt-8">
+          <ul className="mt-8 flex flex-col gap-2.5 lg:border-t lg:border-[#E8E2D9] lg:pt-8">
             {TRUST_ITEMS.map((item) => (
               <li key={item} className="flex items-start gap-2.5 text-sm text-[#44403c]">
                 <span className="mt-0.5 shrink-0 text-[#C4956A]">✔</span>
@@ -72,18 +103,8 @@ export function HeroSection() {
           </ul>
         </div>
 
-        <div className="relative mx-auto w-full max-w-md lg:max-w-none">
-          <div className="relative aspect-[3/4]">
-            <Image
-              src={katyaHero}
-              alt="Катя — фитнес-тренер KATY D."
-              fill
-              className="object-cover object-top"
-              style={HERO_IMAGE_MASK}
-              priority
-              sizes="(max-width: 1024px) 100vw, 28rem"
-            />
-          </div>
+        <div className="order-1 lg:order-2">
+          <HeroPhoto />
         </div>
 
       </div>

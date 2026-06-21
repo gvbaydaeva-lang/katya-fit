@@ -43,9 +43,9 @@ export function ProgramLandingHero({
   imagePriority = true,
 }: ProgramLandingHeroProps) {
   const imageOrder =
-    imagePosition === "right" ? "order-2 lg:order-2" : "order-1 lg:order-1";
+    imagePosition === "right" ? "order-1 lg:order-2" : "order-1 lg:order-1";
   const textOrder =
-    imagePosition === "right" ? "order-1 lg:order-1" : "order-2 lg:order-2";
+    imagePosition === "right" ? "order-2 lg:order-1" : "order-2 lg:order-2";
 
   const textColumnClass =
     contentLayout === "spread"
