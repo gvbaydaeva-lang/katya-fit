@@ -13,7 +13,7 @@ const INCLUDED_ITEMS = [
 
 function CheckItem({ children }: { children: string }) {
   return (
-    <li className="flex items-center gap-3 whitespace-nowrap text-lg font-medium text-[#1c1917]">
+    <li className="flex items-center gap-3 text-base font-medium text-[#1c1917] sm:text-lg">
       <div className="h-1.5 w-1.5 flex-shrink-0 rounded-full bg-[#C4956A]" aria-hidden />
       {children}
     </li>
@@ -52,7 +52,7 @@ export function PricingCTASection({ onCheckout }: PricingCTASectionProps) {
           <p className="text-5xl font-bold text-[#1c1917]">$79</p>
         </div>
 
-        <div className="mt-6 flex justify-center">
+        <div className="mt-6 hidden justify-center md:flex">
           <Button
             type="button"
             onClick={onCheckout}

@@ -50,23 +50,23 @@ type FaqSectionProps = {
 export function FaqSection({ onCheckout }: FaqSectionProps) {
   return (
     <section className="bg-white py-20">
-      <div className="mx-auto max-w-2xl px-6">
-        <h2 className="mb-12 text-center text-3xl font-semibold text-[#1c1917] md:text-4xl">
+      <div className="mx-auto max-w-2xl min-w-0 px-4 sm:px-6">
+        <h2 className="mb-8 text-center text-2xl font-semibold text-[#1c1917] sm:mb-12 sm:text-3xl md:text-4xl">
           Частые вопросы
         </h2>
 
-        <Accordion type="single" collapsible>
+        <Accordion type="single" collapsible className="min-w-0">
           {faqItems.map((item, index) => (
             <AccordionItem
               key={item.q}
               value={`faq-${index}`}
               className="!rounded-none !border-none !bg-transparent !shadow-none border-b border-[#E8E2D9]"
             >
-              <AccordionTrigger className="!px-0 !pl-0 pr-8 !text-base py-4 text-left font-medium text-[#1c1917] hover:bg-transparent focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 [&_svg]:text-[#C4956A]">
-                {item.q}
+              <AccordionTrigger className="!items-start !gap-3 !px-0 py-4 text-left text-[15px] font-medium leading-snug text-[#1c1917] hover:bg-transparent focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 sm:!text-base [&_svg]:mt-1 [&_svg]:text-[#C4956A]">
+                <span className="min-w-0 flex-1 break-words pr-1">{item.q}</span>
               </AccordionTrigger>
               <AccordionContent className="!px-0 !text-sm">
-                <p className="!px-0 pb-4 pt-1 pr-8 !text-sm leading-relaxed text-[#6b5e54]">
+                <p className="!px-0 pb-4 pt-0 text-sm leading-relaxed text-[#6b5e54]">
                   {item.a}
                 </p>
               </AccordionContent>
@@ -74,7 +74,7 @@ export function FaqSection({ onCheckout }: FaqSectionProps) {
           ))}
         </Accordion>
 
-        <div className="mt-10 flex justify-center">
+        <div className="mt-10 hidden justify-center md:flex">
           <Button
             type="button"
             onClick={onCheckout}

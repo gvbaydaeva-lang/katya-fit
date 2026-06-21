@@ -9,7 +9,7 @@ type LandingChromeProps = {
 
 export function LandingChrome({ children, navOverrides }: LandingChromeProps) {
   return (
-    <div className="flex min-h-full flex-1 flex-col">
+    <div className="flex min-h-full flex-1 flex-col overflow-x-hidden">
       <HashScrollHandler />
       <Header navOverrides={navOverrides} />
       <main className="flex-1">{children}</main>

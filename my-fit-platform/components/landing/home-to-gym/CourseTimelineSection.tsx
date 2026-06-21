@@ -197,8 +197,10 @@ function ProgramFeatureCard({
 }
 
 export function CourseTimelineSection() {
+  const marqueeCards = [...programCards, ...programCards, ...programCards];
+
   return (
-    <section className="bg-[#FAF8F4] px-4 py-12 md:px-16 md:py-20">
+    <section className="overflow-hidden bg-[#FAF8F4] px-4 py-12 md:px-16 md:py-20">
       <div className="mx-auto max-w-6xl">
         <p className="text-[11px] font-medium uppercase tracking-widest text-[#C4956A]">
           Программа курса
@@ -208,7 +210,19 @@ export function CourseTimelineSection() {
           5 модулей — от первой тренировки дома до уверенного зала
         </p>
 
-        <ul className="mt-10 grid grid-cols-2 gap-4 lg:grid-cols-5">
+        <div className="mt-10 md:hidden">
+          <div className="relative -mx-4 overflow-hidden">
+            <ul className="course-cards-marquee flex w-max gap-4 px-4">
+              {marqueeCards.map((card, index) => (
+                <li key={`${card.number}-${index}`} className="w-[72vw] max-w-[280px] shrink-0">
+                  <ProgramFeatureCard card={card} className="h-full" />
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        <ul className="mt-10 hidden gap-4 md:grid md:grid-cols-2 lg:grid-cols-5">
           {programCards.map((card, index) => (
             <li
               key={card.number}

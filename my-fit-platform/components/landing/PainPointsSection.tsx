@@ -32,12 +32,10 @@ export function PainPointsSection() {
           ))}
         </div>
 
-        <div className="mt-12 overflow-x-auto">
-          <p className="whitespace-nowrap text-center text-[34px] font-bold leading-tight tracking-[-1px]">
-            <span className="text-[#1c1917]">Проблема не в силе воли — </span>
-            <span className="text-[#C4956A]">проблема в системе.</span>
-          </p>
-        </div>
+        <p className="mt-12 text-center text-2xl font-bold leading-snug tracking-tight sm:text-[34px] sm:leading-tight sm:tracking-[-1px]">
+          <span className="text-[#1c1917]">Проблема не в силе воли — </span>
+          <span className="text-[#C4956A]">проблема в системе.</span>
+        </p>
       </div>
     </section>
   );

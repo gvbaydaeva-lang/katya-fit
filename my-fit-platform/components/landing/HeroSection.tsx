@@ -30,7 +30,7 @@ const TRUST_ITEMS = [
 export function HeroSection() {
   return (
     <section className="relative overflow-hidden bg-[#FAF8F4]">
-      <div className="mx-auto grid max-w-6xl gap-8 px-6 py-16 lg:grid-cols-2 lg:items-center lg:gap-16 lg:py-24">
+      <div className="mx-auto grid max-w-6xl gap-8 px-6 pt-24 pb-16 lg:grid-cols-2 lg:items-center lg:gap-16 lg:py-24">
 
         <div className="flex flex-col">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#C4956A]">

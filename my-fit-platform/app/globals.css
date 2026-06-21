@@ -10,6 +10,10 @@
   --color-ds-hover: #f5f0e8;
   --color-ds-primary: #c4956a;
   --color-ds-primary-hover: #b07d54;
+
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+  --animate-pricing-marquee-left: pricing-marquee-left 28s linear infinite;
 }
 
 :root {
@@ -19,12 +23,15 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-inter), sans-serif;
+  overflow-x: hidden;
+  max-width: 100%;
 }
 
 h1,
@@ -58,4 +65,22 @@ h3 {
 @keyframes pricing-marquee-right {
   from { transform: translateX(-33.333333%); }
   to { transform: translateX(0); }
+}
+
+@keyframes accordion-down {
+  from { height: 0; }
+  to { height: var(--radix-accordion-content-height); }
+}
+
+@keyframes accordion-up {
+  from { height: var(--radix-accordion-content-height); }
+  to { height: 0; }
+}
+
+.course-cards-marquee {
+  animation: var(--animate-pricing-marquee-left);
+}
+
+.course-cards-marquee:hover {
+  animation-play-state: paused;
 }
