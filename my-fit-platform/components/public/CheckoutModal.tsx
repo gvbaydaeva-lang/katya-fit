@@ -1,15 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { X } from "lucide-react";
-import {
-  CHECKOUT_CURRENCIES,
-  formatPlanPrice,
-  getCurrencyLabel,
-  type CheckoutCurrency,
-} from "@/lib/stripe/currencies";
-import { getPlanById } from "@/lib/stripe/plans";
 
 type CheckoutModalProps = {
   isOpen: boolean;
@@ -29,15 +22,9 @@ export default function CheckoutModal({
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
-  const [currency, setCurrency] = useState<CheckoutCurrency>("usd");
   const [consent, setConsent] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-
-  const plan = useMemo(() => getPlanById(planId), [planId]);
-  const selectedPrice = plan
-    ? formatPlanPrice(plan, currency)
-    : planPrice;
 
   const trimmedFullName = fullName.trim();
   const trimmedEmail = email.trim();
@@ -61,7 +48,6 @@ export default function CheckoutModal({
       setFullName("");
       setEmail("");
       setPhone("");
-      setCurrency("usd");
       setConsent(false);
       setError("");
       setIsLoading(false);
@@ -105,7 +91,6 @@ export default function CheckoutModal({
           fullName: trimmedFullName,
           email: trimmedEmail,
           phone: trimmedPhone,
-          currency,
           cancelPath: `${window.location.pathname}${window.location.hash}`,
         }),
       });
@@ -159,38 +144,10 @@ export default function CheckoutModal({
           Оформление доступа
         </h2>
         <p className="mt-2 text-[#C4956A]">
-          {planName} · {selectedPrice}
+          {planName} · {planPrice}
         </p>
 
         <form onSubmit={handleSubmit} className="mt-6 space-y-4">
-          <fieldset className="space-y-2">
-            <legend className="text-sm text-[#1c1917]">Валюта оплаты</legend>
-            <div className="grid grid-cols-2 gap-2">
-              {CHECKOUT_CURRENCIES.map((option) => (
-                <label
-                  key={option}
-                  className={`cursor-pointer rounded-sm border px-4 py-3 text-center text-sm transition-colors ${
-                    currency === option
-                      ? "border-[#C4956A] bg-[#C4956A]/10 text-[#1c1917]"
-                      : "border-[#E8E2D9] bg-white text-stone-600 hover:border-[#C4956A]/60"
-                  }`}
-                >
-                  <input
-                    type="radio"
-                    name="currency"
-                    value={option}
-                    checked={currency === option}
-                    onChange={() => setCurrency(option)}
-                    className="sr-only"
-                  />
-                  {getCurrencyLabel(option)}
-                </label>
-              ))}
-            </div>
-            <p className="text-xs text-stone-500">
-              Сумма в Stripe Checkout: {selectedPrice}
-            </p>
-          </fieldset>
           <label className="block text-sm text-[#1c1917]">
             Имя, Фамилия
             <input

@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import { createCheckoutSession } from "@/lib/stripe/checkout";
-import { isValidCheckoutCurrency } from "@/lib/stripe/currencies";
 import { isStripeConfigured } from "@/lib/stripe/config";
 import { getPlanById, isValidPlanId } from "@/lib/stripe/plans";
 import { getRequestOrigin } from "@/lib/stripe/request-origin";
@@ -11,7 +10,6 @@ export async function POST(request: Request) {
   const fullName = String(body.fullName ?? "").trim();
   const email = String(body.email ?? "").trim();
   const phone = String(body.phone ?? "").trim();
-  const currency = String(body.currency ?? "usd").toLowerCase();
   const cancelPath = String(body.cancelPath ?? "").trim();
 
   if (!isValidPlanId(planId)) {
@@ -28,10 +26,6 @@ export async function POST(request: Request) {
 
   if (!phone) {
     return NextResponse.json({ error: "Укажите телефон" }, { status: 400 });
-  }
-
-  if (!isValidCheckoutCurrency(currency)) {
-    return NextResponse.json({ error: "Неверная валюта оплаты" }, { status: 400 });
   }
 
   const origin = getRequestOrigin(request);
@@ -60,9 +54,7 @@ export async function POST(request: Request) {
     const url = await createCheckoutSession({
       planId: plan.id,
       planName: plan.name,
-      amountUsd: plan.amountCents,
-      amountRub: plan.amountRub,
-      currency,
+      amountCents: plan.amountCents,
       fullName,
       email,
       phone,
