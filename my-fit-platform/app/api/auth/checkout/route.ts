@@ -9,6 +9,7 @@ import {
 } from "@/lib/auth/session";
 import { getPlanById, isValidPlanId } from "@/lib/stripe/plans";
 import { createCheckoutSession } from "@/lib/stripe/checkout";
+import { getRequestOrigin } from "@/lib/stripe/request-origin";
 
 const WEEK_SECONDS = 60 * 60 * 24 * 7;
 
@@ -25,11 +26,13 @@ export async function POST(request: Request) {
   }
 
   const plan = getPlanById(planId)!;
+  const origin = getRequestOrigin(request);
   const stripeUrl = await createCheckoutSession({
     planId: plan.id,
     planName: plan.name,
     amountCents: plan.amountCents,
     email,
+    origin,
   });
 
   if (stripeUrl) {

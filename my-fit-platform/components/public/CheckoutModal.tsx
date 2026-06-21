@@ -69,13 +69,19 @@ export default function CheckoutModal({
           planId,
           email: trimmedEmail,
           phone: trimmedPhone,
+          cancelPath: `${window.location.pathname}${window.location.hash}`,
         }),
       });
 
       const data = await res.json().catch(() => ({}));
 
       if (data.url) {
-        window.location.href = data.url;
+        window.location.assign(data.url);
+        return;
+      }
+
+      if (data.demo && data.checkoutUrl) {
+        window.location.assign(data.checkoutUrl);
         return;
       }
 

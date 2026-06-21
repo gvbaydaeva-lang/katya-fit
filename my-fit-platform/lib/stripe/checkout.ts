@@ -8,6 +8,8 @@ type CreateCheckoutParams = {
   amountCents: number;
   email?: string;
   phone?: string;
+  origin?: string;
+  cancelUrl?: string;
 };
 
 export async function createCheckoutSession(
@@ -19,7 +21,10 @@ export async function createCheckoutSession(
   const stripe = new Stripe(stripeConfig.secretKey);
 
   const origin =
-    process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+    params.origin ??
+    process.env.NEXT_PUBLIC_APP_URL ??
+    "http://localhost:3000";
+  const cancelUrl = params.cancelUrl ?? `${origin}/#pricing`;
 
   const session = await stripe.checkout.sessions.create({
     mode: "payment",
@@ -44,7 +49,7 @@ export async function createCheckoutSession(
       phone: params.phone ?? "",
     },
     success_url: `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `${origin}/#pricing`,
+    cancel_url: cancelUrl,
   });
 
   return session.url;
