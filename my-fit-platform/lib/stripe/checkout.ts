@@ -46,6 +46,7 @@ export async function createCheckoutSession(
     metadata: {
       plan_id: params.planId,
       planId: params.planId,
+      plan_name: params.planName,
       full_name: params.fullName ?? "",
       email: params.email ?? "",
       phone: params.phone ?? "",

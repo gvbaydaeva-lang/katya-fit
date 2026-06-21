@@ -59,6 +59,17 @@ export type DbSubscription = {
   updated_at: string;
 };
 
+export type DbPayment = {
+  id: string;
+  user_name: string;
+  email: string;
+  phone: string | null;
+  amount: number;
+  plan_name: string;
+  stripe_checkout_session_id: string;
+  created_at: string;
+};
+
 export type Database = {
   public: {
     Tables: {
@@ -99,6 +110,20 @@ export type Database = {
           >
         >;
         Update: Partial<Omit<DbSubscription, "id" | "user_id">>;
+      };
+      payments: {
+        Row: DbPayment;
+        Insert: Pick<
+          DbPayment,
+          | "user_name"
+          | "email"
+          | "amount"
+          | "plan_name"
+          | "stripe_checkout_session_id"
+        > & {
+          phone?: string | null;
+        };
+        Update: Partial<Omit<DbPayment, "id" | "stripe_checkout_session_id">>;
       };
       workouts: {
         Row: DbWorkout;
