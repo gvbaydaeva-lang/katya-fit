@@ -1,11 +1,17 @@
 import { isStripeConfigured, stripeConfig } from "@/lib/stripe/config";
+import {
+  CHECKOUT_CURRENCIES,
+  type CheckoutCurrency,
+} from "@/lib/stripe/currencies";
 import type { PlanId } from "@/lib/stripe/plans";
 import { isValidPlanId } from "@/lib/stripe/plans";
 
 type CreateCheckoutParams = {
   planId: PlanId;
   planName: string;
-  amountCents: number;
+  amountUsd: number;
+  amountRub: number;
+  currency: CheckoutCurrency;
   fullName?: string;
   email?: string;
   phone?: string;
@@ -26,18 +32,27 @@ export async function createCheckoutSession(
     process.env.NEXT_PUBLIC_APP_URL ??
     "http://localhost:3000";
   const cancelUrl = params.cancelUrl ?? `${origin}/#pricing`;
+  const selectedAmount =
+    params.currency === "rub" ? params.amountRub : params.amountUsd;
 
   const session = await stripe.checkout.sessions.create({
     mode: "payment",
     customer_email: params.email,
+    currency: params.currency,
+    adaptive_pricing: { enabled: true },
     line_items: [
       {
         price_data: {
           currency: "usd",
-          unit_amount: params.amountCents,
+          unit_amount: params.amountUsd,
           product_data: {
             name: params.planName,
-            description: "Доступ к платформе Катя Fit",
+            description: "Доступ к платформе KATY D.",
+          },
+          currency_options: {
+            rub: {
+              unit_amount: params.amountRub,
+            },
           },
         },
         quantity: 1,
@@ -49,6 +64,9 @@ export async function createCheckoutSession(
       full_name: params.fullName ?? "",
       email: params.email ?? "",
       phone: params.phone ?? "",
+      currency: params.currency,
+      amount: String(selectedAmount),
+      supported_currencies: CHECKOUT_CURRENCIES.join(","),
     },
     success_url: `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: cancelUrl,

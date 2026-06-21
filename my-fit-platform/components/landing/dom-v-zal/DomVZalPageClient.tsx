@@ -13,10 +13,14 @@ import CheckoutModal from "@/components/public/CheckoutModal";
 import domVZalForWhom from "@/public/images/dom-v-zal-for-whom.webp";
 import katyaHero from "@/public/images/katya-hero.webp";
 
+import { getPlanById } from "@/lib/stripe/plans";
+
+const selfPlan = getPlanById("self")!;
+
 const DOM_V_ZAL_CHECKOUT_PLAN = {
-  id: "self",
-  name: "Самостоятельно",
-  price: "$79",
+  id: selfPlan.id,
+  name: selfPlan.name,
+  price: selfPlan.price,
 } as const;
 
 const DOM_V_ZAL_NAV_OVERRIDES = [

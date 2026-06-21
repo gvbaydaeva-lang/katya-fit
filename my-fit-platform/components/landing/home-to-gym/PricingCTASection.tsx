@@ -1,6 +1,9 @@
 "use client";
 
 import { Button } from "@/components/ui/Button";
+import { getPlanById } from "@/lib/stripe/plans";
+
+const selfPlan = getPlanById("self")!;
 
 const INCLUDED_ITEMS = [
   "Видеоуроки с разбором техники",
@@ -49,7 +52,7 @@ export function PricingCTASection({ onCheckout }: PricingCTASectionProps) {
           <span className="mb-2 mt-2 inline-block rounded-sm bg-[#C4956A] px-3 py-1 text-xs font-semibold text-white">
             ЭКОНОМИЯ $30
           </span>
-          <p className="text-5xl font-bold text-[#1c1917]">$79</p>
+          <p className="text-5xl font-bold text-[#1c1917]">{selfPlan.price}</p>
         </div>
 
         <div className="mt-6 hidden justify-center md:flex">

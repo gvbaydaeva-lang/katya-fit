@@ -4,8 +4,10 @@ export const PLANS = [
   {
     id: "self",
     name: "Самостоятельно",
-    price: "$79",
-    amountCents: 7900,
+    price: "$1",
+    priceRub: "100 ₽",
+    amountCents: 100,
+    amountRub: 10000,
     description:
       "Готовая программа тренировок и материалы — вы занимаетесь в своём темпе.",
   },
@@ -13,7 +15,9 @@ export const PLANS = [
     id: "coached",
     name: "С личным сопровождением",
     price: "$199",
+    priceRub: "19 900 ₽",
     amountCents: 19900,
+    amountRub: 1990000,
     description:
       "Персональный контроль тренера, обратная связь и корректировка программы.",
   },
@@ -21,7 +25,9 @@ export const PLANS = [
     id: "platform",
     name: "Доступ к платформе",
     price: "$49",
+    priceRub: "4 900 ₽",
     amountCents: 4900,
+    amountRub: 490000,
     description:
       "Доступ ко всем урокам платформы без личного сопровождения.",
   },

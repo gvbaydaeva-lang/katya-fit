@@ -30,7 +30,9 @@ export async function POST(request: Request) {
   const stripeUrl = await createCheckoutSession({
     planId: plan.id,
     planName: plan.name,
-    amountCents: plan.amountCents,
+    amountUsd: plan.amountCents,
+    amountRub: plan.amountRub,
+    currency: "usd",
     email,
     origin,
   });
