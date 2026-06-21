@@ -49,12 +49,13 @@ export async function createCheckoutSession(
             name: params.planName,
             description: "Доступ к платформе KATY D.",
           },
+          // @ts-ignore: currency_options exists in API but not in installed types
           currency_options: {
             rub: {
               unit_amount: params.amountRub,
             },
           },
-        },
+        } as any,
         quantity: 1,
       },
     ],
