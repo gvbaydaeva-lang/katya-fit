@@ -7,12 +7,17 @@ import { getRequestOrigin } from "@/lib/stripe/request-origin";
 export async function POST(request: Request) {
   const body = await request.json().catch(() => ({}));
   const planId = String(body.planId ?? "");
+  const fullName = String(body.fullName ?? "").trim();
   const email = String(body.email ?? "").trim();
   const phone = String(body.phone ?? "").trim();
   const cancelPath = String(body.cancelPath ?? "").trim();
 
   if (!isValidPlanId(planId)) {
     return NextResponse.json({ error: "Неверный тариф" }, { status: 400 });
+  }
+
+  if (!fullName) {
+    return NextResponse.json({ error: "Укажите имя и фамилию" }, { status: 400 });
   }
 
   if (!email || !email.includes("@")) {
@@ -34,6 +39,7 @@ export async function POST(request: Request) {
     const { createAdminClient } = await import("@/lib/supabase/admin");
     const supabase = createAdminClient();
     await supabase.from("pending_checkouts").insert({
+      full_name: fullName,
       email,
       phone,
       plan_id: planId,
@@ -49,6 +55,7 @@ export async function POST(request: Request) {
       planId: plan.id,
       planName: plan.name,
       amountCents: plan.amountCents,
+      fullName,
       email,
       phone,
       origin,

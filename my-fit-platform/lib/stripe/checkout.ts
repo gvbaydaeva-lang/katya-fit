@@ -6,6 +6,7 @@ type CreateCheckoutParams = {
   planId: PlanId;
   planName: string;
   amountCents: number;
+  fullName?: string;
   email?: string;
   phone?: string;
   origin?: string;
@@ -45,6 +46,7 @@ export async function createCheckoutSession(
     metadata: {
       plan_id: params.planId,
       planId: params.planId,
+      full_name: params.fullName ?? "",
       email: params.email ?? "",
       phone: params.phone ?? "",
     },

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { X } from "lucide-react";
 
@@ -18,10 +19,21 @@ export default function CheckoutModal({
   planName,
   planPrice,
 }: CheckoutModalProps) {
+  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [consent, setConsent] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+
+  const trimmedFullName = fullName.trim();
+  const trimmedEmail = email.trim();
+  const trimmedPhone = phone.trim();
+  const isFormValid =
+    trimmedFullName.length > 0 &&
+    trimmedEmail.includes("@") &&
+    trimmedPhone.length > 0 &&
+    consent;
 
   useEffect(() => {
     if (!isOpen) return;
@@ -33,8 +45,10 @@ export default function CheckoutModal({
 
   useEffect(() => {
     if (!isOpen) {
+      setFullName("");
       setEmail("");
       setPhone("");
+      setConsent(false);
       setError("");
       setIsLoading(false);
     }
@@ -46,8 +60,10 @@ export default function CheckoutModal({
     e.preventDefault();
     setError("");
 
-    const trimmedEmail = email.trim();
-    const trimmedPhone = phone.trim();
+    if (!trimmedFullName) {
+      setError("Укажите имя и фамилию");
+      return;
+    }
 
     if (!trimmedEmail || !trimmedEmail.includes("@")) {
       setError("Укажите корректный email");
@@ -59,6 +75,11 @@ export default function CheckoutModal({
       return;
     }
 
+    if (!consent) {
+      setError("Необходимо согласие на обработку персональных данных");
+      return;
+    }
+
     setIsLoading(true);
 
     try {
@@ -67,6 +88,7 @@ export default function CheckoutModal({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           planId,
+          fullName: trimmedFullName,
           email: trimmedEmail,
           phone: trimmedPhone,
           cancelPath: `${window.location.pathname}${window.location.hash}`,
@@ -127,12 +149,26 @@ export default function CheckoutModal({
 
         <form onSubmit={handleSubmit} className="mt-6 space-y-4">
           <label className="block text-sm text-[#1c1917]">
+            Имя, Фамилия
+            <input
+              type="text"
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+              placeholder="Иван Иванов"
+              required
+              className="mt-1.5 w-full rounded-sm border border-[#E8E2D9] bg-white px-4 py-3 text-sm focus:border-[#C4956A] focus:outline-none"
+              autoComplete="name"
+            />
+          </label>
+
+          <label className="block text-sm text-[#1c1917]">
             Email для доступа к кабинету
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
+              required
               className="mt-1.5 w-full rounded-sm border border-[#E8E2D9] bg-white px-4 py-3 text-sm focus:border-[#C4956A] focus:outline-none"
               autoComplete="email"
             />
@@ -145,14 +181,37 @@ export default function CheckoutModal({
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               placeholder="+1 (555) 000-0000"
+              required
               className="mt-1.5 w-full rounded-sm border border-[#E8E2D9] bg-white px-4 py-3 text-sm focus:border-[#C4956A] focus:outline-none"
               autoComplete="tel"
             />
           </label>
 
+          <label className="flex cursor-pointer items-start gap-3 text-sm text-[#1c1917]">
+            <input
+              type="checkbox"
+              checked={consent}
+              onChange={(e) => setConsent(e.target.checked)}
+              required
+              className="mt-1 h-4 w-4 shrink-0 rounded-sm border-[#E8E2D9] accent-[#C4956A]"
+            />
+            <span>
+              Я согласен на обработку персональных данных.{" "}
+              <Link
+                href="/privacy"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[#C4956A] underline underline-offset-2 hover:text-[#B07D54]"
+                onClick={(e) => e.stopPropagation()}
+              >
+                Политика конфиденциальности
+              </Link>
+            </span>
+          </label>
+
           <button
             type="submit"
-            disabled={isLoading}
+            disabled={isLoading || !isFormValid}
             className="w-full rounded-sm bg-[#3D3530] py-4 text-sm font-medium text-white transition-colors hover:bg-[#C4956A] disabled:cursor-not-allowed disabled:opacity-70"
           >
             {isLoading ? "Загрузка..." : "Перейти к оплате →"}
