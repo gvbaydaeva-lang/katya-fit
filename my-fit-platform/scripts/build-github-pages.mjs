@@ -6,6 +6,9 @@ const toHide = [
   ["app/auth", ".auth-github-pages-backup"],
   ["app/(student)", ".student-github-pages-backup"],
   ["app/(admin)", ".admin-github-pages-backup"],
+  ["app/(public)/login", ".login-github-pages-backup"],
+  ["app/(public)/register", ".register-github-pages-backup"],
+  ["app/(public)/checkout", ".checkout-github-pages-backup"],
   ["middleware.ts", ".middleware-github-pages-backup"],
 ];
 
