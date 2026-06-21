@@ -1,6 +1,7 @@
 "use client";
 
 import { ButtonLink } from "@/components/ui/Button";
+import { LANDING_HERO_TITLE_CLASS } from "@/components/landing/landing-hero-styles";
 import { AUTH_ROUTES } from "@/lib/auth/routes";
 
 type PageHeroProps = {
@@ -31,7 +32,7 @@ export function PageHero({
               {badge}
             </p>
           )}
-          <h1 className="mt-4 max-w-xl text-4xl font-bold leading-tight text-zinc-900 md:text-5xl">
+          <h1 className={`mt-4 text-zinc-900 ${LANDING_HERO_TITLE_CLASS}`}>
             {title}
           </h1>
           <p className="mt-6 text-lg text-zinc-600">{description}</p>

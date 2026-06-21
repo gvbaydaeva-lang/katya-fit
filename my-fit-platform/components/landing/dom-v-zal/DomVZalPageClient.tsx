@@ -3,6 +3,9 @@
 import Image from "next/image";
 import { useState } from "react";
 import { LandingChrome } from "@/components/landing/LandingChrome";
+import { HeroAudienceCard } from "@/components/landing/HeroAudienceCard";
+import { LANDING_HERO_TITLE_CLASS, LANDING_HERO_OBJECT_DOM_V_ZAL } from "@/components/landing/landing-hero-styles";
+import { ProgramLandingHero } from "@/components/landing/ProgramLandingHero";
 import { CourseTimelineSection } from "@/components/landing/home-to-gym/CourseTimelineSection";
 import { PricingCTASection } from "@/components/landing/home-to-gym/PricingCTASection";
 import { FaqSection } from "@/components/landing/dom-v-zal/FaqSection";
@@ -29,33 +32,27 @@ function Check() {
   );
 }
 
-function HeroPhotoGradient() {
-  return (
-    <div className="pointer-events-none absolute inset-y-0 left-0 z-[1] w-[48%] bg-gradient-to-r from-[#FAF8F4] from-5% via-[#FAF8F4]/75 via-35% to-transparent" />
-  );
-}
-
 function WeeksCard({
   className = "",
   compact = false,
-  mini = false,
 }: {
   className?: string;
   compact?: boolean;
-  mini?: boolean;
 }) {
-  const padding = mini ? "p-2" : compact ? "p-3" : "p-6";
-  const width = mini ? "max-w-[118px]" : compact ? "max-w-[140px]" : "min-w-[140px]";
-  const numberSize = mini ? "text-2xl" : compact ? "text-3xl" : "text-5xl";
-  const dividerSpacing = mini ? "mt-1.5 pt-1.5" : compact ? "mt-2 pt-2" : "mt-4 pt-4";
+  const padding = compact ? "p-3" : "p-6";
+  const width = compact ? "max-w-[140px]" : "min-w-[140px]";
+  const numberSize = compact ? "text-3xl" : "text-5xl";
+  const dividerSpacing = compact ? "mt-2 pt-2" : "mt-4 pt-4";
 
   return (
-    <div className={`rounded-sm border border-[#E8E2D9] text-center ${width} ${padding} ${className}`}>
+    <div
+      className={`rounded-sm border border-[#E8E2D9] bg-white text-center shadow-[0_4px_20px_rgba(28,25,23,0.1)] ${width} ${padding} ${className}`}
+    >
       <p className={`font-bold text-stone-900 ${numberSize}`}>12</p>
-      <p className={`font-medium tracking-wider text-[#C4956A] ${mini ? "mt-0.5 text-[10px]" : "mt-1 text-xs"}`}>
+      <p className={`mt-1 font-medium tracking-wider text-[#C4956A] ${compact ? "text-[10px]" : "text-xs"}`}>
         НЕДЕЛЬ
       </p>
-      {!mini && (
+      {!compact && (
         <>
           <p className="mt-1 text-xs leading-snug text-stone-400">пошаговая<br />трансформация</p>
           <div className={`border-t border-[#E8E2D9] ${dividerSpacing}`}>
@@ -66,12 +63,19 @@ function WeeksCard({
           </div>
         </>
       )}
-      {mini && (
-        <p className="mt-1 text-[9px] leading-snug text-stone-500">дома и в зале</p>
+      {compact && (
+        <p className="mt-1 text-[10px] leading-snug text-stone-500">пошаговая трансформация</p>
       )}
     </div>
   );
 }
+
+const heroAudience = [
+  "Для тех, кто никогда не занимался в зале и боится начать",
+  "Для тех, кто хочет тренироваться и дома, и в зале — по ситуации",
+  "Для тех, кто устал от хаотичных тренировок без системы",
+  "Для тех, кто хочет видимый результат за 12 недель",
+] as const;
 
 const forWhom = [
   "Хотите привести тело в форму, но не знаете, с чего начать",
@@ -107,69 +111,44 @@ export function DomVZalPageClient() {
 
   return (
     <LandingChrome navOverrides={DOM_V_ZAL_NAV_OVERRIDES}>
-      <section className="overflow-hidden bg-[#FAF8F4]">
-        <div className="mx-auto max-w-6xl px-6 py-16 lg:py-24">
-          <div className="grid gap-10 md:grid-cols-2 md:items-stretch">
-            <div className="flex min-w-0 flex-col">
-              <h1 className="max-w-xl text-4xl font-bold leading-tight text-stone-900 md:text-5xl">
-                Из дома<br />в зал
-              </h1>
-              <p className="mt-3 text-sm font-medium text-[#C4956A] tracking-wider">— 12 недель, которые изменят не только ваше тело, но и вас</p>
-              <p className="mt-4 max-w-lg text-base text-stone-500 leading-relaxed">
-                Пошаговая программа для женщин, которые хотят начать тренироваться, похудеть, подтянуть тело и обрести уверенность — без стресса, диет и крайностей.
-              </p>
-              <div className="mt-8 hidden flex-wrap items-center gap-4 md:flex">
-                <button type="button" onClick={openCheckout} className={checkoutButtonClassName}>
-                  ХОЧУ В ПРОГРАММУ
-                </button>
-                <button className="flex items-center gap-2 text-sm text-stone-500 hover:text-stone-700 transition-colors">
-                  <span className="flex h-10 w-10 items-center justify-center rounded-full border border-stone-300 text-xs">▶</span>
-                  <span className="text-left">СМОТРЕТЬ ВИДЕО<br /><span className="text-xs font-normal">о программе (1 мин)</span></span>
-                </button>
-              </div>
-              <div className="relative mt-8 h-[min(68vw,400px)] w-full overflow-hidden rounded-sm md:hidden">
-                <Image
-                  src={katyaHero}
-                  alt="Катя — фитнес-тренер KATY D."
-                  fill
-                  className="object-cover object-[right_50%]"
-                  sizes="100vw"
-                  priority
-                />
-                <HeroPhotoGradient />
-                <div className="absolute bottom-2 left-2 z-10 max-w-[42%]">
-                  <WeeksCard mini className="w-full bg-[#FAF8F4]/88 backdrop-blur-sm" />
-                </div>
-              </div>
-              <div className="mt-6 flex flex-wrap items-center gap-4 md:hidden">
-                <button type="button" onClick={openCheckout} className={checkoutButtonClassName}>
-                  ХОЧУ В ПРОГРАММУ
-                </button>
-                <button className="flex items-center gap-2 text-sm text-stone-500 hover:text-stone-700 transition-colors">
-                  <span className="flex h-10 w-10 items-center justify-center rounded-full border border-stone-300 text-xs">▶</span>
-                  <span className="text-left">СМОТРЕТЬ ВИДЕО<br /><span className="text-xs font-normal">о программе (1 мин)</span></span>
-                </button>
-              </div>
-            </div>
-            <div className="relative hidden min-h-0 md:block">
-              <div className="relative h-full w-full overflow-hidden rounded-sm">
-                <Image
-                  src={katyaHero}
-                  alt="Катя — фитнес-тренер KATY D."
-                  fill
-                  className="object-cover object-[right_50%]"
-                  sizes="(max-width: 1024px) 100vw, 50vw"
-                  priority
-                />
-                <HeroPhotoGradient />
-                <div className="absolute bottom-3 left-3 z-10 max-w-[38%]">
-                  <WeeksCard compact className="w-full bg-[#FAF8F4]/88 backdrop-blur-sm" />
-                </div>
-              </div>
-            </div>
+      <ProgramLandingHero
+        image={katyaHero}
+        imageAlt="Катя — фитнес-тренер KATY D."
+        imagePosition="right"
+        imageEdgeFade
+        imageObjectPosition={LANDING_HERO_OBJECT_DOM_V_ZAL}
+        imageOverlay={
+          <div className="absolute bottom-5 left-5 z-10 sm:bottom-6 sm:left-6">
+            <WeeksCard compact />
+          </div>
+        }
+      >
+        <div className="flex flex-col lg:h-full">
+          <div>
+            <h1 className={`text-stone-900 ${LANDING_HERO_TITLE_CLASS}`}>
+              Из дома в зал
+            </h1>
+            <p className="mt-3 text-sm font-medium tracking-wider text-[#C4956A]">
+              — 12 недель, которые изменят не только ваше тело, но и вас
+            </p>
+            <p className="mt-4 max-w-lg text-base leading-relaxed text-stone-500">
+              Пошаговая программа для женщин, которые хотят начать тренироваться, похудеть, подтянуть тело и обрести уверенность — без стресса, диет и крайностей.
+            </p>
+          </div>
+          <div className="mt-8 flex flex-wrap items-center gap-4">
+            <button type="button" onClick={openCheckout} className={checkoutButtonClassName}>
+              ХОЧУ В ПРОГРАММУ
+            </button>
+            <button className="flex items-center gap-2 text-sm text-stone-500 hover:text-stone-700 transition-colors">
+              <span className="flex h-10 w-10 items-center justify-center rounded-full border border-stone-300 text-xs">▶</span>
+              <span className="text-left">СМОТРЕТЬ ВИДЕО<br /><span className="text-xs font-normal">о программе (1 мин)</span></span>
+            </button>
+          </div>
+          <div className="mt-auto pt-8">
+            <HeroAudienceCard title="Кому подходит программа" items={heroAudience} />
           </div>
         </div>
-      </section>
+      </ProgramLandingHero>
 
       <section className="bg-white py-20">
         <div className="mx-auto max-w-6xl px-6">

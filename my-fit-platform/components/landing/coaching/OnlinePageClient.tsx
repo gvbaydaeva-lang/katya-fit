@@ -1,13 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import type { CSSProperties } from "react";
 import { useState } from "react";
 import { HowItWorksSection } from "@/components/landing/coaching/HowItWorksSection";
 import { ReadySection } from "@/components/landing/coaching/ReadySection";
 import { WhatYouGetSection } from "@/components/landing/coaching/WhatYouGetSection";
 import { LandingChrome } from "@/components/landing/LandingChrome";
+import { HeroAudienceCard } from "@/components/landing/HeroAudienceCard";
+import { LANDING_HERO_TITLE_CLASS, LANDING_HERO_OBJECT_ONLINE } from "@/components/landing/landing-hero-styles";
+import { ProgramLandingHero } from "@/components/landing/ProgramLandingHero";
 import CheckoutModal from "@/components/public/CheckoutModal";
 import {
   Accordion,
@@ -85,57 +87,34 @@ export function OnlinePageClient() {
 
   return (
     <LandingChrome>
-      <section className="bg-[#FAF8F4] overflow-hidden">
-        <div className="mx-auto max-w-6xl px-6 py-16 lg:py-24">
-          <div className="grid gap-12 lg:grid-cols-2 lg:items-start">
-            <div className="relative mx-auto w-full max-w-md lg:max-w-none">
-              <div className="relative aspect-[3/4]">
-                <Image
-                  src={onlineHero}
-                  alt="Катя — онлайн сопровождение"
-                  fill
-                  className="object-cover object-[62%_top]"
-                  style={ONLINE_HERO_MASK}
-                  priority
-                  sizes="(max-width: 1024px) 100vw, 50vw"
-                />
-              </div>
-            </div>
-            <div>
-              <h1 className="max-w-xl text-4xl font-bold leading-tight text-stone-900 md:text-5xl">
-                Онлайн<br />сопровождение
-              </h1>
-              <p className="mt-2 text-sm text-[#C4956A] font-medium tracking-wide">
-                Индивидуальная работа со мной для тех,<br />кто хочет получить максимальный результат
-              </p>
-              <ul className="mt-6 space-y-3">
-                {heroFeatures.map((f) => (
-                  <li key={f} className="flex gap-3 text-sm text-stone-600"><Check />{f}</li>
-                ))}
-              </ul>
-              <div className="mt-8 flex flex-wrap items-center gap-4">
-                <Link href="#pricing" className="rounded-sm bg-[#C4956A] px-8 py-3.5 text-sm font-semibold tracking-wider text-white hover:bg-[#B07D54] transition-colors">
-                  ХОЧУ В СОПРОВОЖДЕНИЕ
-                </Link>
-                <button className="flex items-center gap-2 text-sm text-stone-500 hover:text-stone-700 transition-colors">
-                  <span className="flex h-10 w-10 items-center justify-center rounded-full border border-stone-300 text-xs">▶</span>
-                  <span className="text-left">СМОТРЕТЬ ВИДЕО<br /><span className="text-xs font-normal">о программе (1 мин)</span></span>
-                </button>
-              </div>
-              <div className="mt-8 rounded-sm border border-[#E8E2D9] bg-white p-5">
-                <p className="text-sm font-semibold text-stone-900">Для кого это подходит?</p>
-                <ul className="mt-3 space-y-2">
-                  {forWhom.map((f) => (
-                    <li key={f} className="flex gap-2 text-sm text-stone-600">
-                      <span className="text-[#C4956A] shrink-0 mt-0.5">◎</span>{f}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          </div>
+      <ProgramLandingHero
+        image={onlineHero}
+        imageAlt="Катя — онлайн сопровождение"
+        imageObjectPosition={LANDING_HERO_OBJECT_ONLINE}
+        imageMask={ONLINE_HERO_MASK}
+      >
+        <h1 className={`text-stone-900 ${LANDING_HERO_TITLE_CLASS}`}>
+          Онлайн сопровождение
+        </h1>
+        <p className="mt-2 text-sm font-medium tracking-wide text-[#C4956A]">
+          Индивидуальная работа со мной для тех,<br />кто хочет получить максимальный результат
+        </p>
+        <ul className="mt-6 space-y-3">
+          {heroFeatures.map((f) => (
+            <li key={f} className="flex gap-3 text-sm text-stone-600"><Check />{f}</li>
+          ))}
+        </ul>
+        <div className="mt-8 flex flex-wrap items-center gap-4">
+          <Link href="#pricing" className="rounded-sm bg-[#C4956A] px-8 py-3.5 text-sm font-semibold tracking-wider text-white hover:bg-[#B07D54] transition-colors">
+            ХОЧУ В СОПРОВОЖДЕНИЕ
+          </Link>
+          <button className="flex items-center gap-2 text-sm text-stone-500 hover:text-stone-700 transition-colors">
+            <span className="flex h-10 w-10 items-center justify-center rounded-full border border-stone-300 text-xs">▶</span>
+            <span className="text-left">СМОТРЕТЬ ВИДЕО<br /><span className="text-xs font-normal">о программе (1 мин)</span></span>
+          </button>
         </div>
-      </section>
+        <HeroAudienceCard title="Для кого это подходит?" items={forWhom} className="mt-8" />
+      </ProgramLandingHero>
 
       <WhatYouGetSection />
 

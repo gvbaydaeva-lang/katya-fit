@@ -2,6 +2,7 @@ import Image from "next/image";
 import type { CSSProperties } from "react";
 import { AnchorLink } from "@/components/public/AnchorLink";
 import { LANDING_SECTIONS } from "@/lib/landing/anchors";
+import { LANDING_HERO_TITLE_CLASS } from "@/components/landing/landing-hero-styles";
 import katyaHero from "@/public/images/hero-katya.jpg";
 
 const HERO_IMAGE_MASK: CSSProperties = {
@@ -36,8 +37,8 @@ export function HeroSection() {
             Для женщин в декрете и в эмиграции
           </p>
 
-          <h1 className="mt-4 max-w-xl text-4xl font-bold leading-tight text-[#1c1917] md:text-5xl">
-            Верните себе<br />не только<br />форму,<br />но и себя
+          <h1 className={`mt-4 text-[#1c1917] ${LANDING_HERO_TITLE_CLASS}`}>
+            Верните себе не только форму, но и себя
           </h1>
 
           <p className="mt-6 max-w-md text-base leading-relaxed text-[#57534e]">
