@@ -31,7 +31,7 @@ export function PageHero({
               {badge}
             </p>
           )}
-          <h1 className="mt-4 text-4xl font-semibold leading-tight text-zinc-900 sm:text-5xl">
+          <h1 className="mt-4 max-w-xl text-4xl font-bold leading-tight text-zinc-900 md:text-5xl">
             {title}
           </h1>
           <p className="mt-6 text-lg text-zinc-600">{description}</p>

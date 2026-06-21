@@ -102,7 +102,7 @@ export function OnlinePageClient() {
               </div>
             </div>
             <div>
-              <h1 className="text-4xl font-bold text-stone-900 leading-tight sm:text-5xl">
+              <h1 className="max-w-xl text-4xl font-bold leading-tight text-stone-900 md:text-5xl">
                 Онлайн<br />сопровождение
               </h1>
               <p className="mt-2 text-sm text-[#C4956A] font-medium tracking-wide">

@@ -111,7 +111,7 @@ export function DomVZalPageClient() {
         <div className="mx-auto max-w-6xl px-6 py-16 lg:py-24">
           <div className="grid gap-10 md:grid-cols-2 md:items-stretch">
             <div className="flex min-w-0 flex-col">
-              <h1 className="text-5xl font-bold text-stone-900 leading-tight sm:text-6xl lg:text-7xl">
+              <h1 className="max-w-xl text-4xl font-bold leading-tight text-stone-900 md:text-5xl">
                 Из дома<br />в зал
               </h1>
               <p className="mt-3 text-sm font-medium text-[#C4956A] tracking-wider">— 12 недель, которые изменят не только ваше тело, но и вас</p>

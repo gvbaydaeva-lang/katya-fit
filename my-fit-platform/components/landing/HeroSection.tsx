@@ -36,7 +36,7 @@ export function HeroSection() {
             Для женщин в декрете и в эмиграции
           </p>
 
-          <h1 className="mt-4 text-5xl font-black leading-[1.05] tracking-tight text-[#1c1917] sm:text-6xl">
+          <h1 className="mt-4 max-w-xl text-4xl font-bold leading-tight text-[#1c1917] md:text-5xl">
             Верните себе<br />не только<br />форму,<br />но и себя
           </h1>
 
