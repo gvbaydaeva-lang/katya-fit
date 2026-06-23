@@ -16,6 +16,8 @@ import resultKarina from "@/public/images/result-karina.webp";
 import resultElena from "@/public/images/result-elena.webp";
 import resultGalina from "@/public/images/result-galina.webp";
 import resultAisa from "@/public/images/result-aisa.webp";
+import resultClientNew from "@/public/images/result-client-new.jpg";
+import { ClientResultsCarousel } from "@/components/landing/ClientResultsCarousel";
 
 const resultClients = [
   {
@@ -53,6 +55,17 @@ const resultClients = [
     stats: ["Вес: 65,8 кг → 60,6 кг (–5,2 кг)"],
     image: resultAisa,
     alt: "Результат Айсы — до и после",
+  },
+  {
+    stats: [
+      "Вес: –7 кг",
+      "Грудь: –5 см",
+      "Талия: –10 см",
+      "Живот: –10 см",
+      "Бёдра: –5 см",
+    ],
+    image: resultClientNew,
+    alt: "Результат клиентки — до и после",
   },
 ] as const;
 
@@ -128,30 +141,6 @@ function ProgramCard({
   );
 }
 
-function ResultCard({
-  image,
-  alt,
-  children,
-}: {
-  image: import("next/image").StaticImageData;
-  alt: string;
-  children: ReactNode;
-}) {
-  return (
-    <article className="flex h-full min-w-0 flex-col overflow-hidden rounded-sm border border-[#E8E2D9] bg-[#FAF8F4]">
-      <div className="shrink-0 p-2">
-        <CoverImage
-          src={image}
-          alt={alt}
-          aspectClass="aspect-[4/3] rounded-sm"
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-        />
-      </div>
-      <div className="min-w-0 flex-1 px-2 pb-5 pt-1">{children}</div>
-    </article>
-  );
-}
-
 export default function HomePage() {
   return (
     <LandingChrome>
@@ -201,23 +190,7 @@ export default function HomePage() {
       <section className="bg-white py-20 lg:py-28">
         <div className="mx-auto max-w-6xl px-6">
           <h2 className="text-3xl font-bold text-stone-900 sm:text-4xl text-center">Результаты моих клиенток</h2>
-          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4 lg:items-stretch">
-            {resultClients.map((client) => (
-              <ResultCard key={client.name} image={client.image} alt={client.alt}>
-                <p className="text-xs font-semibold text-stone-900">{client.name}</p>
-                <p className="mt-0.5 text-[11px] text-stone-500 leading-snug sm:text-xs">{client.profession}</p>
-                <p className="mt-2 text-[11px] text-stone-500 leading-relaxed italic break-words sm:text-xs">{client.quote}</p>
-                <p className="mt-3 text-[11px] font-bold text-[#C4956A] sm:text-xs">Результат за {client.period}:</p>
-                <ul className="mt-1 space-y-0.5">
-                  {client.stats.map((stat) => (
-                    <li key={stat} className="text-[11px] text-stone-600 leading-snug break-words sm:text-xs">
-                      {stat}
-                    </li>
-                  ))}
-                </ul>
-              </ResultCard>
-            ))}
-          </div>
+          <ClientResultsCarousel clients={resultClients} />
         </div>
       </section>
       </div>

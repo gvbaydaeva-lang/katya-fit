@@ -84,3 +84,41 @@ h3 {
 .course-cards-marquee:hover {
   animation-play-state: paused;
 }
+
+.client-results-track {
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scroll-padding-inline: 0.25rem;
+  touch-action: pan-x;
+}
+
+.client-results-track > article {
+  animation: client-result-fade-in 0.5s ease-out both;
+}
+
+.client-results-track > article:nth-child(2) {
+  animation-delay: 0.08s;
+}
+
+.client-results-track > article:nth-child(3) {
+  animation-delay: 0.16s;
+}
+
+.client-results-track > article:nth-child(4) {
+  animation-delay: 0.24s;
+}
+
+.client-results-track > article:nth-child(5) {
+  animation-delay: 0.32s;
+}
+
+@keyframes client-result-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
