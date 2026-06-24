@@ -113,6 +113,14 @@ export function DomVZalPageClient() {
     setModalOpen(true);
   }
 
+  function scrollToWhatYouGet() {
+    const el = document.getElementById("what-you-get");
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+      window.history.pushState(null, "", "#what-you-get");
+    }
+  }
+
   return (
     <LandingChrome navOverrides={DOM_V_ZAL_NAV_OVERRIDES}>
       <ProgramLandingHero
@@ -146,12 +154,12 @@ export function DomVZalPageClient() {
             className="mt-8 lg:hidden"
           />
           <div className="mt-8 lg:hidden">
-            <button type="button" onClick={openCheckout} className={checkoutButtonClassName}>
+            <button type="button" onClick={scrollToWhatYouGet} className={checkoutButtonClassName}>
               ХОЧУ В ПРОГРАММУ
             </button>
           </div>
           <div className="mt-8 hidden flex-wrap items-center gap-4 lg:flex">
-            <button type="button" onClick={openCheckout} className={checkoutButtonClassName}>
+            <button type="button" onClick={scrollToWhatYouGet} className={checkoutButtonClassName}>
               ХОЧУ В ПРОГРАММУ
             </button>
             <button className="flex items-center gap-2 text-sm text-stone-500 transition-colors hover:text-stone-700">

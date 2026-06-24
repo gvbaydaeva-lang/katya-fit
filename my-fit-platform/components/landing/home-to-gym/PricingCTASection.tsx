@@ -29,7 +29,7 @@ type PricingCTASectionProps = {
 
 export function PricingCTASection({ onCheckout }: PricingCTASectionProps) {
   return (
-    <section className="bg-white py-16 text-center">
+    <section id="what-you-get" className="scroll-mt-20 bg-white py-16 text-center">
       <div className="mx-auto max-w-3xl px-6">
         <h2 className="mb-10 text-2xl font-bold uppercase tracking-widest text-[#1c1917]">
           Что вы получите

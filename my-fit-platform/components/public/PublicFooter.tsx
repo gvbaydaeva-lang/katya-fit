@@ -37,7 +37,7 @@ export function PublicFooter() {
   return (
     <footer id="contact" className="scroll-mt-20 border-t border-[#E8E2D9] bg-[#FAF8F4]">
       <div className="mx-auto max-w-6xl px-6 py-10 sm:py-12">
-        <div className="flex flex-col gap-8">
+        <div className="flex flex-col gap-8 md:flex-row md:items-start md:justify-between">
           <div className="min-w-0">
             <p className="text-xl font-bold tracking-tight text-stone-900">KATY D.</p>
             <Link
@@ -48,37 +48,39 @@ export function PublicFooter() {
             </Link>
           </div>
 
-          <nav
-            aria-label="Навигация в подвале"
-            className="flex flex-wrap gap-x-6 gap-y-3 text-xs tracking-wider text-stone-500"
-          >
-            <Link href="/#my-story" className="transition-colors hover:text-stone-900">
-              Обо мне
-            </Link>
-            <Link href="/#programs" className="transition-colors hover:text-stone-900">
-              Программы
-            </Link>
-            <Link href="/#results" className="transition-colors hover:text-stone-900">
-              Отзывы
-            </Link>
-            <Link href="/#contact" className="transition-colors hover:text-stone-900">
-              Контакты
-            </Link>
-          </nav>
+          <div className="flex flex-col gap-8 md:items-end md:gap-6">
+            <nav
+              aria-label="Навигация в подвале"
+              className="flex flex-wrap gap-x-6 gap-y-3 text-xs tracking-wider text-stone-500"
+            >
+              <Link href="/#my-story" className="transition-colors hover:text-stone-900">
+                Обо мне
+              </Link>
+              <Link href="/#programs" className="transition-colors hover:text-stone-900">
+                Программы
+              </Link>
+              <Link href="/#results" className="transition-colors hover:text-stone-900">
+                Отзывы
+              </Link>
+              <Link href="/#contact" className="transition-colors hover:text-stone-900">
+                Контакты
+              </Link>
+            </nav>
 
-          <div className="flex flex-wrap items-center gap-3 sm:gap-4">
-            {SOCIAL_LINKS.map((social) => (
-              <a
-                key={social.href}
-                href={social.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={social.label}
-                className={socialLinkClassName}
-              >
-                {social.icon}
-              </a>
-            ))}
+            <div className="flex flex-wrap items-center gap-3 sm:gap-4">
+              {SOCIAL_LINKS.map((social) => (
+                <a
+                  key={social.href}
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={social.label}
+                  className={socialLinkClassName}
+                >
+                  {social.icon}
+                </a>
+              ))}
+            </div>
           </div>
         </div>
       </div>
