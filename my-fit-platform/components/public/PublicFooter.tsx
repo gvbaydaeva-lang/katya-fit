@@ -37,12 +37,15 @@ export function PublicFooter() {
   return (
     <footer id="contact" className="scroll-mt-20 border-t border-[#E8E2D9] bg-[#FAF8F4]">
       <div className="mx-auto max-w-6xl px-6 py-10 sm:py-12">
-        <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
+        <div className="flex flex-col gap-8">
           <div className="min-w-0">
             <p className="text-xl font-bold tracking-tight text-stone-900">KATY D.</p>
-            <p className="mt-0.5 text-[8px] font-light uppercase tracking-[0.25em] text-stone-400">
-              FITNESS &amp; NUTRITION COACH
-            </p>
+            <Link
+              href="/privacy"
+              className="mt-2 inline-block text-xs text-stone-500 underline-offset-4 transition-colors hover:text-stone-900 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C4956A]"
+            >
+              Политика конфиденциальности
+            </Link>
           </div>
 
           <nav
@@ -77,15 +80,6 @@ export function PublicFooter() {
               </a>
             ))}
           </div>
-        </div>
-
-        <div className="mt-8 border-t border-[#E8E2D9] pt-6">
-          <Link
-            href="/privacy"
-            className="text-xs text-stone-500 underline-offset-4 transition-colors hover:text-stone-900 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C4956A]"
-          >
-            Политика конфиденциальности
-          </Link>
         </div>
       </div>
     </footer>

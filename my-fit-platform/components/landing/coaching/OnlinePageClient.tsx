@@ -164,7 +164,12 @@ export function OnlinePageClient() {
               <div className="mt-auto rounded-sm bg-stone-100 p-4 text-center">
                 <p className="text-sm text-stone-600">Индивидуальные условия. Заполните анкету, чтобы обсудить детали.</p>
               </div>
-              <Link href="#" className="mt-4 inline-flex w-full justify-center rounded-sm bg-[#C4956A] px-5 py-3 text-sm font-semibold tracking-wider text-white hover:bg-[#B07D54] transition-colors">
+              <Link
+                href="https://forms.gle/QV4jF771qE5wNkjU6"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-4 inline-flex w-full justify-center rounded-sm bg-[#C4956A] px-5 py-3 text-sm font-semibold tracking-wider text-white hover:bg-[#B07D54] transition-colors"
+              >
                 ЗАПОЛНИТЬ АНКЕТУ
               </Link>
             </article>

@@ -55,7 +55,7 @@ export function PricingCTASection({ onCheckout }: PricingCTASectionProps) {
           <p className="text-5xl font-bold text-[#1c1917]">{selfPlan.price}</p>
         </div>
 
-        <div className="mt-6 hidden justify-center md:flex">
+        <div className="mt-6 flex justify-center">
           <Button
             type="button"
             onClick={onCheckout}
