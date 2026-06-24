@@ -67,6 +67,7 @@ export type DbPayment = {
   amount: number;
   plan_name: string;
   stripe_checkout_session_id: string;
+  welcome_email_sent_at: string | null;
   created_at: string;
 };
 

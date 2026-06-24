@@ -1,5 +1,6 @@
 import type Stripe from "stripe";
 import { stripeConfig } from "@/lib/stripe/config";
+import { fulfillCheckoutAccess } from "@/lib/stripe/fulfill-checkout-access";
 import { savePaymentFromCheckoutSession } from "@/lib/stripe/save-payment";
 
 export async function handleStripeWebhook(
@@ -43,6 +44,19 @@ export async function handleStripeWebhook(
     if (!result.ok) {
       console.error("[stripe/webhook] save payment failed:", result.error);
       return { status: 500, body: { error: result.error } };
+    }
+
+    const accessResult = await fulfillCheckoutAccess(
+      session,
+      result.stripeCheckoutSessionId,
+    );
+
+    if (!accessResult.ok) {
+      console.error(
+        "[stripe/webhook] fulfill checkout access failed:",
+        accessResult.error,
+      );
+      return { status: 500, body: { error: accessResult.error } };
     }
   }
 

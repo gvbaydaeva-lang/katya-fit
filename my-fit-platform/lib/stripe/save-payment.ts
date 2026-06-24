@@ -4,34 +4,43 @@ import { createAdminClient } from "@/lib/supabase/admin";
 
 export async function savePaymentFromCheckoutSession(
   session: Stripe.Checkout.Session,
-): Promise<{ ok: true } | { ok: false; error: string }> {
+): Promise<
+  | { ok: true; stripeCheckoutSessionId: string; isNew: boolean }
+  | { ok: false; error: string }
+> {
   if (session.payment_status !== "paid") {
     return { ok: false, error: "Checkout session is not paid" };
   }
 
   const stripeCheckoutSessionId = session.id;
+
   const email =
     session.customer_details?.email ??
     session.customer_email ??
     session.metadata?.email ??
     "";
+
   const userName =
-    session.metadata?.full_name?.trim() ||
     session.customer_details?.name?.trim() ||
+    session.metadata?.full_name?.trim() ||
     "—";
+
   const phone =
-    session.metadata?.phone?.trim() ||
     session.customer_details?.phone?.trim() ||
+    session.metadata?.phone?.trim() ||
     null;
+
+  const amount = session.amount_total ?? 0;
+
   const planId =
     session.metadata?.plan_id ?? session.metadata?.planId ?? "";
   const plan = getPlanById(planId);
   const planName =
     session.metadata?.plan_name?.trim() ||
     plan?.name ||
+    session.line_items?.data?.[0]?.description ||
     planId ||
     "—";
-  const amount = session.amount_total ?? 0;
 
   if (!email) {
     return { ok: false, error: "Checkout session has no email" };
@@ -42,21 +51,22 @@ export async function savePaymentFromCheckoutSession(
   }
 
   const admin = createAdminClient();
-  const { error } = await admin.from("payments").upsert(
-    {
-      stripe_checkout_session_id: stripeCheckoutSessionId,
-      user_name: userName,
-      email,
-      phone,
-      amount,
-      plan_name: planName,
-    },
-    { onConflict: "stripe_checkout_session_id", ignoreDuplicates: true },
-  );
+  const { error } = await admin.from("payments").insert({
+    stripe_checkout_session_id: stripeCheckoutSessionId,
+    user_name: userName,
+    email,
+    phone,
+    amount,
+    plan_name: planName,
+  });
 
   if (error) {
+    // Повторная доставка webhook — запись уже есть, считаем успехом
+    if (error.code === "23505") {
+      return { ok: true, stripeCheckoutSessionId, isNew: false };
+    }
     return { ok: false, error: error.message };
   }
 
-  return { ok: true };
+  return { ok: true, stripeCheckoutSessionId, isNew: true };
 }
