@@ -26,9 +26,7 @@ function loadEnvFile(path) {
 
 const fileEnv = loadEnvFile(envPath);
 const url =
-  process.env.NEXT_PUBLIC_SUPABASE_URL ||
-  fileEnv.NEXT_PUBLIC_SUPABASE_URL ||
-  "https://whlnpdkphfekgtilcbqc.supabase.co";
+  process.env.NEXT_PUBLIC_SUPABASE_URL || fileEnv.NEXT_PUBLIC_SUPABASE_URL;
 const key =
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
   fileEnv.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
@@ -36,6 +34,12 @@ const key =
 
 console.log("Katya Fit — проверка Supabase");
 console.log("  .env.local:", existsSync(envPath) ? envPath : "не найден");
+
+if (!url) {
+  console.error("  ОШИБКА: NEXT_PUBLIC_SUPABASE_URL не задан");
+  process.exit(1);
+}
+
 console.log("  URL:", url);
 
 if (!key) {

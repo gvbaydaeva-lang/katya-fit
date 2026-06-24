@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { ButtonLink } from "@/components/ui/Button";
 import { AUTH_ROUTES, STUDENT_ROUTES } from "@/lib/auth/routes";
 
@@ -11,7 +12,7 @@ export function AuthNav() {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
+    if (!isSupabaseConfigured()) {
       setReady(true);
       return;
     }

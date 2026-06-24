@@ -1,6 +1,3 @@
-/** Актуальный проект Supabase (fallback, если .env.local не подхватился) */
-const DEFAULT_SUPABASE_URL = "https://whlnpdkphfekgtilcbqc.supabase.co";
-
 function normalizeUrl(url: string): string {
   return url.trim().replace(/\/$/, "");
 }
@@ -27,9 +24,14 @@ function isValidSupabaseSecretKey(key: string): boolean {
 }
 
 export function getSupabaseUrl(): string {
-  const url = normalizeUrl(
-    process.env.NEXT_PUBLIC_SUPABASE_URL?.trim() || DEFAULT_SUPABASE_URL,
-  );
+  const raw = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
+  if (!raw) {
+    throw new Error(
+      "NEXT_PUBLIC_SUPABASE_URL не задан (Supabase → Project Settings → API → Project URL)",
+    );
+  }
+
+  const url = normalizeUrl(raw);
   if (!isValidSupabaseUrl(url)) {
     throw new Error(
       "NEXT_PUBLIC_SUPABASE_URL должен быть вида https://<project>.supabase.co",
