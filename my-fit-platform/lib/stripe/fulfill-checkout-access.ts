@@ -1,7 +1,6 @@
 import type Stripe from "stripe";
 import { generatePasswordSetupLink } from "@/lib/auth/generate-password-setup-link";
 import { upsertActiveSubscription } from "@/lib/auth/create-subscription";
-import { sendPurchaseAccessEmail } from "@/lib/email/send-purchase-access-email";
 import { isValidPlanId } from "@/lib/stripe/plans";
 import { createAdminClient } from "@/lib/supabase/admin";
 
@@ -33,7 +32,7 @@ export async function fulfillCheckoutAccess(
 
   const { data: payment, error: paymentError } = await admin
     .from("payments")
-    .select("welcome_email_sent_at")
+    .select("id")
     .eq("stripe_checkout_session_id", stripeCheckoutSessionId)
     .maybeSingle();
 
@@ -41,8 +40,8 @@ export async function fulfillCheckoutAccess(
     return { ok: false, error: paymentError.message };
   }
 
-  if (payment?.welcome_email_sent_at) {
-    return { ok: true };
+  if (!payment) {
+    return { ok: false, error: "Payment record not found" };
   }
 
   const email = getCheckoutEmail(session);
@@ -73,27 +72,6 @@ export async function fulfillCheckoutAccess(
     if (subscriptionError) {
       return { ok: false, error: subscriptionError };
     }
-  }
-
-  const emailResult = await sendPurchaseAccessEmail({
-    to: email,
-    accessLink: linkResult.actionLink,
-  });
-
-  if (!emailResult.ok) {
-    return { ok: false, error: emailResult.error };
-  }
-
-  const { error: markError } = await admin
-    .from("payments")
-    .update({ welcome_email_sent_at: new Date().toISOString() })
-    .eq("stripe_checkout_session_id", stripeCheckoutSessionId);
-
-  if (markError) {
-    console.error(
-      "[stripe/webhook] welcome email sent but mark failed:",
-      markError.message,
-    );
   }
 
   return { ok: true };

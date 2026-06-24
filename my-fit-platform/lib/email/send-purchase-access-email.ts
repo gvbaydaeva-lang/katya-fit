@@ -9,24 +9,10 @@ export async function sendPurchaseAccessEmail(
   params: SendPurchaseAccessEmailParams,
 ): Promise<{ ok: true } | { ok: false; error: string }> {
   if (!isResendConfigured()) {
-    return { ok: false, error: "RESEND_API_KEY или RESEND_FROM_EMAIL не заданы" };
+    return { ok: false, error: "RESEND_API_KEY не задан" };
   }
 
-  const text = [
-    "Здравствуйте!",
-    "",
-    "Спасибо за покупку в Katya Fit. Ваш доступ к платформе готов.",
-    "Пожалуйста, перейдите по ссылке ниже, чтобы установить пароль и войти в личный кабинет:",
-    "",
-    params.accessLink,
-  ].join("\n");
-
-  const html = `
-    <p>Здравствуйте!</p>
-    <p>Спасибо за покупку в Katya Fit. Ваш доступ к платформе готов.</p>
-    <p>Пожалуйста, перейдите по ссылке ниже, чтобы установить пароль и войти в личный кабинет:</p>
-    <p><a href="${params.accessLink}">${params.accessLink}</a></p>
-  `.trim();
+  const html = `Здравствуйте! Спасибо за покупку. Ваш доступ к платформе активирован. Ссылка для входа: <a href="${params.accessLink}">${params.accessLink}</a>`;
 
   const { Resend } = await import("resend");
   const resend = new Resend(emailConfig.resendApiKey);
@@ -34,8 +20,7 @@ export async function sendPurchaseAccessEmail(
   const { error } = await resend.emails.send({
     from: emailConfig.from,
     to: params.to,
-    subject: "Ваш доступ к Katya Fit",
-    text,
+    subject: "Доступ к платформе Katya Fit",
     html,
   });
 
