@@ -93,18 +93,24 @@ export function OnlinePageClient() {
         imageObjectPosition={LANDING_HERO_OBJECT_ONLINE}
         imageMask={ONLINE_HERO_MASK}
       >
+        <div className="flex flex-col">
         <h1 className={`text-stone-900 ${LANDING_HERO_TITLE_CLASS}`}>
           Онлайн сопровождение
         </h1>
         <p className="mt-2 text-sm font-medium tracking-wide text-[#C4956A]">
           Индивидуальная работа со мной для тех,<br />кто хочет получить максимальный результат
         </p>
-        <ul className="mt-6 space-y-3">
+        <ul className="order-3 mt-6 space-y-3">
           {heroFeatures.map((f) => (
             <li key={f} className="flex gap-3 text-sm text-stone-600"><Check />{f}</li>
           ))}
         </ul>
-        <div className="mt-8 flex flex-wrap items-center gap-4">
+        <HeroAudienceCard
+          title="Для кого это подходит?"
+          items={forWhom}
+          className="order-4 mt-8 lg:order-5"
+        />
+        <div className="order-5 mt-8 flex flex-wrap items-center gap-4 lg:order-4">
           <Link href="#pricing" className="rounded-sm bg-[#C4956A] px-8 py-3.5 text-sm font-semibold tracking-wider text-white hover:bg-[#B07D54] transition-colors">
             ХОЧУ В СОПРОВОЖДЕНИЕ
           </Link>
@@ -113,7 +119,7 @@ export function OnlinePageClient() {
             <span className="text-left">СМОТРЕТЬ ВИДЕО<br /><span className="text-xs font-normal">о программе (1 мин)</span></span>
           </button>
         </div>
-        <HeroAudienceCard title="Для кого это подходит?" items={forWhom} className="mt-8" />
+        </div>
       </ProgramLandingHero>
 
       <WhatYouGetSection />

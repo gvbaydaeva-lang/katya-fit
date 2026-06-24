@@ -139,6 +139,12 @@ export function DomVZalPageClient() {
               Пошаговая программа для женщин, которые хотят начать тренироваться, похудеть, подтянуть тело и обрести уверенность — без стресса, диет и крайностей.
             </p>
           </div>
+          <HeroAudienceCard
+            title="Кому подходит программа"
+            items={heroAudience}
+            variant="plain"
+            className="mt-8 lg:hidden"
+          />
           <div className="mt-8 lg:hidden">
             <button type="button" onClick={openCheckout} className={checkoutButtonClassName}>
               ХОЧУ В ПРОГРАММУ
@@ -148,17 +154,11 @@ export function DomVZalPageClient() {
             <button type="button" onClick={openCheckout} className={checkoutButtonClassName}>
               ХОЧУ В ПРОГРАММУ
             </button>
-            <button className="flex items-center gap-2 text-sm text-stone-500 hover:text-stone-700 transition-colors">
+            <button className="flex items-center gap-2 text-sm text-stone-500 transition-colors hover:text-stone-700">
               <span className="flex h-10 w-10 items-center justify-center rounded-full border border-stone-300 text-xs">▶</span>
               <span className="text-left">СМОТРЕТЬ ВИДЕО<br /><span className="text-xs font-normal">о программе (1 мин)</span></span>
             </button>
           </div>
-          <HeroAudienceCard
-            title="Кому подходит программа"
-            items={heroAudience}
-            variant="plain"
-            className="mt-8 lg:hidden"
-          />
           <div className="mt-auto hidden pt-8 lg:block">
             <HeroAudienceCard title="Кому подходит программа" items={heroAudience} />
           </div>

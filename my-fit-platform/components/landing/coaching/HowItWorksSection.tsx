@@ -49,8 +49,8 @@ function StepCard({
   imageAlt,
 }: (typeof STEPS)[number]) {
   return (
-    <article className="flex h-full flex-col overflow-hidden rounded-sm border border-[#E8E2D9] bg-white">
-      <div className="relative h-[220px] w-full shrink-0">
+    <article className="flex h-full flex-col overflow-hidden rounded-sm border border-[#E8E2D9] bg-white shadow-sm transition-all duration-200 hover:shadow-md">
+      <div className="relative aspect-[4/3] w-full shrink-0 overflow-hidden bg-[#E8E2D9]">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={image}
@@ -58,27 +58,41 @@ function StepCard({
           className="h-full w-full object-cover"
           loading="lazy"
         />
-        <div className="absolute left-3 top-3 flex h-7 w-7 items-center justify-center rounded-full bg-[#C4956A] text-xs font-bold text-white">
+        <span className="absolute left-3 top-3 z-10 rounded-sm bg-white/75 px-1.5 py-0.5 text-xs font-medium tracking-wider text-[#C4956A] backdrop-blur-[2px]">
           {n}
-        </div>
+        </span>
       </div>
-      <div className="flex flex-1 flex-col gap-2 bg-white p-4 sm:p-5">
-        <h3 className="text-sm font-semibold text-stone-900">{title}</h3>
-        <p className="text-xs leading-relaxed text-stone-500">{desc}</p>
+      <div className="flex flex-1 flex-col p-4">
+        <h3 className="text-base font-bold leading-snug text-[#1c1917]">{title}</h3>
+        <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-[#78716c]">{desc}</p>
       </div>
     </article>
   );
 }
 
 export function HowItWorksSection() {
+  const marqueeCards = [...STEPS, ...STEPS, ...STEPS];
+
   return (
-    <section className="bg-[#FAF8F4] py-20">
+    <section className="overflow-hidden bg-[#FAF8F4] py-20">
       <div className="mx-auto max-w-6xl px-6">
-        <h2 className="text-center text-3xl font-bold text-stone-900 sm:text-4xl">
+        <h2 className="text-center text-3xl font-bold text-[#1c1917] sm:text-4xl">
           Как проходит работа
         </h2>
 
-        <ul className="mt-12 grid grid-cols-2 gap-5 lg:flex lg:items-stretch">
+        <div className="mt-10 md:hidden">
+          <div className="relative -mx-6 overflow-hidden">
+            <ul className="course-cards-marquee flex w-max gap-4 px-6">
+              {marqueeCards.map((step, index) => (
+                <li key={`${step.n}-${index}`} className="w-[72vw] max-w-[280px] shrink-0">
+                  <StepCard {...step} />
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        <ul className="mt-10 hidden gap-5 md:grid md:grid-cols-2 lg:flex lg:items-stretch">
           {STEPS.map((step) => (
             <li key={step.n} className="min-w-0 flex-1">
               <StepCard {...step} />

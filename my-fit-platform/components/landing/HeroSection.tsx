@@ -33,9 +33,6 @@ const primaryCtaClassName =
 const secondaryButtonClassName =
   "inline-flex items-center rounded-sm border border-[#E8E2D9] bg-transparent px-6 py-3 text-sm font-semibold uppercase tracking-widest text-[#1c1917] transition-colors hover:bg-[#F0EBE3]";
 
-const secondaryLinkClassName =
-  "inline-flex items-center gap-1 text-sm text-[#57534e] underline-offset-4 transition-colors hover:text-[#1c1917] hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C4956A]";
-
 function HeroPhoto() {
   return (
     <div className="relative mx-auto w-full max-w-md lg:max-w-none">
@@ -74,26 +71,7 @@ export function HeroSection() {
             себя уверенно в своём теле.
           </p>
 
-          <div className="mt-8 flex flex-col gap-4 lg:flex-row lg:flex-wrap lg:gap-3">
-            <AnchorLink sectionId={LANDING_SECTIONS.programs} className={primaryCtaClassName}>
-              Мои программы
-            </AnchorLink>
-            <AnchorLink
-              sectionId={LANDING_SECTIONS.about}
-              ariaLabel="Перейти к разделу обо мне"
-              className={`${secondaryLinkClassName} lg:hidden`}
-            >
-              Обо мне <span aria-hidden="true">→</span>
-            </AnchorLink>
-            <AnchorLink
-              sectionId={LANDING_SECTIONS.about}
-              className={`${secondaryButtonClassName} hidden lg:inline-flex`}
-            >
-              Обо мне
-            </AnchorLink>
-          </div>
-
-          <ul className="mt-8 flex flex-col gap-2.5 lg:border-t lg:border-[#E8E2D9] lg:pt-8">
+          <ul className="order-3 mt-8 flex flex-col gap-2.5 lg:order-5 lg:border-t lg:border-[#E8E2D9] lg:pt-8">
             {TRUST_ITEMS.map((item) => (
               <li key={item} className="flex items-start gap-2.5 text-sm text-[#44403c]">
                 <span className="mt-0.5 shrink-0 text-[#C4956A]">✔</span>
@@ -101,6 +79,19 @@ export function HeroSection() {
               </li>
             ))}
           </ul>
+
+          <div className="order-4 mt-8 flex flex-col gap-4 lg:order-4 lg:flex-row lg:flex-wrap lg:gap-3">
+            <AnchorLink sectionId={LANDING_SECTIONS.programs} className={primaryCtaClassName}>
+              Мои программы
+            </AnchorLink>
+            <AnchorLink
+              sectionId={LANDING_SECTIONS.about}
+              ariaLabel="Перейти к разделу обо мне"
+              className={secondaryButtonClassName}
+            >
+              Обо мне
+            </AnchorLink>
+          </div>
         </div>
 
         <div className="order-1 lg:order-2">
