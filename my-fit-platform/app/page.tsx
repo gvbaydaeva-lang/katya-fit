@@ -3,6 +3,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { HeroSection } from "@/components/landing/HeroSection";
 import { PainPointsSection } from "@/components/landing/PainPointsSection";
+import { MyStorySection } from "@/components/landing/MyStorySection";
 import WhyItWorksSection from "@/components/landing/WhyItWorksSection";
 import FaqSection from "@/components/landing/FaqSection";
 import FinalCtaSection from "@/components/landing/FinalCtaSection";
@@ -11,7 +12,6 @@ import { LANDING_ROUTES } from "@/lib/landing/routes";
 import { landingNewTabProps } from "@/lib/landing/link-props";
 import programDomVZal from "@/public/images/program-dom-v-zal.webp";
 import programOnline from "@/public/images/program-online.webp";
-import storyBeforeAfter from "@/public/images/story-before-after.webp";
 import resultKarina from "@/public/images/result-karina.webp";
 import resultElena from "@/public/images/result-elena.webp";
 import resultGalina from "@/public/images/result-galina.webp";
@@ -154,41 +154,7 @@ export default function HomePage() {
 
       <PainPointsSection />
 
-      {/* ─── МОЯ ИСТОРИЯ ─── */}
-      <div id="my-story" className="scroll-mt-20">
-      <section className="bg-white py-20 lg:py-28">
-        <div className="mx-auto max-w-6xl px-6">
-          <div className="grid gap-16 lg:grid-cols-2 lg:items-center">
-            <div className="w-full min-w-0">
-              <CoverImage
-                src={storyBeforeAfter}
-                alt="Трансформация Кати — до и после"
-                aspectClass="aspect-square rounded-sm"
-                sizes="(max-width: 1024px) 100vw, 50vw"
-              />
-            </div>
-            <div>
-              <h2 className="text-3xl font-bold text-stone-900 sm:text-4xl">Моя история</h2>
-              <div className="mt-6 space-y-4 text-stone-500 leading-relaxed">
-                <p>После рождения дочери и переезда в США я набрала 20 кг. Новая страна, язык, отсутствие близких рядом, декрет — всё это перевернуло мою жизнь.</p>
-                <p>Я потеряла себя, свою энергию и уверенность. Тренировки стали моим способом вернуть себе.</p>
-                <p>Сегодня я не просто в лучшей форме, чем когда-либо. Я — сертифицированный тренер, и я помогаю женщинам пройти этот путь с поддержкой и системой.</p>
-              </div>
-              <div className="mt-8 flex items-center gap-4 flex-wrap">
-                <div className="rounded-sm border border-stone-200 px-4 py-2.5">
-                  <p className="text-xs font-bold tracking-widest text-stone-800">IFPA</p>
-                  <p className="text-[9px] text-stone-400 tracking-wide mt-0.5">CERTIFIED TRAINER</p>
-                </div>
-                <div className="rounded-sm border border-stone-200 px-4 py-2.5">
-                  <p className="text-xs font-bold tracking-widest text-stone-800">MENNO HENSELMANS</p>
-                  <p className="text-[9px] text-stone-400 tracking-wide mt-0.5">SCIENCE TO APPLY</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-      </div>
+      <MyStorySection />
 
       {/* ─── РЕЗУЛЬТАТЫ ─── */}
       <div id="results" className="scroll-mt-20">
