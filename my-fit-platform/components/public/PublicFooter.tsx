@@ -48,7 +48,7 @@ export function PublicFooter() {
             </Link>
           </div>
 
-          <div className="flex flex-col gap-8 md:items-end md:gap-6">
+          <div className="flex flex-col gap-8 md:flex-col-reverse md:items-end md:gap-6">
             <nav
               aria-label="Навигация в подвале"
               className="flex flex-wrap gap-x-6 gap-y-3 text-xs tracking-wider text-stone-500"

@@ -45,38 +45,38 @@ function CoverImage({
 function ResultCardBody({ client }: { client: ClientResult }) {
   return (
     <div className="flex h-full flex-col">
-      {client.name ? (
-        <p className="text-xs font-semibold text-stone-900">{client.name}</p>
-      ) : null}
-      {client.profession ? (
-        <p className="mt-0.5 text-[11px] leading-snug text-stone-500 sm:text-xs">
-          {client.profession}
+      <div className="shrink-0">
+        {client.name ? (
+          <p className="text-xs font-semibold text-stone-900">{client.name}</p>
+        ) : null}
+        {client.profession ? (
+          <p className="mt-0.5 text-[11px] leading-snug text-stone-500 sm:text-xs">
+            {client.profession}
+          </p>
+        ) : null}
+      </div>
+      <div className="mt-2 h-[9.75rem] sm:h-[10rem]">
+        {client.quote ? (
+          <p className="text-[11px] leading-relaxed text-stone-500 italic break-words sm:text-xs">
+            {client.quote}
+          </p>
+        ) : null}
+      </div>
+      <div className="mt-3 shrink-0">
+        <p className="text-[11px] font-bold text-[#C4956A] sm:text-xs">
+          {client.period ? `Результат за ${client.period}:` : "Результат:"}
         </p>
-      ) : null}
-      {client.quote ? (
-        <p className="mt-2 min-h-[3.5rem] flex-1 text-[11px] leading-relaxed text-stone-500 italic break-words sm:min-h-[4rem] sm:text-xs">
-          {client.quote}
-        </p>
-      ) : (
-        <div className="min-h-[3.5rem] flex-1 sm:min-h-[4rem]" />
-      )}
-      <p
-        className={`text-[11px] font-bold text-[#C4956A] sm:text-xs ${
-          client.quote || client.name ? "mt-3" : "mt-1"
-        }`}
-      >
-        {client.period ? `Результат за ${client.period}:` : "Результат:"}
-      </p>
-      <ul className="mt-1 space-y-0.5">
-        {client.stats.map((stat) => (
-          <li
-            key={stat}
-            className="text-[11px] leading-snug text-stone-600 break-words sm:text-xs"
-          >
-            {stat}
-          </li>
-        ))}
-      </ul>
+        <ul className="mt-1 space-y-0.5">
+          {client.stats.map((stat) => (
+            <li
+              key={stat}
+              className="text-[11px] leading-snug text-stone-600 break-words sm:text-xs"
+            >
+              {stat}
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }
@@ -216,7 +216,7 @@ export function ClientResultsCarousel({ clients }: ClientResultsCarouselProps) {
             role="region"
             aria-label="Результаты клиенток"
             aria-roledescription="карусель"
-            className={`flex snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${
+            className={`flex snap-x snap-mandatory items-stretch gap-4 overflow-x-auto overscroll-x-contain pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${
               isDragging ? "cursor-grabbing select-none" : "cursor-grab"
             }`}
             onPointerDown={onPointerDown}
@@ -229,7 +229,7 @@ export function ClientResultsCarousel({ clients }: ClientResultsCarouselProps) {
               <ResultCard
                 key={getClientKey(client)}
                 client={client}
-                className="w-[min(78vw,300px)] shrink-0 snap-start"
+                className="w-[min(78vw,300px)] shrink-0 self-stretch snap-start"
               />
             ))}
             <div className="w-4 shrink-0 snap-none" aria-hidden />
