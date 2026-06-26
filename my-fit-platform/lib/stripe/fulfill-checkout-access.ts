@@ -1,6 +1,7 @@
 import type Stripe from "stripe";
 import { generatePasswordSetupLink } from "@/lib/auth/generate-password-setup-link";
 import { upsertActiveSubscription } from "@/lib/auth/create-subscription";
+import { sendCheckoutWelcomeEmail } from "@/lib/email/send-checkout-welcome-email";
 import { isValidPlanId } from "@/lib/stripe/plans";
 import { createAdminClient } from "@/lib/supabase/admin";
 
@@ -28,6 +29,11 @@ export async function fulfillCheckoutAccess(
   session: Stripe.Checkout.Session,
   stripeCheckoutSessionId: string,
 ): Promise<{ ok: true } | { ok: false; error: string }> {
+  console.log("[stripe/webhook][fulfill] start", {
+    stripeCheckoutSessionId,
+    sessionId: session.id,
+  });
+
   const admin = createAdminClient();
 
   const { data: payment, error: paymentError } = await admin
@@ -46,8 +52,11 @@ export async function fulfillCheckoutAccess(
 
   const email = getCheckoutEmail(session);
   if (!email) {
+    console.error("[stripe/webhook][fulfill] no checkout email");
     return { ok: false, error: "Checkout session has no email" };
   }
+
+  console.log("[stripe/webhook][fulfill] generating password setup link", { email });
 
   const linkResult = await generatePasswordSetupLink({
     email,
@@ -55,11 +64,16 @@ export async function fulfillCheckoutAccess(
   });
 
   if (!linkResult.ok) {
+    console.error("[stripe/webhook][fulfill] password link failed:", linkResult.error);
     return { ok: false, error: linkResult.error };
   }
 
+  console.log("[stripe/webhook][fulfill] user ready", { userId: linkResult.userId });
+
   const planId = getCheckoutPlanId(session);
   if (isValidPlanId(planId)) {
+    console.log("[stripe/webhook][fulfill] upserting subscription", { planId });
+
     const { error: subscriptionError } = await upsertActiveSubscription({
       userId: linkResult.userId,
       planId,
@@ -70,9 +84,23 @@ export async function fulfillCheckoutAccess(
     });
 
     if (subscriptionError) {
+      console.error("[stripe/webhook][fulfill] subscription failed:", subscriptionError);
       return { ok: false, error: subscriptionError };
     }
   }
 
+  console.log("[stripe/webhook][fulfill] sending welcome email");
+
+  const emailResult = await sendCheckoutWelcomeEmail(
+    session,
+    stripeCheckoutSessionId,
+  );
+
+  if (!emailResult.ok) {
+    console.error("[stripe/webhook][fulfill] welcome email failed:", emailResult.error);
+    return { ok: false, error: emailResult.error };
+  }
+
+  console.log("[stripe/webhook][fulfill] complete");
   return { ok: true };
 }
