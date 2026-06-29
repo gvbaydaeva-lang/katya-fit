@@ -1,0 +1,6 @@
+1:"$Sreact.fragment"
+2:I[20048,["/katya-fit/_next/static/chunks/0onh~yj03i3zw.js","/katya-fit/_next/static/chunks/0d3shmwh5_nmn.js","/katya-fit/_next/static/chunks/0f6dzj8tpfj46.js","/katya-fit/_next/static/chunks/0nu7uiz1.84uh.js"],"DomVZalPageClient"]
+3:I[97367,["/katya-fit/_next/static/chunks/0onh~yj03i3zw.js","/katya-fit/_next/static/chunks/0d3shmwh5_nmn.js"],"OutletBoundary"]
+4:"$Sreact.suspense"
+0:{"rsc":["$","$1","c",{"children":[["$","$L2",null,{}],[["$","script","script-0",{"src":"/katya-fit/_next/static/chunks/0f6dzj8tpfj46.js","async":true}],["$","script","script-1",{"src":"/katya-fit/_next/static/chunks/0nu7uiz1.84uh.js","async":true}]],["$","$L3",null,{"children":["$","$4",null,{"name":"Next.MetadataOutlet","children":"$@5"}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"iigX4uJ4thL8xyRw_cEE4"}
+5:null

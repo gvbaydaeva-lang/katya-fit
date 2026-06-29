@@ -1,0 +1,6 @@
+:HL["/katya-fit/_next/static/chunks/0k41-jzb_kwzo.css","style"]
+:HL["/katya-fit/_next/static/media/83afe278b6a6bb3c-s.p.0q-301v4kxxnr.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/katya-fit/_next/static/media/9c72aa0f40e4eef8-s.p.0m6w47a4e5dy9.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/katya-fit/_next/static/media/ad85ec941b4c8b5c-s.p.05d45e320-u13.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/katya-fit/_next/static/media/e6aefe7c5076108d-s.p.0imd-o46o_a7~.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+0:{"tree":{"name":"","param":null,"prefetchHints":20,"slots":{"children":{"name":"online","param":null,"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}},"staleTime":300,"buildId":"iigX4uJ4thL8xyRw_cEE4"}
