@@ -1,4 +1,5 @@
 import type Stripe from "stripe";
+import { sendCheckoutWelcomeEmail } from "@/lib/email/send-checkout-welcome-email";
 import { stripeConfig } from "@/lib/stripe/config";
 import { fulfillCheckoutAccess } from "@/lib/stripe/fulfill-checkout-access";
 import { savePaymentFromCheckoutSession } from "@/lib/stripe/save-payment";
@@ -62,52 +63,87 @@ export async function handleStripeWebhook(
   });
 
   if (event.type === "checkout.session.completed") {
-    const session = event.data.object as Stripe.Checkout.Session;
+    try {
+      const session = event.data.object as Stripe.Checkout.Session;
 
-    console.log("[stripe/webhook] checkout.session.completed", {
-      sessionId: session.id,
-      paymentStatus: session.payment_status,
-      customerEmail: getCheckoutEmail(session),
-      planId: session.metadata?.plan_id ?? session.metadata?.planId ?? null,
-    });
+      console.log("[stripe/webhook] checkout.session.completed", {
+        sessionId: session.id,
+        paymentStatus: session.payment_status,
+        customerEmail: getCheckoutEmail(session),
+        planId: session.metadata?.plan_id ?? session.metadata?.planId ?? null,
+      });
 
-    const result = await savePaymentFromCheckoutSession(session);
-    console.log("[stripe/webhook] save payment result", {
-      ok: result.ok,
-      ...(result.ok
-        ? {
-            stripeCheckoutSessionId: result.stripeCheckoutSessionId,
-            isNew: result.isNew,
-          }
-        : { error: result.error }),
-    });
+      const result = await savePaymentFromCheckoutSession(session);
+      console.log("[stripe/webhook] save payment result", {
+        ok: result.ok,
+        ...(result.ok
+          ? {
+              stripeCheckoutSessionId: result.stripeCheckoutSessionId,
+              isNew: result.isNew,
+            }
+          : { error: result.error }),
+      });
 
-    if (!result.ok) {
-      console.error("[stripe/webhook] save payment failed:", result.error);
-      return { status: 500, body: { error: result.error } };
-    }
+      if (!result.ok) {
+        console.error("[stripe/webhook] save payment failed:", result.error);
+        return { status: 500, body: { error: result.error } };
+      }
 
-    console.log("[stripe/webhook] starting fulfillCheckoutAccess (access + email)");
+      console.log("[stripe/webhook] starting fulfillCheckoutAccess (user + subscription)");
 
-    const accessResult = await fulfillCheckoutAccess(
-      session,
-      result.stripeCheckoutSessionId,
-    );
-
-    console.log("[stripe/webhook] fulfillCheckoutAccess result", {
-      ok: accessResult.ok,
-      ...(accessResult.ok ? {} : { error: accessResult.error }),
-    });
-
-    if (!accessResult.ok) {
-      console.error(
-        "[stripe/webhook] fulfill checkout access failed:",
-        accessResult.error,
+      const accessResult = await fulfillCheckoutAccess(
+        session,
+        result.stripeCheckoutSessionId,
       );
-      return { status: 500, body: { error: accessResult.error } };
-    }
 
-    console.log("[stripe/webhook] checkout flow completed successfully");
+      console.log("[stripe/webhook] fulfillCheckoutAccess result", {
+        ok: accessResult.ok,
+        ...(accessResult.ok
+          ? { userId: accessResult.userId }
+          : { error: accessResult.error }),
+      });
+
+      if (!accessResult.ok) {
+        console.error(
+          "[stripe/webhook] fulfill checkout access failed:",
+          accessResult.error,
+        );
+        return { status: 500, body: { error: accessResult.error } };
+      }
+
+      try {
+        const emailResult = await sendCheckoutWelcomeEmail(
+          session,
+          result.stripeCheckoutSessionId,
+        );
+
+        if (!emailResult.ok) {
+          console.error(
+            "[stripe/webhook] welcome email failed (non-fatal):",
+            emailResult.error,
+          );
+        } else {
+          console.log("[stripe/webhook] welcome email sent or already sent");
+        }
+      } catch (emailError) {
+        const message =
+          emailError instanceof Error
+            ? emailError.message
+            : "Unknown welcome email error";
+        console.error(
+          "[stripe/webhook] welcome email threw (non-fatal):",
+          message,
+          emailError,
+        );
+      }
+
+      console.log("[stripe/webhook] checkout flow completed successfully");
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Unknown checkout webhook error";
+      console.error("[stripe/webhook] checkout handler crashed:", message, error);
+      return { status: 500, body: { error: message } };
+    }
   } else {
     console.log("[stripe/webhook] event ignored", { eventType: event.type });
   }

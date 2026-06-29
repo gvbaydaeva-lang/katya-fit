@@ -50,23 +50,29 @@ export async function savePaymentFromCheckoutSession(
     return { ok: false, error: "Checkout session has invalid amount" };
   }
 
-  const admin = createAdminClient();
-  const { error } = await admin.from("payments").insert({
-    stripe_checkout_session_id: stripeCheckoutSessionId,
-    user_name: userName,
-    email,
-    phone,
-    amount,
-    plan_name: planName,
-  });
+  try {
+    const admin = createAdminClient();
+    const { error } = await admin.from("payments").insert({
+      stripe_checkout_session_id: stripeCheckoutSessionId,
+      user_name: userName,
+      email,
+      phone,
+      amount,
+      plan_name: planName,
+    });
 
-  if (error) {
-    // Повторная доставка webhook — запись уже есть, считаем успехом
-    if (error.code === "23505") {
-      return { ok: true, stripeCheckoutSessionId, isNew: false };
+    if (error) {
+      // Повторная доставка webhook — запись уже есть, считаем успехом
+      if (error.code === "23505") {
+        return { ok: true, stripeCheckoutSessionId, isNew: false };
+      }
+      return { ok: false, error: error.message };
     }
-    return { ok: false, error: error.message };
-  }
 
-  return { ok: true, stripeCheckoutSessionId, isNew: true };
+    return { ok: true, stripeCheckoutSessionId, isNew: true };
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "Unknown save payment error";
+    return { ok: false, error: message };
+  }
 }
