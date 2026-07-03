@@ -5,7 +5,8 @@
 
 [build.environment]
   # Публичные NEXT_PUBLIC_* попадают в клиентский бандл — не считать утечкой
-  SECRETS_SCAN_OMIT_KEYS = "NEXT_PUBLIC_SUPABASE_ANON_KEY,NEXT_PUBLIC_SUPABASE_URL"
+  SECRETS_SCAN_OMIT_KEYS = "NEXT_PUBLIC_SUPABASE_ANON_KEY,NEXT_PUBLIC_SUPABASE_URL,NEXT_PUBLIC_APP_URL"
+  NEXT_PUBLIC_APP_URL = "https://katya-fit.online"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"

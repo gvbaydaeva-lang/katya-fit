@@ -99,7 +99,7 @@ export async function handleStripeWebhook(
       console.log("[stripe/webhook] fulfillCheckoutAccess result", {
         ok: accessResult.ok,
         ...(accessResult.ok
-          ? { userId: accessResult.userId }
+          ? { userId: accessResult.userId, hasActionLink: Boolean(accessResult.actionLink) }
           : { error: accessResult.error }),
       });
 
@@ -112,10 +112,11 @@ export async function handleStripeWebhook(
       }
 
       try {
-        const emailResult = await sendCheckoutWelcomeEmail(
+        const emailResult = await sendCheckoutWelcomeEmail({
           session,
-          result.stripeCheckoutSessionId,
-        );
+          stripeCheckoutSessionId: result.stripeCheckoutSessionId,
+          actionLink: accessResult.actionLink,
+        });
 
         if (!emailResult.ok) {
           console.error(

@@ -27,7 +27,9 @@ function getCheckoutPlanId(session: Stripe.Checkout.Session): string {
 export async function fulfillCheckoutAccess(
   session: Stripe.Checkout.Session,
   stripeCheckoutSessionId: string,
-): Promise<{ ok: true; userId: string } | { ok: false; error: string }> {
+): Promise<
+  { ok: true; userId: string; actionLink: string } | { ok: false; error: string }
+> {
   console.log("[stripe/webhook][fulfill] start", {
     stripeCheckoutSessionId,
     sessionId: session.id,
@@ -100,7 +102,11 @@ export async function fulfillCheckoutAccess(
     }
 
     console.log("[stripe/webhook][fulfill] access granted");
-    return { ok: true, userId: linkResult.userId };
+    return {
+      ok: true,
+      userId: linkResult.userId,
+      actionLink: linkResult.actionLink,
+    };
   } catch (error) {
     const message =
       error instanceof Error ? error.message : "Unknown fulfill checkout error";
