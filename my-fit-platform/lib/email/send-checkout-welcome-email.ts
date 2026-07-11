@@ -1,8 +1,14 @@
 import { Resend } from "resend";
 import type Stripe from "stripe";
+import { createClient } from "@supabase/supabase-js";
 import { getAppOrigin } from "@/lib/app-url";
-import { emailConfig, isResendConfigured } from "@/lib/email/config";
+import {
+  emailConfig,
+  getResendConfigError,
+  isResendConfigured,
+} from "@/lib/email/config";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { getSupabaseAnonKey, getSupabaseUrl } from "@/lib/supabase/env";
 
 type SendCheckoutWelcomeEmailParams = {
   session: Stripe.Checkout.Session;
@@ -32,6 +38,45 @@ function buildCheckoutWelcomeEmailHtml(actionLink: string): string {
   
   <p>С уважением,<br>Команда Katya Fit</p>
 </div>`;
+}
+
+async function sendSupabaseAccessEmail(to: string): Promise<void> {
+  const supabase = createClient(getSupabaseUrl(), getSupabaseAnonKey(), {
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
+  const redirectTo = `${getAppOrigin()}/auth/callback?next=${encodeURIComponent("/app")}`;
+  const { error } = await supabase.auth.resetPasswordForEmail(to, {
+    redirectTo,
+  });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+}
+
+async function markWelcomeEmailError(
+  stripeCheckoutSessionId: string,
+  error: string,
+): Promise<void> {
+  try {
+    const admin = createAdminClient();
+    const { error: markError } = await admin
+      .from("payments")
+      .update({ welcome_email_error: error.slice(0, 1000) })
+      .eq("stripe_checkout_session_id", stripeCheckoutSessionId);
+
+    if (markError) {
+      console.error(
+        "[stripe/webhook][email] failed to mark welcome_email_error:",
+        markError.message,
+      );
+    }
+  } catch (markError) {
+    console.error(
+      "[stripe/webhook][email] failed to mark welcome_email_error:",
+      markError,
+    );
+  }
 }
 
 export async function sendCheckoutWelcomeEmail(
@@ -76,12 +121,6 @@ export async function sendCheckoutWelcomeEmail(
       return { ok: true };
     }
 
-    if (!isResendConfigured()) {
-      const error = "RESEND_API_KEY не задан";
-      console.error("[stripe/webhook][email]", error);
-      return { ok: false, error };
-    }
-
     const to = getCheckoutEmail(session);
     if (!to) {
       const error = "Checkout session has no customer email";
@@ -90,7 +129,32 @@ export async function sendCheckoutWelcomeEmail(
         customerEmail: session.customer_email ?? null,
         metadataEmail: session.metadata?.email ?? null,
       });
+      await markWelcomeEmailError(stripeCheckoutSessionId, error);
       return { ok: false, error };
+    }
+
+    if (!isResendConfigured()) {
+      console.warn(
+        "[stripe/webhook][email] Resend is not configured, using Supabase Auth email:",
+        getResendConfigError() ?? "Resend не настроен",
+      );
+      await sendSupabaseAccessEmail(to);
+      const { error: markError } = await admin
+        .from("payments")
+        .update({
+          welcome_email_sent_at: new Date().toISOString(),
+          welcome_email_error: null,
+        })
+        .eq("stripe_checkout_session_id", stripeCheckoutSessionId);
+
+      if (markError) {
+        console.error(
+          "[stripe/webhook][email] Supabase email sent but mark failed:",
+          markError.message,
+        );
+      }
+
+      return { ok: true };
     }
 
     const siteUrl = getAppOrigin();
@@ -111,6 +175,7 @@ export async function sendCheckoutWelcomeEmail(
 
     if (error) {
       console.error("[stripe/webhook][email] Resend API error:", error);
+      await markWelcomeEmailError(stripeCheckoutSessionId, error.message);
       return { ok: false, error: error.message };
     }
 
@@ -120,7 +185,10 @@ export async function sendCheckoutWelcomeEmail(
 
     const { error: markError } = await admin
       .from("payments")
-      .update({ welcome_email_sent_at: new Date().toISOString() })
+      .update({
+        welcome_email_sent_at: new Date().toISOString(),
+        welcome_email_error: null,
+      })
       .eq("stripe_checkout_session_id", stripeCheckoutSessionId);
 
     if (markError) {
@@ -137,6 +205,7 @@ export async function sendCheckoutWelcomeEmail(
     const message =
       error instanceof Error ? error.message : "Unknown Resend send error";
     console.error("[stripe/webhook][email] unexpected failure:", message, error);
+    await markWelcomeEmailError(stripeCheckoutSessionId, message);
     return { ok: false, error: message };
   }
 }

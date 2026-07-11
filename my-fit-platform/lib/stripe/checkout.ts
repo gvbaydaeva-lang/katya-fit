@@ -1,3 +1,4 @@
+import { normalizeAppOrigin } from "@/lib/app-url";
 import { isStripeConfigured, stripeConfig } from "@/lib/stripe/config";
 import type { PlanId } from "@/lib/stripe/plans";
 import { isValidPlanId } from "@/lib/stripe/plans";
@@ -23,8 +24,7 @@ export async function createCheckoutSession(
 
   const origin =
     params.origin ??
-    process.env.NEXT_PUBLIC_APP_URL ??
-    "http://localhost:3000";
+    normalizeAppOrigin(process.env.NEXT_PUBLIC_APP_URL);
   const cancelUrl = params.cancelUrl ?? `${origin}/#pricing`;
 
   const session = await stripe.checkout.sessions.create({

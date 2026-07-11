@@ -9,6 +9,8 @@ export type AdminPaymentRow = {
   phone: string | null;
   amount: number;
   planName: string;
+  welcomeEmailSentAt: string | null;
+  welcomeEmailError: string | null;
   createdAt: string;
 };
 
@@ -48,6 +50,8 @@ export async function fetchAdminPayments(): Promise<{
       phone: payment.phone,
       amount: payment.amount,
       planName: payment.plan_name,
+      welcomeEmailSentAt: payment.welcome_email_sent_at,
+      welcomeEmailError: payment.welcome_email_error,
       createdAt: payment.created_at,
     })),
     error: null,

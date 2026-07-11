@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { normalizeAppOrigin } from "@/lib/app-url";
 import { createRouteHandlerClient } from "@/lib/supabase/route-handler";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 
@@ -25,8 +26,9 @@ export async function POST(request: Request) {
     );
   }
 
-  const origin =
-    process.env.NEXT_PUBLIC_APP_URL ?? new URL(request.url).origin;
+  const origin = process.env.NEXT_PUBLIC_APP_URL
+    ? normalizeAppOrigin(process.env.NEXT_PUBLIC_APP_URL)
+    : new URL(request.url).origin;
 
   const response = NextResponse.json({ ok: true });
   const supabase = await createRouteHandlerClient(response);

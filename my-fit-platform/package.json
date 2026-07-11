@@ -11,6 +11,7 @@
     "lint": "eslint",
     "db:setup-workouts": "node scripts/apply-workouts-schema.mjs",
     "db:setup-payments": "node scripts/apply-payments-schema.mjs",
+    "emails:resend-welcome": "node scripts/resend-welcome-emails.mjs",
     "pages:build": "opennextjs-cloudflare build --config ../wrangler.toml && node scripts/prepare-pages-deploy.mjs"
   },
   "dependencies": {

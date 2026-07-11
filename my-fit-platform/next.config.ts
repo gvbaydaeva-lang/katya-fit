@@ -17,7 +17,6 @@ const nextConfig: NextConfig = {
           },
         }),
     proxyClientMaxBodySize: "50mb",
-    serverComponentsExternalPackages: ["@opentelemetry/api"],
   },
   serverExternalPackages: ["@opentelemetry/api"],
   turbopack: {

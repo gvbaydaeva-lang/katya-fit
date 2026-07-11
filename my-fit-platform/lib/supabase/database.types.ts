@@ -65,9 +65,11 @@ export type DbPayment = {
   email: string;
   phone: string | null;
   amount: number;
+  plan_id: "self" | "coached" | "platform" | null;
   plan_name: string;
   stripe_checkout_session_id: string;
   welcome_email_sent_at: string | null;
+  welcome_email_error: string | null;
   created_at: string;
 };
 
@@ -123,6 +125,7 @@ export type Database = {
           | "stripe_checkout_session_id"
         > & {
           phone?: string | null;
+          plan_id?: DbPayment["plan_id"];
         };
         Update: Partial<Omit<DbPayment, "id" | "stripe_checkout_session_id">>;
       };

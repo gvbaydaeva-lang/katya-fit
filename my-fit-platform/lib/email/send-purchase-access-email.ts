@@ -1,4 +1,8 @@
-import { emailConfig, isResendConfigured } from "@/lib/email/config";
+import {
+  emailConfig,
+  getResendConfigError,
+  isResendConfigured,
+} from "@/lib/email/config";
 
 type SendPurchaseAccessEmailParams = {
   to: string;
@@ -9,7 +13,10 @@ export async function sendPurchaseAccessEmail(
   params: SendPurchaseAccessEmailParams,
 ): Promise<{ ok: true } | { ok: false; error: string }> {
   if (!isResendConfigured()) {
-    return { ok: false, error: "RESEND_API_KEY не задан" };
+    return {
+      ok: false,
+      error: getResendConfigError() ?? "Resend не настроен",
+    };
   }
 
   const html = `Здравствуйте! Спасибо за покупку. Ваш доступ к платформе активирован. Ссылка для входа: <a href="${params.accessLink}">${params.accessLink}</a>`;

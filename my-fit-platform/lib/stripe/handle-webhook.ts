@@ -120,9 +120,13 @@ export async function handleStripeWebhook(
 
         if (!emailResult.ok) {
           console.error(
-            "[stripe/webhook] welcome email failed (non-fatal):",
+            "[stripe/webhook] welcome email failed:",
             emailResult.error,
           );
+          return {
+            status: 500,
+            body: { error: `Welcome email failed: ${emailResult.error}` },
+          };
         } else {
           console.log("[stripe/webhook] welcome email sent or already sent");
         }
@@ -132,10 +136,14 @@ export async function handleStripeWebhook(
             ? emailError.message
             : "Unknown welcome email error";
         console.error(
-          "[stripe/webhook] welcome email threw (non-fatal):",
+          "[stripe/webhook] welcome email threw:",
           message,
           emailError,
         );
+        return {
+          status: 500,
+          body: { error: `Welcome email failed: ${message}` },
+        };
       }
 
       console.log("[stripe/webhook] checkout flow completed successfully");

@@ -58,6 +58,7 @@ export async function savePaymentFromCheckoutSession(
       email,
       phone,
       amount,
+      plan_id: plan?.id ?? null,
       plan_name: planName,
     });
 

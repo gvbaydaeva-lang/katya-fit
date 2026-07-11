@@ -35,6 +35,7 @@ export function PaymentsTable({ rows }: PaymentsTableProps) {
             <th className="px-4 py-3 font-medium text-ds-heading">Телефон</th>
             <th className="px-4 py-3 font-medium text-ds-heading">Тариф</th>
             <th className="px-4 py-3 font-medium text-ds-heading">Сумма</th>
+            <th className="px-4 py-3 font-medium text-ds-heading">Письмо</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-stone-900/8 bg-ds-surface">
@@ -52,6 +53,22 @@ export function PaymentsTable({ rows }: PaymentsTableProps) {
               <td className="px-4 py-3 text-ds-text">{row.planName}</td>
               <td className="px-4 py-3 font-medium text-ds-text">
                 {formatPaymentAmount(row.amount)}
+              </td>
+              <td className="px-4 py-3 text-ds-muted">
+                {row.welcomeEmailSentAt ? (
+                  <span className="font-medium text-emerald-700">
+                    Отправлено
+                  </span>
+                ) : row.welcomeEmailError ? (
+                  <span
+                    className="font-medium text-red-700"
+                    title={row.welcomeEmailError}
+                  >
+                    Ошибка
+                  </span>
+                ) : (
+                  <span className="text-amber-700">Ожидает</span>
+                )}
               </td>
             </tr>
           ))}
