@@ -1,5 +1,15 @@
+"use client";
+
 import Image from "next/image";
 import type { StaticImageData } from "next/image";
+import { useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import programTrainingImage from "@/public/images/program-training-dom-zal.webp";
 
 type IllustrationKind = "notebook" | "photo";
@@ -8,6 +18,8 @@ type ProgramCard = {
   number: string;
   title: string;
   description: string;
+  fullDescription: string;
+  details: readonly string[];
   illustration: IllustrationKind;
   imageSrc?: string;
   localImage?: StaticImageData;
@@ -21,7 +33,14 @@ const programCards: readonly ProgramCard[] = [
     number: "01",
     title: "Тренировки (дом + зал)",
     description:
-      "Пошаговые тренировки для любого уровня. Можно заниматься дома или в зале.",
+      "4 недели дома для техники и 8 недель в зале для уверенного прогресса.",
+    fullDescription:
+      "Сначала вы тренируетесь дома: привыкаете к режиму, учитесь чувствовать тело и спокойно осваиваете базовые движения без давления. После этого переходите в зал уже не с ощущением «я ничего не понимаю», а с понятной логикой тренировок, техникой и готовым планом.",
+    details: [
+      "Первые 4 недели — домашние тренировки для любого уровня подготовки",
+      "Следующие 8 недель — тренировки в зале с постепенным ростом нагрузки",
+      "Переход построен так, чтобы не было страха перед тренажёрами и весами",
+    ],
     illustration: "photo",
     localImage: programTrainingImage,
     imageAlt: "Тренировки дома и в зале",
@@ -32,6 +51,13 @@ const programCards: readonly ProgramCard[] = [
     title: "Питание без подсчёта калорий",
     description:
       "Простая и гибкая система питания, без жёстких ограничений.",
+    fullDescription:
+      "В программе есть понятные принципы питания, которые помогают худеть и подтягивать тело без жёстких запретов. Вы учитесь собирать рацион из обычных продуктов, не жить в калькуляторе калорий и не срываться из-за ощущения, что «ничего нельзя».",
+    details: [
+      "Рацион без крайностей, голодовок и сложных схем",
+      "Фокус на сытость, белок, регулярность и простые привычки",
+      "Подходит для обычной жизни, семьи, работы и поездок",
+    ],
     illustration: "photo",
     imageSrc:
       "https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=600&h=450&fit=crop",
@@ -41,7 +67,14 @@ const programCards: readonly ProgramCard[] = [
     number: "03",
     title: "Пошаговый план на 12 недель",
     description:
-      "Понятные этапы, которые помогут двигаться вперёд без откатов.",
+      "Чёткая структура: база дома, адаптация к залу, рост нагрузки.",
+    fullDescription:
+      "Это не набор случайных тренировок, а маршрут с понятной последовательностью. Сначала вы готовите тело дома, затем переносите знакомые движения в зал, учитесь работать с гантелями и тренажёрами и постепенно увеличиваете нагрузку без хаоса и перегруза.",
+    details: [
+      "Недели 1–4: техника, ритм, базовая сила и уверенность дома",
+      "Недели 5–8: знакомство с залом и безопасная работа с весами",
+      "Недели 9–12: закрепление навыка и прогрессия нагрузки",
+    ],
     illustration: "notebook",
     mediaClassName: "bg-[#F0EDE8]",
   },
@@ -50,6 +83,13 @@ const programCards: readonly ProgramCard[] = [
     title: "Видео-уроки и техника",
     description:
       "Подробные видео и инструкции для правильного выполнения упражнений.",
+    fullDescription:
+      "Вы не остаётесь один на один с непонятными названиями упражнений. Видеоуроки показывают, как выполнять движения, на что обращать внимание, где часто ошибаются новички и как адаптировать упражнение под свой уровень.",
+    details: [
+      "Разбор техники базовых движений понятным языком",
+      "Подсказки по положению корпуса, амплитуде и дыханию",
+      "Варианты упражнений для дома и для тренажёрного зала",
+    ],
     illustration: "photo",
     imageSrc:
       "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=600&h=450&fit=crop",
@@ -60,6 +100,13 @@ const programCards: readonly ProgramCard[] = [
     title: "Поддержка и мотивация",
     description:
       "Вы не одна. Поддержка тренера и комьюнити на протяжении всей программы.",
+    fullDescription:
+      "Самое сложное в начале — не идеальная техника, а не бросить после первой неуверенности. Поэтому программа помогает держать темп: вы понимаете, что делать дальше, видите свой прогресс и не теряетесь, когда приходит время перейти из дома в зал.",
+    details: [
+      "Понятные ориентиры на каждом этапе программы",
+      "Мотивация продолжать, даже если раньше вы уже начинали и бросали",
+      "Ощущение, что у вас есть система, а не случайные тренировки",
+    ],
     illustration: "photo",
     imageSrc:
       "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=600&h=450&fit=crop",
@@ -177,13 +224,18 @@ function CardMedia({ card }: { card: ProgramCard }) {
 function ProgramFeatureCard({
   card,
   className = "",
+  onOpen,
 }: {
   card: ProgramCard;
   className?: string;
+  onOpen: () => void;
 }) {
   return (
-    <article
-      className={`overflow-hidden rounded-sm border border-[#E8E2D9] bg-white shadow-sm transition-all duration-200 hover:shadow-md ${className}`}
+    <button
+      type="button"
+      onClick={onOpen}
+      className={`block overflow-hidden rounded-sm border border-[#E8E2D9] bg-white text-left shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[#C4956A]/35 ${className}`}
+      aria-label={`Открыть полное описание модуля: ${card.title}`}
     >
       <CardMedia card={card} />
       <div className="p-4">
@@ -191,13 +243,17 @@ function ProgramFeatureCard({
         <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-[#78716c]">
           {card.description}
         </p>
+        <span className="mt-3 inline-block text-xs font-semibold uppercase tracking-wider text-[#C4956A]">
+          Подробнее
+        </span>
       </div>
-    </article>
+    </button>
   );
 }
 
 export function CourseTimelineSection() {
   const marqueeCards = [...programCards, ...programCards, ...programCards];
+  const [selectedCard, setSelectedCard] = useState<ProgramCard | null>(null);
 
   return (
     <section className="overflow-hidden bg-[#FAF8F4] px-4 py-12 md:px-16 md:py-20">
@@ -207,7 +263,7 @@ export function CourseTimelineSection() {
         </p>
         <h2 className="mt-2 text-3xl font-bold text-[#1c1917]">Что входит в программу</h2>
         <p className="mt-3 max-w-2xl text-base text-[#78716c]">
-          5 модулей — от первой тренировки дома до уверенного зала
+          5 модулей — от первых спокойных тренировок дома до уверенной работы с весами в зале
         </p>
 
         <div className="mt-10 md:hidden">
@@ -215,7 +271,7 @@ export function CourseTimelineSection() {
             <ul className="course-cards-marquee flex w-max gap-4 px-4">
               {marqueeCards.map((card, index) => (
                 <li key={`${card.number}-${index}`} className="w-[72vw] max-w-[280px] shrink-0">
-                  <ProgramFeatureCard card={card} className="h-full" />
+                  <ProgramFeatureCard card={card} className="h-full" onOpen={() => setSelectedCard(card)} />
                 </li>
               ))}
             </ul>
@@ -228,11 +284,40 @@ export function CourseTimelineSection() {
               key={card.number}
               className={index === programCards.length - 1 ? "col-span-2 lg:col-span-1" : ""}
             >
-              <ProgramFeatureCard card={card} className="h-full" />
+              <ProgramFeatureCard card={card} className="h-full" onOpen={() => setSelectedCard(card)} />
             </li>
           ))}
         </ul>
       </div>
+
+      <Dialog open={selectedCard !== null} onOpenChange={(open) => !open && setSelectedCard(null)}>
+        {selectedCard && (
+          <DialogContent className="max-h-[88vh] max-w-xl overflow-y-auto rounded-sm bg-white p-0">
+            <CardMedia card={selectedCard} />
+            <div className="p-6">
+              <DialogHeader>
+                <p className="text-xs font-semibold uppercase tracking-widest text-[#C4956A]">
+                  Модуль {selectedCard.number}
+                </p>
+                <DialogTitle className="text-2xl font-bold text-[#1c1917]">
+                  {selectedCard.title}
+                </DialogTitle>
+                <DialogDescription className="text-sm leading-relaxed text-[#6b5e54]">
+                  {selectedCard.fullDescription}
+                </DialogDescription>
+              </DialogHeader>
+              <ul className="mt-5 space-y-3">
+                {selectedCard.details.map((detail) => (
+                  <li key={detail} className="flex gap-3 text-sm leading-relaxed text-[#57534e]">
+                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#C4956A]" aria-hidden />
+                    <span>{detail}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </DialogContent>
+        )}
+      </Dialog>
     </section>
   );
 }

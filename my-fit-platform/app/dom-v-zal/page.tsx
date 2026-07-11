@@ -2,7 +2,7 @@ import { DomVZalPageClient } from "@/components/landing/dom-v-zal/DomVZalPageCli
 
 export const metadata = {
   title: "Из дома в зал — KATY D.",
-  description: "12-недельная пошаговая система для женщин, которые хотят начать тренироваться, похудеть, подтянуть тело и обрести уверенность.",
+  description: "12-недельная программа мягкого перехода: 4 недели тренировок дома и 8 недель в зале для уверенного старта с весами.",
 };
 
 export default function DomVZalPage() {
