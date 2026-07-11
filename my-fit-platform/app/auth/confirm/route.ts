@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { AUTH_ROUTES, STUDENT_ROUTES } from "@/lib/auth/routes";
+import { getAppOrigin } from "@/lib/app-url";
 import { createAuthRouteClientWithResponse } from "@/lib/supabase/auth-route";
 
 const ALLOWED_TYPES = new Set(["invite", "recovery"]);
@@ -13,13 +14,14 @@ function getSafeNext(value: string | null): string {
 }
 
 export async function GET(request: Request) {
-  const { searchParams, origin } = new URL(request.url);
+  const { searchParams } = new URL(request.url);
+  const appOrigin = getAppOrigin();
   const tokenHash = searchParams.get("token_hash");
   const type = searchParams.get("type");
   const next = getSafeNext(searchParams.get("next"));
 
   if (!tokenHash || !type || !ALLOWED_TYPES.has(type)) {
-    return NextResponse.redirect(`${origin}${AUTH_ROUTES.login}?error=auth_link_invalid`);
+    return NextResponse.redirect(`${appOrigin}${AUTH_ROUTES.login}?error=auth_link_invalid`);
   }
 
   const cookieJar = NextResponse.json({ ok: true });
@@ -32,11 +34,11 @@ export async function GET(request: Request) {
   });
 
   if (error) {
-    return NextResponse.redirect(`${origin}${AUTH_ROUTES.login}?error=auth_link_expired`);
+    return NextResponse.redirect(`${appOrigin}${AUTH_ROUTES.login}?error=auth_link_expired`);
   }
 
   const setPasswordPath = `${AUTH_ROUTES.setPassword}?next=${encodeURIComponent(next)}`;
-  const redirect = NextResponse.redirect(`${origin}${setPasswordPath}`);
+  const redirect = NextResponse.redirect(`${appOrigin}${setPasswordPath}`);
   applyCookiesTo(redirect);
   return redirect;
 }

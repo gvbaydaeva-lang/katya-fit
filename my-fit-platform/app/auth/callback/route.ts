@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { isTrainerUser } from "@/lib/auth/admin";
 import { resolvePostLoginPath } from "@/lib/auth/post-login";
+import { getAppOrigin } from "@/lib/app-url";
 import { createAuthRouteClientWithResponse } from "@/lib/supabase/auth-route";
 import { AUTH_ROUTES, STUDENT_ROUTES } from "@/lib/auth/routes";
 
@@ -19,12 +20,13 @@ function isSafeSetPasswordPath(path: string): boolean {
 }
 
 export async function GET(request: Request) {
-  const { searchParams, origin } = new URL(request.url);
+  const { searchParams } = new URL(request.url);
+  const appOrigin = getAppOrigin();
   const code = searchParams.get("code");
   const next = searchParams.get("next") ?? STUDENT_ROUTES.dashboard;
 
   if (!code) {
-    return NextResponse.redirect(`${origin}/login?error=auth_callback_failed`);
+    return NextResponse.redirect(`${appOrigin}/login?error=auth_callback_failed`);
   }
 
   const cookieJar = NextResponse.json({ ok: true });
@@ -33,7 +35,7 @@ export async function GET(request: Request) {
   const { data, error } = await supabase.auth.exchangeCodeForSession(code);
 
   if (error || !data.user) {
-    return NextResponse.redirect(`${origin}/login?error=auth_callback_failed`);
+    return NextResponse.redirect(`${appOrigin}/login?error=auth_callback_failed`);
   }
 
   const target = isSafeSetPasswordPath(next)
@@ -42,7 +44,7 @@ export async function GET(request: Request) {
         isTrainer: isTrainerUser(data.user.email),
       });
 
-  const redirect = NextResponse.redirect(`${origin}${target}`);
+  const redirect = NextResponse.redirect(`${appOrigin}${target}`);
   applyCookiesTo(redirect);
   return redirect;
 }
