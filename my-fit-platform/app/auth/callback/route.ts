@@ -2,7 +2,21 @@ import { NextResponse } from "next/server";
 import { isTrainerUser } from "@/lib/auth/admin";
 import { resolvePostLoginPath } from "@/lib/auth/post-login";
 import { createAuthRouteClientWithResponse } from "@/lib/supabase/auth-route";
-import { STUDENT_ROUTES } from "@/lib/auth/routes";
+import { AUTH_ROUTES, STUDENT_ROUTES } from "@/lib/auth/routes";
+
+function isSafeSetPasswordPath(path: string): boolean {
+  if (!path.startsWith(`${AUTH_ROUTES.setPassword}`)) return false;
+
+  try {
+    const url = new URL(path, "http://local");
+    return (
+      url.pathname === AUTH_ROUTES.setPassword &&
+      !url.searchParams.get("next")?.startsWith("//")
+    );
+  } catch {
+    return false;
+  }
+}
 
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
@@ -22,9 +36,11 @@ export async function GET(request: Request) {
     return NextResponse.redirect(`${origin}/login?error=auth_callback_failed`);
   }
 
-  const target = resolvePostLoginPath(next, {
-    isTrainer: isTrainerUser(data.user.email),
-  });
+  const target = isSafeSetPasswordPath(next)
+    ? next
+    : resolvePostLoginPath(next, {
+        isTrainer: isTrainerUser(data.user.email),
+      });
 
   const redirect = NextResponse.redirect(`${origin}${target}`);
   applyCookiesTo(redirect);

@@ -2,6 +2,7 @@ import { Resend } from "resend";
 import type Stripe from "stripe";
 import { createClient } from "@supabase/supabase-js";
 import { getAppOrigin } from "@/lib/app-url";
+import { AUTH_ROUTES, STUDENT_ROUTES } from "@/lib/auth/routes";
 import {
   emailConfig,
   getResendConfigError,
@@ -25,16 +26,26 @@ function getCheckoutEmail(session: Stripe.Checkout.Session): string {
   ).trim();
 }
 
+function escapeHtml(value: string): string {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;");
+}
+
 function buildCheckoutWelcomeEmailHtml(actionLink: string): string {
+  const safeActionLink = escapeHtml(actionLink);
+
   return `<div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto;">
   <h2 style="color: #000;">Здравствуйте!</h2>
   <p>Спасибо за покупку в <strong>Katya Fit</strong>.</p>
   <p>Ваш доступ к платформе готов. Пожалуйста, перейдите по кнопке ниже, чтобы установить пароль и войти в личный кабинет:</p>
   
-  <a href="${actionLink}" style="display: inline-block; padding: 12px 24px; background-color: #000; color: #fff; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 20px 0;">Установить пароль и войти</a>
+  <a href="${safeActionLink}" style="display: inline-block; padding: 12px 24px; background-color: #000; color: #fff; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 20px 0;">Установить пароль и войти</a>
   
   <p style="font-size: 14px; color: #666;">Если кнопка не работает, скопируйте эту ссылку в браузер:<br>
-  ${actionLink}</p>
+  <a href="${safeActionLink}" style="color: #333;">${safeActionLink}</a></p>
   
   <p>С уважением,<br>Команда Katya Fit</p>
 </div>`;
@@ -44,7 +55,8 @@ async function sendSupabaseAccessEmail(to: string): Promise<void> {
   const supabase = createClient(getSupabaseUrl(), getSupabaseAnonKey(), {
     auth: { persistSession: false, autoRefreshToken: false },
   });
-  const redirectTo = `${getAppOrigin()}/auth/callback?next=${encodeURIComponent("/app")}`;
+  const setPasswordPath = `${AUTH_ROUTES.setPassword}?next=${encodeURIComponent(STUDENT_ROUTES.dashboard)}`;
+  const redirectTo = `${getAppOrigin()}/auth/callback?next=${encodeURIComponent(setPasswordPath)}`;
   const { error } = await supabase.auth.resetPasswordForEmail(to, {
     redirectTo,
   });

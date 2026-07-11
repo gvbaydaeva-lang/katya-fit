@@ -12,6 +12,7 @@ export const CHECKOUT_ROUTES = {
 export const AUTH_ROUTES = {
   login: "/login",
   register: "/register",
+  setPassword: "/set-password",
 } as const;
 
 /** Префикс закрытой зоны личного кабинета */
@@ -53,7 +54,11 @@ export function isProtectedPath(pathname: string): boolean {
 }
 
 export function isAuthPath(pathname: string): boolean {
-  return pathname === AUTH_ROUTES.login || pathname === AUTH_ROUTES.register;
+  return (
+    pathname === AUTH_ROUTES.login ||
+    pathname === AUTH_ROUTES.register ||
+    pathname === AUTH_ROUTES.setPassword
+  );
 }
 
 export function isCheckoutPath(pathname: string): boolean {

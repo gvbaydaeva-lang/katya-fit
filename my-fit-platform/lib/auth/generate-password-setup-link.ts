@@ -1,5 +1,5 @@
 import { getAppOrigin } from "@/lib/app-url";
-import { STUDENT_ROUTES } from "@/lib/auth/routes";
+import { AUTH_ROUTES, STUDENT_ROUTES } from "@/lib/auth/routes";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 type GeneratePasswordSetupLinkParams = {
@@ -11,6 +11,17 @@ type GeneratePasswordSetupLinkResult =
   | { ok: true; actionLink: string; userId: string }
   | { ok: false; error: string };
 
+function buildPasswordSetupActionLink(
+  tokenHash: string,
+  verificationType: string,
+): string {
+  const url = new URL("/auth/confirm", getAppOrigin());
+  url.searchParams.set("token_hash", tokenHash);
+  url.searchParams.set("type", verificationType);
+  url.searchParams.set("next", STUDENT_ROUTES.dashboard);
+  return url.toString();
+}
+
 /**
  * Уникальная ссылка для установки пароля через Supabase Auth Admin API.
  * Для нового email — invite, для существующего — recovery.
@@ -20,7 +31,8 @@ export async function generatePasswordSetupLink(
 ): Promise<GeneratePasswordSetupLinkResult> {
   try {
     const email = params.email.trim().toLowerCase();
-    const redirectTo = `${getAppOrigin()}/auth/callback?next=${encodeURIComponent(STUDENT_ROUTES.dashboard)}`;
+    const setPasswordPath = `${AUTH_ROUTES.setPassword}?next=${encodeURIComponent(STUDENT_ROUTES.dashboard)}`;
+    const redirectTo = `${getAppOrigin()}/auth/callback?next=${encodeURIComponent(setPasswordPath)}`;
     const admin = createAdminClient();
 
     const invite = await admin.auth.admin.generateLink({
@@ -39,7 +51,10 @@ export async function generatePasswordSetupLink(
     ) {
       return {
         ok: true,
-        actionLink: invite.data.properties.action_link,
+        actionLink: buildPasswordSetupActionLink(
+          invite.data.properties.hashed_token,
+          invite.data.properties.verification_type,
+        ),
         userId: invite.data.user.id,
       };
     }
@@ -57,7 +72,10 @@ export async function generatePasswordSetupLink(
     ) {
       return {
         ok: true,
-        actionLink: recovery.data.properties.action_link,
+        actionLink: buildPasswordSetupActionLink(
+          recovery.data.properties.hashed_token,
+          recovery.data.properties.verification_type,
+        ),
         userId: recovery.data.user.id,
       };
     }

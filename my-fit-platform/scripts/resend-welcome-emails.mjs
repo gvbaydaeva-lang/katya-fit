@@ -47,6 +47,39 @@ function requireEnv(name, value) {
   }
 }
 
+function requirePublicAppUrl() {
+  const url = new URL(appUrl);
+  const isLocalhost = ["localhost", "127.0.0.1", "::1"].includes(url.hostname);
+
+  if (url.protocol !== "https:" || isLocalhost) {
+    console.error(
+      `NEXT_PUBLIC_APP_URL должен быть публичным HTTPS URL для писем клиентам. Сейчас: ${appUrl}`,
+    );
+    process.exit(1);
+  }
+}
+
+function getPasswordSetupRedirectTo() {
+  const setPasswordPath = `/set-password?next=${encodeURIComponent("/app")}`;
+  return `${appUrl}/auth/callback?next=${encodeURIComponent(setPasswordPath)}`;
+}
+
+function buildPasswordSetupActionLink(tokenHash, verificationType) {
+  const url = new URL("/auth/confirm", appUrl);
+  url.searchParams.set("token_hash", tokenHash);
+  url.searchParams.set("type", verificationType);
+  url.searchParams.set("next", "/app");
+  return url.toString();
+}
+
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;");
+}
+
 function inferPlanId(payment) {
   if (validPlanIds.has(payment.plan_id)) return payment.plan_id;
   const name = String(payment.plan_name || "").toLowerCase();
@@ -57,19 +90,21 @@ function inferPlanId(payment) {
 }
 
 function buildHtml(actionLink) {
+  const safeActionLink = escapeHtml(actionLink);
+
   return `<div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto;">
   <h2 style="color: #000;">Здравствуйте!</h2>
   <p>Спасибо за покупку в <strong>Katya Fit</strong>.</p>
   <p>Ваш доступ к платформе готов. Перейдите по кнопке ниже, чтобы установить пароль и войти в личный кабинет:</p>
-  <a href="${actionLink}" style="display: inline-block; padding: 12px 24px; background-color: #000; color: #fff; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 20px 0;">Установить пароль и войти</a>
-  <p style="font-size: 14px; color: #666;">Если кнопка не работает, скопируйте эту ссылку в браузер:<br>${actionLink}</p>
+  <a href="${safeActionLink}" style="display: inline-block; padding: 12px 24px; background-color: #000; color: #fff; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 20px 0;">Установить пароль и войти</a>
+  <p style="font-size: 14px; color: #666;">Если кнопка не работает, скопируйте эту ссылку в браузер:<br><a href="${safeActionLink}" style="color: #333;">${safeActionLink}</a></p>
   <p>С уважением,<br>Команда Katya Fit</p>
 </div>`;
 }
 
 async function generatePasswordSetupLink(admin, payment) {
   const email = payment.email.trim().toLowerCase();
-  const redirectTo = `${appUrl}/auth/callback?next=${encodeURIComponent("/app")}`;
+  const redirectTo = getPasswordSetupRedirectTo();
   const fullName = payment.user_name && payment.user_name !== "—"
     ? payment.user_name
     : undefined;
@@ -85,7 +120,10 @@ async function generatePasswordSetupLink(admin, payment) {
 
   if (!invite.error && invite.data.properties?.action_link && invite.data.user?.id) {
     return {
-      actionLink: invite.data.properties.action_link,
+      actionLink: buildPasswordSetupActionLink(
+        invite.data.properties.hashed_token,
+        invite.data.properties.verification_type,
+      ),
       userId: invite.data.user.id,
     };
   }
@@ -98,7 +136,10 @@ async function generatePasswordSetupLink(admin, payment) {
 
   if (!recovery.error && recovery.data.properties?.action_link && recovery.data.user?.id) {
     return {
-      actionLink: recovery.data.properties.action_link,
+      actionLink: buildPasswordSetupActionLink(
+        recovery.data.properties.hashed_token,
+        recovery.data.properties.verification_type,
+      ),
       userId: recovery.data.user.id,
     };
   }
@@ -171,7 +212,7 @@ async function sendEmail(to, actionLink) {
     const supabase = createClient(supabaseUrl, supabaseAnonKey, {
       auth: { persistSession: false, autoRefreshToken: false },
     });
-    const redirectTo = `${appUrl}/auth/callback?next=${encodeURIComponent("/app")}`;
+    const redirectTo = getPasswordSetupRedirectTo();
     const { error } = await supabase.auth.resetPasswordForEmail(to, {
       redirectTo,
     });
@@ -202,6 +243,7 @@ async function sendEmail(to, actionLink) {
 requireEnv("NEXT_PUBLIC_SUPABASE_URL", supabaseUrl);
 requireEnv("NEXT_PUBLIC_SUPABASE_ANON_KEY", supabaseAnonKey);
 requireEnv("SUPABASE_SERVICE_ROLE_KEY", serviceKey);
+requirePublicAppUrl();
 
 const admin = createClient(supabaseUrl, serviceKey, {
   auth: { persistSession: false, autoRefreshToken: false },
