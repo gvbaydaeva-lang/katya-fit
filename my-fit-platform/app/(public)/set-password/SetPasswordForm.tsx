@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import type { FormEvent } from "react";
 import { Button } from "@/components/ui/Button";
 import { PageHeading } from "@/components/ui/PageHeading";
@@ -23,10 +23,24 @@ function SetPasswordFormInner() {
   const supabase = useMemo(() => createClient(), []);
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [email, setEmail] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
 
   const next = getSafeNext(searchParams.get("next"));
+
+  useEffect(() => {
+    let mounted = true;
+    supabase.auth.getUser().then(({ data }) => {
+      if (mounted) {
+        setEmail(data.user?.email ?? null);
+      }
+    });
+
+    return () => {
+      mounted = false;
+    };
+  }, [supabase]);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -62,6 +76,11 @@ function SetPasswordFormInner() {
         title="Установите пароль"
         description="Придумайте пароль для входа в личный кабинет."
       />
+      {email && (
+        <p className="mt-5 rounded-lg bg-zinc-50 px-3 py-2 text-sm text-zinc-700">
+          Аккаунт: <span className="font-medium text-zinc-900">{email}</span>
+        </p>
+      )}
       <form onSubmit={handleSubmit} className="mt-8 space-y-4">
         <label className="block text-sm font-medium text-zinc-700">
           Новый пароль

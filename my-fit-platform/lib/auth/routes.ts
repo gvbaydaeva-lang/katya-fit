@@ -13,6 +13,7 @@ export const AUTH_ROUTES = {
   login: "/login",
   register: "/register",
   setPassword: "/set-password",
+  forgotPassword: "/forgot-password",
 } as const;
 
 /** Префикс закрытой зоны личного кабинета */
@@ -57,7 +58,8 @@ export function isAuthPath(pathname: string): boolean {
   return (
     pathname === AUTH_ROUTES.login ||
     pathname === AUTH_ROUTES.register ||
-    pathname === AUTH_ROUTES.setPassword
+    pathname === AUTH_ROUTES.setPassword ||
+    pathname === AUTH_ROUTES.forgotPassword
   );
 }
 

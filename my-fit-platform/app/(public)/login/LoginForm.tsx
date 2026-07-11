@@ -13,15 +13,25 @@ type LoginFormProps = {
 
 const initialState: LoginState = {};
 
+function getAuthErrorMessage(code: string | null): string | null {
+  if (code === "auth_callback_failed") {
+    return "Не удалось подтвердить вход. Попробуйте снова.";
+  }
+  if (code === "auth_link_invalid") {
+    return "Ссылка некорректная. Откройте последнее письмо или запросите новую ссылку через «Забыли пароль?».";
+  }
+  if (code === "auth_link_expired") {
+    return "Эта ссылка уже использована или устарела. Запросите новую через «Забыли пароль?».";
+  }
+  return null;
+}
+
 function LoginFormInner({ callbackUrl }: LoginFormProps) {
   const searchParams = useSearchParams();
   const [state, formAction, pending] = useActionState(loginAction, initialState);
 
   const authError =
-    state.error ??
-    (searchParams.get("error") === "auth_callback_failed"
-      ? "Не удалось подтвердить вход. Попробуйте снова."
-      : null);
+    state.error ?? getAuthErrorMessage(searchParams.get("error"));
 
   const targetAfterLogin = callbackUrl ?? ADMIN_ROUTES.clients;
 
@@ -64,6 +74,11 @@ function LoginFormInner({ callbackUrl }: LoginFormProps) {
           minLength={6}
         />
       </label>
+      <div className="-mt-2 text-right">
+        <Link href={AUTH_ROUTES.forgotPassword} className="text-sm text-rose-600 underline">
+          Забыли пароль?
+        </Link>
+      </div>
       {authError && (
         <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
           {authError}

@@ -4,11 +4,12 @@ import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import { LoginForm } from "@/app/(public)/login/LoginForm";
 import { PageHeading } from "@/components/ui/PageHeading";
+import { STUDENT_ROUTES } from "@/lib/auth/routes";
 
 function LoginPageInner() {
   const searchParams = useSearchParams();
   const callbackUrl =
-    searchParams.get("callbackUrl") ?? "/admin/clients";
+    searchParams.get("callbackUrl") ?? STUDENT_ROUTES.dashboard;
 
   return (
     <section className="mx-auto max-w-md px-4 py-16">

@@ -116,6 +116,10 @@ export async function updateSession(request: NextRequest) {
   }
 
   if (isAuthPath(pathname) && user) {
+    if (pathname === AUTH_ROUTES.setPassword) {
+      return response;
+    }
+
     if (isTrainerUser(user.email)) {
       const callbackUrl = request.nextUrl.searchParams.get("callbackUrl");
       const target = resolvePostLoginPath(callbackUrl, { isTrainer: true });
