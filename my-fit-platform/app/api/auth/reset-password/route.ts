@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
+import { getAppOrigin } from "@/lib/app-url";
 import { generatePasswordRecoveryLink } from "@/lib/auth/generate-password-setup-link";
+import { AUTH_ROUTES } from "@/lib/auth/routes";
 import {
   emailConfig,
   getResendConfigError,
@@ -17,6 +19,8 @@ function escapeHtml(value: string): string {
 
 function buildResetPasswordEmailHtml(actionLink: string): string {
   const safeActionLink = escapeHtml(actionLink);
+  const loginLink = `${getAppOrigin()}${AUTH_ROUTES.login}`;
+  const safeLoginLink = escapeHtml(loginLink);
 
   return `<div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto;">
   <h2 style="color: #000;">Восстановление пароля</h2>
@@ -27,6 +31,12 @@ function buildResetPasswordEmailHtml(actionLink: string): string {
 
   <p style="font-size: 14px; color: #666;">Если кнопка не работает, скопируйте эту ссылку в браузер:<br>
   <a href="${safeActionLink}" style="color: #333;">${safeActionLink}</a></p>
+
+  <div style="margin: 24px 0; padding: 16px; background: #f7f4ef; border-radius: 8px;">
+    <p style="margin: 0 0 8px;"><strong>Постоянная ссылка для входа в личный кабинет:</strong></p>
+    <p style="margin: 0 0 8px;"><a href="${safeLoginLink}" style="color: #333;">${safeLoginLink}</a></p>
+    <p style="margin: 0; font-size: 14px; color: #666;">После установки нового пароля входите по этой ссылке с вашим email и новым паролем.</p>
+  </div>
 
   <p style="font-size: 14px; color: #666;">Если вы не запрашивали восстановление, просто проигнорируйте это письмо.</p>
 

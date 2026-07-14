@@ -22,7 +22,7 @@ export const STUDENT_APP_PREFIX = "/app";
 import { moduleListHref } from "@/lib/workouts/content-blocks";
 
 export const STUDENT_ROUTES = {
-  dashboard: "/app",
+  dashboard: "/app/workouts",
   myWorkouts: "/app/workouts",
   settings: "/app/profile",
   profile: "/app/profile",

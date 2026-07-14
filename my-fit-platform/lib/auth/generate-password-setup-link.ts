@@ -18,7 +18,7 @@ export function buildPasswordSetupActionLink(
   const url = new URL("/auth/confirm", getAppOrigin());
   url.searchParams.set("token_hash", tokenHash);
   url.searchParams.set("type", verificationType);
-  url.searchParams.set("next", STUDENT_ROUTES.dashboard);
+  url.searchParams.set("next", STUDENT_ROUTES.myWorkouts);
   return url.toString();
 }
 
@@ -27,7 +27,7 @@ export async function generatePasswordRecoveryLink(
 ): Promise<GeneratePasswordSetupLinkResult> {
   try {
     const normalizedEmail = email.trim().toLowerCase();
-    const setPasswordPath = `${AUTH_ROUTES.setPassword}?next=${encodeURIComponent(STUDENT_ROUTES.dashboard)}`;
+    const setPasswordPath = `${AUTH_ROUTES.setPassword}?next=${encodeURIComponent(STUDENT_ROUTES.myWorkouts)}`;
     const redirectTo = `${getAppOrigin()}/auth/callback?next=${encodeURIComponent(setPasswordPath)}`;
     const admin = createAdminClient();
 
@@ -77,7 +77,7 @@ export async function generatePasswordSetupLink(
 ): Promise<GeneratePasswordSetupLinkResult> {
   try {
     const email = params.email.trim().toLowerCase();
-    const setPasswordPath = `${AUTH_ROUTES.setPassword}?next=${encodeURIComponent(STUDENT_ROUTES.dashboard)}`;
+    const setPasswordPath = `${AUTH_ROUTES.setPassword}?next=${encodeURIComponent(STUDENT_ROUTES.myWorkouts)}`;
     const redirectTo = `${getAppOrigin()}/auth/callback?next=${encodeURIComponent(setPasswordPath)}`;
     const admin = createAdminClient();
 

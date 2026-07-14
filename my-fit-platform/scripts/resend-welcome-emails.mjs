@@ -60,7 +60,7 @@ function requirePublicAppUrl() {
 }
 
 function getPasswordSetupRedirectTo() {
-  const setPasswordPath = `/set-password?next=${encodeURIComponent("/app")}`;
+  const setPasswordPath = `/set-password?next=${encodeURIComponent("/app/workouts")}`;
   return `${appUrl}/auth/callback?next=${encodeURIComponent(setPasswordPath)}`;
 }
 
@@ -68,7 +68,7 @@ function buildPasswordSetupActionLink(tokenHash, verificationType) {
   const url = new URL("/auth/confirm", appUrl);
   url.searchParams.set("token_hash", tokenHash);
   url.searchParams.set("type", verificationType);
-  url.searchParams.set("next", "/app");
+  url.searchParams.set("next", "/app/workouts");
   return url.toString();
 }
 
@@ -91,13 +91,21 @@ function inferPlanId(payment) {
 
 function buildHtml(actionLink) {
   const safeActionLink = escapeHtml(actionLink);
+  const loginLink = `${appUrl}/login`;
+  const safeLoginLink = escapeHtml(loginLink);
 
   return `<div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto;">
   <h2 style="color: #000;">Здравствуйте!</h2>
   <p>Спасибо за покупку в <strong>Katya Fit</strong>.</p>
-  <p>Ваш доступ к платформе готов. Перейдите по кнопке ниже, чтобы установить пароль и войти в личный кабинет:</p>
+  <p>Ваш доступ к платформе готов.</p>
+  <p><strong>Сначала задайте пароль</strong> по кнопке ниже. Эта ссылка нужна только для первого входа или восстановления доступа.</p>
   <a href="${safeActionLink}" style="display: inline-block; padding: 12px 24px; background-color: #000; color: #fff; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 20px 0;">Установить пароль и войти</a>
   <p style="font-size: 14px; color: #666;">Если кнопка не работает, скопируйте эту ссылку в браузер:<br><a href="${safeActionLink}" style="color: #333;">${safeActionLink}</a></p>
+  <div style="margin: 24px 0; padding: 16px; background: #f7f4ef; border-radius: 8px;">
+    <p style="margin: 0 0 8px;"><strong>Постоянная ссылка для входа в личный кабинет:</strong></p>
+    <p style="margin: 0 0 8px;"><a href="${safeLoginLink}" style="color: #333;">${safeLoginLink}</a></p>
+    <p style="margin: 0; font-size: 14px; color: #666;">Сохраните эту страницу. После установки пароля входите по ней с вашим email и паролем, который вы зададите.</p>
+  </div>
   <p>С уважением,<br>Команда Katya Fit</p>
 </div>`;
 }
