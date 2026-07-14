@@ -35,6 +35,11 @@ const nextConfig: NextConfig = {
   async redirects() {
     if (isGithubPages) return [];
     return [
+      {
+        source: "/admin-login",
+        destination: "/login?callbackUrl=%2Fadmin%2Fcontent",
+        permanent: false,
+      },
       { source: "/home-to-gym", destination: "/dom-v-zal", permanent: true },
       { source: "/coaching", destination: "/online", permanent: true },
       { source: "/about", destination: "/#my-story", permanent: false },
