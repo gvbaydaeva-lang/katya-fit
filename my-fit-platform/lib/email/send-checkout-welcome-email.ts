@@ -190,7 +190,7 @@ export async function sendCheckoutWelcomeEmail(
     const { data, error } = await resend.emails.send({
       from: emailConfig.from,
       to,
-      subject: "Доступ к платформе Katya Fit",
+      subject: "Доступ в Katya Fit",
       html: buildCheckoutWelcomeEmailHtml(actionLink),
     });
 

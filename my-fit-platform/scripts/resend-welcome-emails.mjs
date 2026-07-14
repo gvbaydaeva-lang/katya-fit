@@ -83,6 +83,9 @@ function escapeHtml(value) {
 function inferPlanId(payment) {
   if (validPlanIds.has(payment.plan_id)) return payment.plan_id;
   const name = String(payment.plan_name || "").toLowerCase();
+  if (name.includes("из дома")) return "self";
+  if (name.includes("онлайн")) return "coached";
+  if (name.includes("вместе")) return "platform";
   if (name.includes("сопровожд")) return "coached";
   if (name.includes("платформ")) return "platform";
   if (name.includes("самостоятель")) return "self";
@@ -237,7 +240,7 @@ async function sendEmail(to, actionLink) {
     body: JSON.stringify({
       from: resendFromEmail,
       to,
-      subject: "Доступ к платформе Katya Fit",
+      subject: "Доступ в Katya Fit",
       html: buildHtml(actionLink),
     }),
   });

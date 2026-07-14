@@ -11,6 +11,7 @@ import { HeroAudienceCard } from "@/components/landing/HeroAudienceCard";
 import { LANDING_HERO_TITLE_CLASS, LANDING_HERO_OBJECT_ONLINE } from "@/components/landing/landing-hero-styles";
 import { ProgramLandingHero } from "@/components/landing/ProgramLandingHero";
 import CheckoutModal from "@/components/public/CheckoutModal";
+import { getPlanById } from "@/lib/stripe/plans";
 import {
   Accordion,
   AccordionContent,
@@ -34,10 +35,12 @@ const ONLINE_HERO_MASK: CSSProperties = {
   maskComposite: "intersect",
 };
 
+const onlineSupportPlan = getPlanById("coached")!;
+
 const COACHED_CHECKOUT_PLAN = {
-  id: "coached",
-  name: "Персональный старт",
-  price: "$149",
+  id: onlineSupportPlan.id,
+  name: onlineSupportPlan.name,
+  price: onlineSupportPlan.price,
 } as const;
 
 function Check() {
@@ -131,7 +134,7 @@ export function OnlinePageClient() {
           <h2 className="text-3xl font-bold text-stone-900 sm:text-4xl text-center">Тарифы</h2>
           <div className="mt-12 grid items-stretch gap-6 lg:grid-cols-2">
             <article className="flex h-full flex-col rounded-sm border border-[#E8E2D9] bg-[#FAF8F4] p-8">
-              <h3 className="text-xl font-bold text-stone-900">Персональный старт</h3>
+              <h3 className="text-xl font-bold text-stone-900">Онлайн сопровождение</h3>
               <p className="text-sm text-stone-400 mt-1">12 недель персональной работы</p>
               <ul className="mt-6 space-y-3">
                 {["Подробная анкета", "Расчет КБЖУ", "Персональный план питания", "Программа тренировок", "Видео техники упражнений", "1 онлайн-тренировка по видеосвязи", "Ежемесячная корректировка плана"].map((f) => (
@@ -139,9 +142,10 @@ export function OnlinePageClient() {
                 ))}
               </ul>
               <div className="mt-auto pt-8">
-                <p className="text-xl text-[#9ca3af] line-through">$209</p>
                 <div className="flex items-baseline gap-2">
-                  <span className="text-4xl font-bold text-stone-900">$149</span>
+                  <span className="text-4xl font-bold text-stone-900">
+                    {onlineSupportPlan.price}
+                  </span>
                   <span className="text-sm text-stone-400">/ 12 недель</span>
                 </div>
               </div>
@@ -157,7 +161,7 @@ export function OnlinePageClient() {
               <h3 className="text-xl font-bold text-stone-900">Вместе</h3>
               <p className="text-sm text-stone-400 mt-1">Полное онлайн сопровождение</p>
               <ul className="mt-6 space-y-3">
-                {["Всё из тарифа «Персональный старт»", "Еженедельные отчеты", "Поддержка", "Ответы на вопросы", "Контроль питания", "Контроль тренировок", "Корректировки по мере необходимости"].map((f) => (
+                {["Всё из тарифа «Онлайн сопровождение»", "Еженедельные отчеты", "Поддержка", "Ответы на вопросы", "Контроль питания", "Контроль тренировок", "Корректировки по мере необходимости"].map((f) => (
                   <li key={f} className="flex gap-3 text-sm text-stone-600"><Check />{f}</li>
                 ))}
               </ul>

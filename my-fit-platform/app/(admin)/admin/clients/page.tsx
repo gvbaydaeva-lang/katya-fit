@@ -12,10 +12,7 @@ export default async function AdminClientsPage() {
 
   return (
     <>
-      <PageHeading
-        title="Clients"
-        description="Успешные оплаты из Stripe и профили клиентов из Supabase."
-      />
+      <PageHeading title="Clients" />
 
       <section className="mb-10">
         <h2 className="mb-4 text-lg font-semibold text-ds-heading">Оплаты</h2>

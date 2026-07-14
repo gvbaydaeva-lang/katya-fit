@@ -37,7 +37,7 @@ export async function createCheckoutSession(
           unit_amount: params.amountCents,
           product_data: {
             name: params.planName,
-            description: "Доступ к платформе KATY D.",
+            description: "Материалы и личный кабинет KATY D.",
           },
         },
         quantity: 1,

@@ -1,6 +1,7 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getServiceRoleKey } from "@/lib/supabase/env";
 import type { DbPayment } from "@/lib/supabase/database.types";
+import { getPlanById } from "@/lib/stripe/plans";
 
 export type AdminPaymentRow = {
   id: string;
@@ -49,7 +50,9 @@ export async function fetchAdminPayments(): Promise<{
       email: payment.email,
       phone: payment.phone,
       amount: payment.amount,
-      planName: payment.plan_name,
+      planName: payment.plan_id
+        ? (getPlanById(payment.plan_id)?.name ?? payment.plan_name)
+        : payment.plan_name,
       welcomeEmailSentAt: payment.welcome_email_sent_at,
       welcomeEmailError: payment.welcome_email_error,
       createdAt: payment.created_at,

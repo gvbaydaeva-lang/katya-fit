@@ -19,7 +19,7 @@ export async function sendPurchaseAccessEmail(
     };
   }
 
-  const html = `Здравствуйте! Спасибо за покупку. Ваш доступ к платформе активирован. Ссылка для входа: <a href="${params.accessLink}">${params.accessLink}</a>`;
+  const html = `Здравствуйте! Спасибо за покупку. Ваш доступ в личный кабинет активирован. Ссылка для входа: <a href="${params.accessLink}">${params.accessLink}</a>`;
 
   const { Resend } = await import("resend");
   const resend = new Resend(emailConfig.resendApiKey);
@@ -27,7 +27,7 @@ export async function sendPurchaseAccessEmail(
   const { error } = await resend.emails.send({
     from: emailConfig.from,
     to: params.to,
-    subject: "Доступ к платформе Katya Fit",
+    subject: "Доступ в Katya Fit",
     html,
   });
 
