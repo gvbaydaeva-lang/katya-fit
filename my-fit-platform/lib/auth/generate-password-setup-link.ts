@@ -11,7 +11,7 @@ type GeneratePasswordSetupLinkResult =
   | { ok: true; actionLink: string; userId: string }
   | { ok: false; error: string };
 
-function buildPasswordSetupActionLink(
+export function buildPasswordSetupActionLink(
   tokenHash: string,
   verificationType: string,
 ): string {
@@ -20,6 +20,52 @@ function buildPasswordSetupActionLink(
   url.searchParams.set("type", verificationType);
   url.searchParams.set("next", STUDENT_ROUTES.dashboard);
   return url.toString();
+}
+
+export async function generatePasswordRecoveryLink(
+  email: string,
+): Promise<GeneratePasswordSetupLinkResult> {
+  try {
+    const normalizedEmail = email.trim().toLowerCase();
+    const setPasswordPath = `${AUTH_ROUTES.setPassword}?next=${encodeURIComponent(STUDENT_ROUTES.dashboard)}`;
+    const redirectTo = `${getAppOrigin()}/auth/callback?next=${encodeURIComponent(setPasswordPath)}`;
+    const admin = createAdminClient();
+
+    const recovery = await admin.auth.admin.generateLink({
+      type: "recovery",
+      email: normalizedEmail,
+      options: { redirectTo },
+    });
+
+    if (
+      !recovery.error &&
+      recovery.data.properties?.hashed_token &&
+      recovery.data.properties?.verification_type &&
+      recovery.data.user?.id
+    ) {
+      return {
+        ok: true,
+        actionLink: buildPasswordSetupActionLink(
+          recovery.data.properties.hashed_token,
+          recovery.data.properties.verification_type,
+        ),
+        userId: recovery.data.user.id,
+      };
+    }
+
+    return {
+      ok: false,
+      error: recovery.error?.message ?? "Не удалось создать ссылку восстановления",
+    };
+  } catch (error) {
+    return {
+      ok: false,
+      error:
+        error instanceof Error
+          ? error.message
+          : "Не удалось создать ссылку восстановления",
+    };
+  }
 }
 
 /**

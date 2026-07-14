@@ -1,8 +1,38 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
-import { getAppOrigin } from "@/lib/app-url";
-import { AUTH_ROUTES, STUDENT_ROUTES } from "@/lib/auth/routes";
-import { getSupabaseAnonKey, getSupabaseUrl } from "@/lib/supabase/env";
+import { Resend } from "resend";
+import { generatePasswordRecoveryLink } from "@/lib/auth/generate-password-setup-link";
+import {
+  emailConfig,
+  getResendConfigError,
+  isResendConfigured,
+} from "@/lib/email/config";
+
+function escapeHtml(value: string): string {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;");
+}
+
+function buildResetPasswordEmailHtml(actionLink: string): string {
+  const safeActionLink = escapeHtml(actionLink);
+
+  return `<div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto;">
+  <h2 style="color: #000;">Восстановление пароля</h2>
+  <p>Вы запросили новый пароль для личного кабинета <strong>Katya Fit</strong>.</p>
+  <p>Перейдите по кнопке ниже и установите новый пароль:</p>
+
+  <a href="${safeActionLink}" style="display: inline-block; padding: 12px 24px; background-color: #000; color: #fff; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 20px 0;">Установить новый пароль</a>
+
+  <p style="font-size: 14px; color: #666;">Если кнопка не работает, скопируйте эту ссылку в браузер:<br>
+  <a href="${safeActionLink}" style="color: #333;">${safeActionLink}</a></p>
+
+  <p style="font-size: 14px; color: #666;">Если вы не запрашивали восстановление, просто проигнорируйте это письмо.</p>
+
+  <p>С уважением,<br>Команда Katya Fit</p>
+</div>`;
+}
 
 export async function POST(request: Request) {
   const body = await request.json().catch(() => ({}));
@@ -12,14 +42,24 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Укажите корректный email" }, { status: 400 });
   }
 
-  const supabase = createClient(getSupabaseUrl(), getSupabaseAnonKey(), {
-    auth: { persistSession: false, autoRefreshToken: false },
-  });
-  const setPasswordPath = `${AUTH_ROUTES.setPassword}?next=${encodeURIComponent(STUDENT_ROUTES.dashboard)}`;
-  const redirectTo = `${getAppOrigin()}/auth/callback?next=${encodeURIComponent(setPasswordPath)}`;
+  if (!isResendConfigured()) {
+    return NextResponse.json(
+      { error: getResendConfigError() ?? "Resend не настроен" },
+      { status: 500 },
+    );
+  }
 
-  const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo,
+  const linkResult = await generatePasswordRecoveryLink(email);
+  if (!linkResult.ok) {
+    return NextResponse.json({ error: linkResult.error }, { status: 400 });
+  }
+
+  const resend = new Resend(emailConfig.resendApiKey);
+  const { error } = await resend.emails.send({
+    from: emailConfig.from,
+    to: email,
+    subject: "Восстановление пароля Katya Fit",
+    html: buildResetPasswordEmailHtml(linkResult.actionLink),
   });
 
   if (error) {
