@@ -18,7 +18,7 @@ export default async function StudentWorkoutsPage() {
       <WorkoutsPageHeader />
 
       {modules.length === 0 ? (
-        <div className="rounded-xl border-none bg-ds-surface px-6 py-10 text-center text-sm text-ds-muted shadow-sm">
+        <div className="rounded-xl border-none bg-ds-surface px-6 py-10 text-center text-base text-ds-muted shadow-sm">
           Пока нет опубликованных уроков для вашего тарифа.
         </div>
       ) : (

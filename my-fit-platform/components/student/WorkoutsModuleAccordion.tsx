@@ -62,8 +62,8 @@ export function WorkoutsModuleAccordion({ modules }: WorkoutsModuleAccordionProp
             id={anchorId}
             className="scroll-mt-4 overflow-hidden"
           >
-            <AccordionTrigger className="px-4 py-3.5 hover:bg-ds-surface-raised/80">
-              <span className="min-w-0 flex-1 pr-3 text-left text-lg font-bold tracking-tight text-ds-heading sm:text-xl">
+            <AccordionTrigger className="px-5 py-4 hover:bg-ds-surface-raised/80">
+              <span className="min-w-0 flex-1 pr-3 text-left font-[family-name:var(--font-playfair)] text-xl font-bold tracking-tight text-ds-heading sm:text-2xl">
                 {title}
               </span>
             </AccordionTrigger>
@@ -74,11 +74,11 @@ export function WorkoutsModuleAccordion({ modules }: WorkoutsModuleAccordionProp
                   <li key={lesson.id}>
                     <Link
                       href={STUDENT_ROUTES.lesson(lesson.id, module.moduleName)}
-                      className="group flex items-center gap-2 px-4 py-2.5 text-sm text-ds-text transition-colors hover:bg-ds-hover hover:text-rose-700"
+                      className="group flex min-h-16 items-center gap-3 px-5 py-4 font-[family-name:var(--font-inter)] text-xl font-medium leading-tight text-ds-text transition-colors hover:bg-ds-hover hover:text-rose-700 sm:text-2xl"
                     >
                       <span className="min-w-0 flex-1 leading-snug">{lesson.title}</span>
                       <ChevronRight
-                        className="h-4 w-4 shrink-0 text-ds-muted opacity-60 transition-transform group-hover:translate-x-0.5 group-hover:text-rose-600 group-hover:opacity-100"
+                        className="h-5 w-5 shrink-0 text-ds-muted opacity-70 transition-transform group-hover:translate-x-0.5 group-hover:text-rose-600 group-hover:opacity-100"
                         aria-hidden
                       />
                     </Link>
