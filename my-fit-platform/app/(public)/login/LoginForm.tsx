@@ -34,6 +34,7 @@ function LoginFormInner({ callbackUrl }: LoginFormProps) {
     state.error ?? getAuthErrorMessage(searchParams.get("error"));
 
   const targetAfterLogin = callbackUrl ?? ADMIN_ROUTES.clients;
+  const forgotPasswordHref = `${AUTH_ROUTES.forgotPassword}?next=${encodeURIComponent(targetAfterLogin)}`;
 
   // Убираем пароль из URL, если форма ушла нативным GET (без JS)
   useEffect(() => {
@@ -75,7 +76,7 @@ function LoginFormInner({ callbackUrl }: LoginFormProps) {
         />
       </label>
       <div className="-mt-2 text-right">
-        <Link href={AUTH_ROUTES.forgotPassword} className="text-sm text-rose-600 underline">
+        <Link href={forgotPasswordHref} className="text-sm text-rose-600 underline">
           Забыли пароль?
         </Link>
       </div>

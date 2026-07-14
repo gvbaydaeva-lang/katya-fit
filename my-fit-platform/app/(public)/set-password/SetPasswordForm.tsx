@@ -6,7 +6,7 @@ import { Suspense, useEffect, useMemo, useState } from "react";
 import type { FormEvent } from "react";
 import { Button } from "@/components/ui/Button";
 import { PageHeading } from "@/components/ui/PageHeading";
-import { AUTH_ROUTES, STUDENT_ROUTES } from "@/lib/auth/routes";
+import { ADMIN_ROUTES, AUTH_ROUTES, STUDENT_ROUTES } from "@/lib/auth/routes";
 import { createClient } from "@/lib/supabase/client";
 
 function getSafeNext(value: string | null): string {
@@ -14,7 +14,12 @@ function getSafeNext(value: string | null): string {
     return STUDENT_ROUTES.dashboard;
   }
 
-  return value.startsWith("/app") ? value : STUDENT_ROUTES.dashboard;
+  if (value.startsWith("/app")) return value;
+  if (value === ADMIN_ROUTES.root || value.startsWith(`${ADMIN_ROUTES.root}/`)) {
+    return value;
+  }
+
+  return STUDENT_ROUTES.dashboard;
 }
 
 function SetPasswordFormInner() {

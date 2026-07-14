@@ -1,5 +1,5 @@
 import { getAppOrigin } from "@/lib/app-url";
-import { AUTH_ROUTES, STUDENT_ROUTES } from "@/lib/auth/routes";
+import { ADMIN_ROUTES, AUTH_ROUTES, STUDENT_ROUTES } from "@/lib/auth/routes";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 type GeneratePasswordSetupLinkParams = {
@@ -11,23 +11,41 @@ type GeneratePasswordSetupLinkResult =
   | { ok: true; actionLink: string; userId: string }
   | { ok: false; error: string };
 
+function getSafePasswordNext(next?: string | null): string {
+  if (!next || !next.startsWith("/") || next.startsWith("//")) {
+    return STUDENT_ROUTES.myWorkouts;
+  }
+  if (
+    next === STUDENT_ROUTES.dashboard ||
+    next.startsWith("/app/") ||
+    next === ADMIN_ROUTES.root ||
+    next.startsWith(`${ADMIN_ROUTES.root}/`)
+  ) {
+    return next;
+  }
+  return STUDENT_ROUTES.myWorkouts;
+}
+
 export function buildPasswordSetupActionLink(
   tokenHash: string,
   verificationType: string,
+  next?: string | null,
 ): string {
   const url = new URL("/auth/confirm", getAppOrigin());
   url.searchParams.set("token_hash", tokenHash);
   url.searchParams.set("type", verificationType);
-  url.searchParams.set("next", STUDENT_ROUTES.myWorkouts);
+  url.searchParams.set("next", getSafePasswordNext(next));
   return url.toString();
 }
 
 export async function generatePasswordRecoveryLink(
   email: string,
+  next?: string | null,
 ): Promise<GeneratePasswordSetupLinkResult> {
   try {
     const normalizedEmail = email.trim().toLowerCase();
-    const setPasswordPath = `${AUTH_ROUTES.setPassword}?next=${encodeURIComponent(STUDENT_ROUTES.myWorkouts)}`;
+    const safeNext = getSafePasswordNext(next);
+    const setPasswordPath = `${AUTH_ROUTES.setPassword}?next=${encodeURIComponent(safeNext)}`;
     const redirectTo = `${getAppOrigin()}/auth/callback?next=${encodeURIComponent(setPasswordPath)}`;
     const admin = createAdminClient();
 
@@ -48,6 +66,7 @@ export async function generatePasswordRecoveryLink(
         actionLink: buildPasswordSetupActionLink(
           recovery.data.properties.hashed_token,
           recovery.data.properties.verification_type,
+          safeNext,
         ),
         userId: recovery.data.user.id,
       };

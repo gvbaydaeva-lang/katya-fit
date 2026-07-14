@@ -47,6 +47,7 @@ function buildResetPasswordEmailHtml(actionLink: string): string {
 export async function POST(request: Request) {
   const body = await request.json().catch(() => ({}));
   const email = String(body.email ?? "").trim().toLowerCase();
+  const next = typeof body.next === "string" ? body.next : null;
 
   if (!email.includes("@")) {
     return NextResponse.json({ error: "Укажите корректный email" }, { status: 400 });
@@ -59,7 +60,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const linkResult = await generatePasswordRecoveryLink(email);
+  const linkResult = await generatePasswordRecoveryLink(email, next);
   if (!linkResult.ok) {
     return NextResponse.json({ error: linkResult.error }, { status: 400 });
   }

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { AUTH_ROUTES, STUDENT_ROUTES } from "@/lib/auth/routes";
+import { ADMIN_ROUTES, AUTH_ROUTES, STUDENT_ROUTES } from "@/lib/auth/routes";
 import { getAppOrigin } from "@/lib/app-url";
 import { createAuthRouteClientWithResponse } from "@/lib/supabase/auth-route";
 
@@ -10,7 +10,12 @@ function getSafeNext(value: string | null): string {
     return STUDENT_ROUTES.dashboard;
   }
 
-  return value.startsWith("/app") ? value : STUDENT_ROUTES.dashboard;
+  if (value.startsWith("/app")) return value;
+  if (value === ADMIN_ROUTES.root || value.startsWith(`${ADMIN_ROUTES.root}/`)) {
+    return value;
+  }
+
+  return STUDENT_ROUTES.dashboard;
 }
 
 export async function GET(request: Request) {

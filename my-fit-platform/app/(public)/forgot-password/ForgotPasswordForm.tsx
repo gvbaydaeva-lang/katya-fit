@@ -1,13 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { Suspense, useState } from "react";
 import type { FormEvent } from "react";
 import { Button } from "@/components/ui/Button";
 import { PageHeading } from "@/components/ui/PageHeading";
 import { AUTH_ROUTES } from "@/lib/auth/routes";
 
-export function ForgotPasswordForm() {
+function ForgotPasswordFormInner() {
+  const searchParams = useSearchParams();
+  const next = searchParams.get("next");
   const [email, setEmail] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [info, setInfo] = useState<string | null>(null);
@@ -23,7 +26,7 @@ export function ForgotPasswordForm() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "same-origin",
-      body: JSON.stringify({ email }),
+      body: JSON.stringify({ email, next }),
     });
     const data = await response.json().catch(() => ({}));
     setPending(false);
@@ -76,5 +79,19 @@ export function ForgotPasswordForm() {
         </Link>
       </p>
     </section>
+  );
+}
+
+export function ForgotPasswordForm() {
+  return (
+    <Suspense
+      fallback={
+        <section className="mx-auto max-w-md px-4 py-16 text-sm text-zinc-500">
+          Загрузка…
+        </section>
+      }
+    >
+      <ForgotPasswordFormInner />
+    </Suspense>
   );
 }
