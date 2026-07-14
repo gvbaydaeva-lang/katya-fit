@@ -3,7 +3,7 @@ import { AUTH_ROUTES } from "@/lib/auth/routes";
 import { getAuthUser } from "@/lib/auth/session";
 
 /** Единственный тренер с доступом в /admin */
-const TRAINER_EMAIL = "gv.baydaeva@gmail.com";
+const TRAINER_EMAIL = "mogule4ka@gmail.com";
 
 /** Доступ в /admin — только по email тренера */
 export function isTrainerUser(email?: string | null): boolean {
