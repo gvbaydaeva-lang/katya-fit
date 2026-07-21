@@ -315,7 +315,7 @@ export function CourseTimelineSection() {
                 </DialogHeader>
               </div>
               <CardMedia card={selectedCard} compact />
-              <div className="p-6">
+              <div className="px-6 pb-12 pt-6">
                 <DialogDescription className="text-base leading-relaxed text-[#57534e]">
                   {selectedCard.fullDescription}
                 </DialogDescription>

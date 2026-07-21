@@ -180,7 +180,7 @@ export function HowItWorksSection() {
                   className="h-full w-full object-cover"
                 />
               </div>
-              <div className="p-6">
+              <div className="px-6 pb-12 pt-6">
                 <DialogDescription className="text-base leading-relaxed text-[#57534e]">
                   {selectedStep.fullDescription}
                 </DialogDescription>
