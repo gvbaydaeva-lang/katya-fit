@@ -192,7 +192,9 @@ function CardMedia({
   return (
     <div
       className={`relative overflow-hidden ${
-        compact ? "h-52 md:h-64" : "aspect-[4/3]"
+        compact
+          ? "h-[clamp(8rem,24vh,13rem)] md:h-[clamp(8rem,24vh,14rem)]"
+          : "aspect-[4/3]"
       } ${mediaClass}`}
     >
       {card.illustration === "notebook" && (
@@ -302,8 +304,8 @@ export function CourseTimelineSection() {
 
       <Dialog open={selectedCard !== null} onOpenChange={(open) => !open && setSelectedCard(null)}>
         {selectedCard && (
-          <DialogContent className="max-h-[90vh] max-w-2xl gap-0 overflow-hidden rounded-sm bg-white p-0">
-            <div className="min-h-0 overflow-y-auto overscroll-contain">
+          <DialogContent className="max-h-[94dvh] max-w-2xl gap-0 overflow-y-auto overscroll-contain rounded-sm bg-white p-0">
+            <div>
               <div className="p-6 pb-5">
                 <DialogHeader>
                   <p className="text-xs font-semibold uppercase tracking-widest text-[#C4956A]">
@@ -315,7 +317,7 @@ export function CourseTimelineSection() {
                 </DialogHeader>
               </div>
               <CardMedia card={selectedCard} compact />
-              <div className="px-6 pb-12 pt-6">
+              <div className="px-6 pb-16 pt-5">
                 <DialogDescription className="text-base leading-relaxed text-[#57534e]">
                   {selectedCard.fullDescription}
                 </DialogDescription>

@@ -160,8 +160,8 @@ export function HowItWorksSection() {
 
       <Dialog open={selectedStep !== null} onOpenChange={(open) => !open && setSelectedStep(null)}>
         {selectedStep && (
-          <DialogContent className="max-h-[90vh] max-w-2xl gap-0 overflow-hidden rounded-sm bg-white p-0">
-            <div className="min-h-0 overflow-y-auto overscroll-contain">
+          <DialogContent className="max-h-[94dvh] max-w-2xl gap-0 overflow-y-auto overscroll-contain rounded-sm bg-white p-0">
+            <div>
               <div className="p-6 pb-5">
                 <DialogHeader>
                   <p className="text-xs font-semibold uppercase tracking-widest text-[#C4956A]">
@@ -172,7 +172,7 @@ export function HowItWorksSection() {
                   </DialogTitle>
                 </DialogHeader>
               </div>
-              <div className="relative h-52 overflow-hidden bg-[#E8E2D9] md:h-64">
+              <div className="relative h-[clamp(8rem,24vh,13rem)] overflow-hidden bg-[#E8E2D9] md:h-[clamp(8rem,24vh,14rem)]">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={selectedStep.image}
@@ -180,7 +180,7 @@ export function HowItWorksSection() {
                   className="h-full w-full object-cover"
                 />
               </div>
-              <div className="px-6 pb-12 pt-6">
+              <div className="px-6 pb-16 pt-5">
                 <DialogDescription className="text-base leading-relaxed text-[#57534e]">
                   {selectedStep.fullDescription}
                 </DialogDescription>
