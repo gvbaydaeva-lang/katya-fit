@@ -65,16 +65,16 @@ export function HeroSection() {
           </div>
 
           {/* Trust block */}
-          <ul className="mt-8 grid gap-3 border-t border-[#E8E2D9] pt-8">
+          <ul className="mt-8 grid gap-x-4 gap-y-5 border-t border-[#E8E2D9] pt-7 sm:grid-cols-2 lg:grid-cols-3">
             {TRUST_ITEMS.map(({ label, icon: Icon }) => (
               <li
                 key={label}
-                className="flex min-h-14 items-center gap-3 rounded-sm border border-[#E8E2D9] bg-white/55 px-3.5 py-3 text-sm leading-snug text-[#44403c]"
+                className="flex items-start gap-2.5 text-[12px] leading-snug text-[#44403c]"
               >
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#F0E5D9] text-[#B07D54]">
-                  <Icon aria-hidden="true" className="h-[18px] w-[18px]" strokeWidth={1.8} />
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[#D7B58F] text-[#B07D54]">
+                  <Icon aria-hidden="true" className="h-4 w-4" strokeWidth={1.7} />
                 </span>
-                <span>{label}</span>
+                <span className="pt-0.5">{label}</span>
               </li>
             ))}
           </ul>
