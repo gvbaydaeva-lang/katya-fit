@@ -4,6 +4,7 @@ import Link from "next/link";
 import type { CSSProperties } from "react";
 import { useState } from "react";
 import { HowItWorksSection } from "@/components/landing/coaching/HowItWorksSection";
+import { ClientResultsSection } from "@/components/landing/ClientResultsSection";
 import { ReadySection } from "@/components/landing/coaching/ReadySection";
 import { WhatYouGetSection } from "@/components/landing/coaching/WhatYouGetSection";
 import { LandingChrome } from "@/components/landing/LandingChrome";
@@ -42,6 +43,8 @@ const COACHED_CHECKOUT_PLAN = {
   name: onlineSupportPlan.name,
   price: onlineSupportPlan.price,
 } as const;
+
+const ONLINE_NAV_OVERRIDES = [{ label: "ОТЗЫВЫ", href: "#results" }];
 
 function Check() {
   return (
@@ -89,7 +92,7 @@ export function OnlinePageClient() {
   }
 
   return (
-    <LandingChrome>
+    <LandingChrome navOverrides={ONLINE_NAV_OVERRIDES}>
       <ProgramLandingHero
         image={onlineHero}
         imageAlt="Катя — онлайн сопровождение"
@@ -128,6 +131,8 @@ export function OnlinePageClient() {
       <WhatYouGetSection />
 
       <HowItWorksSection />
+
+      <ClientResultsSection />
 
       <section id="pricing" className="bg-white py-20">
         <div className="mx-auto max-w-6xl px-6">

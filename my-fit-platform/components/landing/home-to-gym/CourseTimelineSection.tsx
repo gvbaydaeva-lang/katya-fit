@@ -179,12 +179,22 @@ function NotebookIllustration() {
   );
 }
 
-function CardMedia({ card }: { card: ProgramCard }) {
+function CardMedia({
+  card,
+  compact = false,
+}: {
+  card: ProgramCard;
+  compact?: boolean;
+}) {
   const mediaClass = card.mediaClassName ?? "bg-[#E8E2D9]";
   const imageClass = card.imageClassName ?? "object-cover";
 
   return (
-    <div className={`relative aspect-[4/3] overflow-hidden ${mediaClass}`}>
+    <div
+      className={`relative overflow-hidden ${
+        compact ? "h-52 md:h-64" : "aspect-[4/3]"
+      } ${mediaClass}`}
+    >
       {card.illustration === "notebook" && (
         <div className="flex h-full w-full items-center justify-center p-6">
           <NotebookIllustration />
@@ -292,28 +302,32 @@ export function CourseTimelineSection() {
 
       <Dialog open={selectedCard !== null} onOpenChange={(open) => !open && setSelectedCard(null)}>
         {selectedCard && (
-          <DialogContent className="max-h-[88vh] max-w-xl overflow-y-auto rounded-sm bg-white p-0">
-            <CardMedia card={selectedCard} />
-            <div className="p-6">
-              <DialogHeader>
-                <p className="text-xs font-semibold uppercase tracking-widest text-[#C4956A]">
-                  Модуль {selectedCard.number}
-                </p>
-                <DialogTitle className="text-2xl font-bold text-[#1c1917]">
-                  {selectedCard.title}
-                </DialogTitle>
-                <DialogDescription className="text-sm leading-relaxed text-[#6b5e54]">
+          <DialogContent className="max-h-[90vh] max-w-2xl gap-0 overflow-hidden rounded-sm bg-white p-0">
+            <div className="min-h-0 overflow-y-auto overscroll-contain">
+              <div className="p-6 pb-5">
+                <DialogHeader>
+                  <p className="text-xs font-semibold uppercase tracking-widest text-[#C4956A]">
+                    Модуль {selectedCard.number}
+                  </p>
+                  <DialogTitle className="text-2xl font-bold text-[#1c1917]">
+                    {selectedCard.title}
+                  </DialogTitle>
+                </DialogHeader>
+              </div>
+              <CardMedia card={selectedCard} compact />
+              <div className="p-6">
+                <DialogDescription className="text-base leading-relaxed text-[#57534e]">
                   {selectedCard.fullDescription}
                 </DialogDescription>
-              </DialogHeader>
-              <ul className="mt-5 space-y-3">
-                {selectedCard.details.map((detail) => (
-                  <li key={detail} className="flex gap-3 text-sm leading-relaxed text-[#57534e]">
-                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#C4956A]" aria-hidden />
-                    <span>{detail}</span>
-                  </li>
-                ))}
-              </ul>
+                <ul className="mt-5 space-y-3">
+                  {selectedCard.details.map((detail) => (
+                    <li key={detail} className="flex gap-3 text-sm leading-relaxed text-[#57534e]">
+                      <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#C4956A]" aria-hidden />
+                      <span>{detail}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </DialogContent>
         )}

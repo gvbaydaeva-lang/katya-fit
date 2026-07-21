@@ -3,7 +3,6 @@
 import Image from "next/image";
 import { useState } from "react";
 import { LandingChrome } from "@/components/landing/LandingChrome";
-import { ClientResultsSection } from "@/components/landing/ClientResultsSection";
 import { HeroAudienceCard } from "@/components/landing/HeroAudienceCard";
 import { LANDING_HERO_TITLE_CLASS, LANDING_HERO_OBJECT_DOM_V_ZAL } from "@/components/landing/landing-hero-styles";
 import { ProgramLandingHero } from "@/components/landing/ProgramLandingHero";
@@ -26,7 +25,7 @@ const DOM_V_ZAL_CHECKOUT_PLAN = {
 
 const DOM_V_ZAL_NAV_OVERRIDES = [
   { label: "ОБО МНЕ", href: "/#my-story", target: "_blank" },
-  { label: "ОТЗЫВЫ", href: "#results" },
+  { label: "ОТЗЫВЫ", href: "/online#results", target: "_blank" },
 ];
 
 function Check() {
@@ -225,8 +224,6 @@ export function DomVZalPageClient() {
       </div>
 
       <CourseTimelineSection />
-
-      <ClientResultsSection />
 
       <PricingCTASection onCheckout={openCheckout} />
 
