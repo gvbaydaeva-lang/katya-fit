@@ -60,7 +60,9 @@ export function Header({ navOverrides }: HeaderProps) {
     <header className="sticky top-0 z-50 border-b border-[#E8E2D9] bg-[#FAF8F4]/98 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-4">
         <Link href="/" className="flex flex-col leading-none">
-          <span className="text-xl font-bold tracking-tight text-stone-900">KATY D.</span>
+          <span className="font-[family-name:var(--font-playfair)] text-xl font-bold tracking-tight text-stone-900">
+            Katy Dikaeva
+          </span>
           <span className="text-[8px] font-light text-stone-400 tracking-[0.25em] uppercase mt-0.5">FITNESS &amp; NUTRITION COACH</span>
         </Link>
 

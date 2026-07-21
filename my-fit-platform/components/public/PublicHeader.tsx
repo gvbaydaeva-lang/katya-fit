@@ -11,8 +11,11 @@ export function PublicHeader() {
   return (
     <header className="sticky top-0 z-50 border-b border-zinc-200/80 bg-white/90 backdrop-blur">
       <div className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-4 py-4">
-        <Link href="/" className="text-lg font-semibold text-zinc-900">
-          Катя <span className="text-rose-600">Fit</span>
+        <Link
+          href="/"
+          className="font-[family-name:var(--font-playfair)] text-lg font-bold text-zinc-900"
+        >
+          Katy Dikaeva
         </Link>
         <nav className="hidden items-center gap-1 text-sm md:flex">
           {PAGE_NAV.map((item) => {

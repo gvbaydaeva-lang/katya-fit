@@ -17,7 +17,7 @@ export function ReadySection() {
           <div className="relative order-1 min-h-[320px] lg:order-2">
             <Image
               src={katyaOnline}
-              alt="Катя — фитнес-тренер KATY D."
+              alt="Катя — фитнес-тренер Katy Dikaeva"
               fill
               className="object-cover object-top"
               sizes="(max-width: 1024px) 100vw, 50vw"

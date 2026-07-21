@@ -25,7 +25,7 @@ export function AdminHeader({ email }: AdminHeaderProps) {
       <div>
         <p className="text-sm font-medium text-rose-500">Админ-панель</p>
         <h1 className="text-2xl font-semibold tracking-tight text-ds-heading">
-          Катя Fit
+          Katy Dikaeva
         </h1>
         <p className="mt-1 text-sm text-ds-muted">{email}</p>
       </div>

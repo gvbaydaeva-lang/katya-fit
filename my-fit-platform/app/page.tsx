@@ -75,8 +75,8 @@ const resultClients = [
 ] as const;
 
 export const metadata = {
-  title: "KATY D. — фитнес-тренер для женщин",
-  description: "Помогаю женщинам в декрете и эмиграции восстановить форму и энергию. Без диет и крайностей.",
+  title: "Katy Dikaeva — фитнес-тренер для женщин",
+  description: "Для женщин, которые выбирают силу, здоровье и долголетие. Научный подход, без диет и крайностей.",
 };
 
 function CheckIcon() {

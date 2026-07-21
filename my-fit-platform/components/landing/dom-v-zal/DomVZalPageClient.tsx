@@ -125,7 +125,7 @@ export function DomVZalPageClient() {
     <LandingChrome navOverrides={DOM_V_ZAL_NAV_OVERRIDES}>
       <ProgramLandingHero
         image={katyaHero}
-        imageAlt="Катя — фитнес-тренер KATY D."
+        imageAlt="Катя — фитнес-тренер Katy Dikaeva"
         imagePosition="right"
         imageEdgeFade
         imageObjectPosition={LANDING_HERO_OBJECT_DOM_V_ZAL}

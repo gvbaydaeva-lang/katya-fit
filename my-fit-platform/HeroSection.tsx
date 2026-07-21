@@ -1,11 +1,22 @@
 import Image from "next/image";
+import {
+  BadgeCheck,
+  FlaskConical,
+  Globe2,
+  GraduationCap,
+  HeartHandshake,
+} from "lucide-react";
 import { ButtonLink } from "@/components/ui/Button";
 
 const TRUST_ITEMS = [
-  "Минус 20 кг после родов и эмиграции",
-  "Сертифицированный фитнес-тренер IFPA",
-  "Menno Henselmans Personal Trainer Certification",
-  "Работаю с женщинами по всему миру",
+  { label: "Работаю с женщинами по всему миру", icon: Globe2 },
+  { label: "Сертифицированный фитнес-тренер IFPA", icon: BadgeCheck },
+  {
+    label: "Menno Henselmans Personal Trainer Certification",
+    icon: GraduationCap,
+  },
+  { label: "Индивидуальный подход и поддержка", icon: HeartHandshake },
+  { label: "Научный подход, без диет и крайностей", icon: FlaskConical },
 ];
 
 export function HeroSection() {
@@ -16,7 +27,7 @@ export function HeroSection() {
         {/* LEFT: Text */}
         <div className="flex flex-col">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#C4956A]">
-            Для женщин в декрете и в эмиграции
+            Для женщин, которые выбирают силу, здоровье и долголетие
           </p>
 
           <h1 className="mt-4 text-5xl font-black leading-[1.05] tracking-tight text-[#1c1917] sm:text-6xl">
@@ -54,11 +65,16 @@ export function HeroSection() {
           </div>
 
           {/* Trust block */}
-          <ul className="mt-8 flex flex-col gap-2.5 border-t border-[#E8E2D9] pt-8">
-            {TRUST_ITEMS.map((item) => (
-              <li key={item} className="flex items-start gap-2.5 text-sm text-[#44403c]">
-                <span className="mt-0.5 shrink-0 text-[#C4956A]">✔</span>
-                <span>{item}</span>
+          <ul className="mt-8 grid gap-3 border-t border-[#E8E2D9] pt-8">
+            {TRUST_ITEMS.map(({ label, icon: Icon }) => (
+              <li
+                key={label}
+                className="flex min-h-14 items-center gap-3 rounded-sm border border-[#E8E2D9] bg-white/55 px-3.5 py-3 text-sm leading-snug text-[#44403c]"
+              >
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#F0E5D9] text-[#B07D54]">
+                  <Icon aria-hidden="true" className="h-[18px] w-[18px]" strokeWidth={1.8} />
+                </span>
+                <span>{label}</span>
               </li>
             ))}
           </ul>
@@ -70,7 +86,7 @@ export function HeroSection() {
             {/* Replace src with real photo path when available */}
             <Image
               src="/images/katya-hero.jpg"
-              alt="Катя — фитнес-тренер KATY D."
+              alt="Катя — фитнес-тренер Katy Dikaeva"
               fill
               className="object-cover object-top"
               priority

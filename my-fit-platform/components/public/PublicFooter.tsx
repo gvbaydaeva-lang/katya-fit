@@ -39,7 +39,9 @@ export function PublicFooter() {
       <div className="mx-auto max-w-6xl px-6 py-10 sm:py-12">
         <div className="flex flex-col gap-8 md:flex-row md:items-start md:justify-between">
           <div className="min-w-0">
-            <p className="text-xl font-bold tracking-tight text-stone-900">KATY D.</p>
+            <p className="font-[family-name:var(--font-playfair)] text-xl font-bold tracking-tight text-stone-900">
+              Katy Dikaeva
+            </p>
             <Link
               href="/privacy"
               className="mt-2 inline-block text-xs text-stone-500 underline-offset-4 transition-colors hover:text-stone-900 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C4956A]"

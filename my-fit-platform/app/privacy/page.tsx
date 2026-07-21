@@ -3,8 +3,8 @@ import Link from "next/link";
 import { LandingChrome } from "@/components/landing/LandingChrome";
 
 export const metadata: Metadata = {
-  title: "Политика конфиденциальности — KATY D.",
-  description: "Политика обработки персональных данных на сайте KATY D.",
+  title: "Политика конфиденциальности — Katy Dikaeva",
+  description: "Политика обработки персональных данных на сайте Katy Dikaeva.",
 };
 
 export default function PrivacyPage() {
@@ -32,7 +32,7 @@ export default function PrivacyPage() {
             </h2>
             <p className="mt-3">
               Настоящая Политика конфиденциальности описывает, какие персональные
-              данные мы собираем при использовании сайта KATY D., как мы их
+              данные мы собираем при использовании сайта Katy Dikaeva, как мы их
               обрабатываем и защищаем. Оформляя заказ или заполняя формы на сайте,
               вы соглашаетесь с условиями настоящей Политики.
             </p>

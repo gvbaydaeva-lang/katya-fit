@@ -1,5 +1,12 @@
 import Image from "next/image";
 import type { CSSProperties } from "react";
+import {
+  BadgeCheck,
+  FlaskConical,
+  Globe2,
+  GraduationCap,
+  HeartHandshake,
+} from "lucide-react";
 import { AnchorLink } from "@/components/public/AnchorLink";
 import { LANDING_SECTIONS } from "@/lib/landing/anchors";
 import { LANDING_HERO_TITLE_CLASS } from "@/components/landing/landing-hero-styles";
@@ -21,10 +28,14 @@ const HERO_IMAGE_MASK: CSSProperties = {
 };
 
 const TRUST_ITEMS = [
-  "Минус 20 кг после родов и эмиграции",
-  "Сертифицированный фитнес-тренер IFPA",
-  "Menno Henselmans Personal Trainer Certification",
-  "Работаю с женщинами по всему миру",
+  { label: "Работаю с женщинами по всему миру", icon: Globe2 },
+  { label: "Сертифицированный фитнес-тренер IFPA", icon: BadgeCheck },
+  {
+    label: "Menno Henselmans Personal Trainer Certification",
+    icon: GraduationCap,
+  },
+  { label: "Индивидуальный подход и поддержка", icon: HeartHandshake },
+  { label: "Научный подход, без диет и крайностей", icon: FlaskConical },
 ];
 
 const primaryCtaClassName =
@@ -39,7 +50,7 @@ function HeroPhoto() {
       <div className="relative aspect-[3/4]">
         <Image
           src={katyaHero}
-          alt="Катя — фитнес-тренер KATY D."
+          alt="Катя — фитнес-тренер Katy Dikaeva"
           fill
           className="object-cover object-top"
           style={HERO_IMAGE_MASK}
@@ -58,7 +69,7 @@ export function HeroSection() {
 
         <div className="order-2 flex flex-col lg:order-1">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#C4956A]">
-            Для женщин в декрете и в эмиграции
+            Для женщин, которые выбирают силу, здоровье и долголетие
           </p>
 
           <h1 className={`mt-4 text-[#1c1917] ${LANDING_HERO_TITLE_CLASS}`}>
@@ -71,11 +82,16 @@ export function HeroSection() {
             себя уверенно в своём теле.
           </p>
 
-          <ul className="order-3 mt-8 flex flex-col gap-2.5 lg:order-5 lg:border-t lg:border-[#E8E2D9] lg:pt-8">
-            {TRUST_ITEMS.map((item) => (
-              <li key={item} className="flex items-start gap-2.5 text-sm text-[#44403c]">
-                <span className="mt-0.5 shrink-0 text-[#C4956A]">✔</span>
-                <span>{item}</span>
+          <ul className="order-3 mt-8 grid gap-3 lg:order-5 lg:border-t lg:border-[#E8E2D9] lg:pt-8">
+            {TRUST_ITEMS.map(({ label, icon: Icon }) => (
+              <li
+                key={label}
+                className="flex min-h-14 items-center gap-3 rounded-sm border border-[#E8E2D9] bg-white/55 px-3.5 py-3 text-sm leading-snug text-[#44403c]"
+              >
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#F0E5D9] text-[#B07D54]">
+                  <Icon aria-hidden="true" className="h-[18px] w-[18px]" strokeWidth={1.8} />
+                </span>
+                <span>{label}</span>
               </li>
             ))}
           </ul>

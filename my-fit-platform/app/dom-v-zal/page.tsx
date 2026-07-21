@@ -1,7 +1,7 @@
 import { DomVZalPageClient } from "@/components/landing/dom-v-zal/DomVZalPageClient";
 
 export const metadata = {
-  title: "Из дома в зал — KATY D.",
+  title: "Из дома в зал — Katy Dikaeva",
   description: "12-недельная программа мягкого перехода: 4 недели тренировок дома и 8 недель в зале для уверенного старта с весами.",
 };
 

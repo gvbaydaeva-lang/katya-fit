@@ -17,7 +17,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Катя Fit — тренировки и личный кабинет",
+  title: "Katy Dikaeva — тренировки и личный кабинет",
   description: "Онлайн-тренировки с персональным доступом после оплаты тарифа",
 };
 
