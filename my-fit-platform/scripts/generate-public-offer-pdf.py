@@ -51,7 +51,7 @@ class OfferDocTemplate(BaseDocTemplate):
             topMargin=MARGIN_TOP,
             bottomMargin=MARGIN_BOTTOM,
             title="Публичная оферта Katy Dikaeva",
-            author="Katy Dikaeva",
+            author="Екатерина Дикаева",
             subject="Договор-оферта об оказании услуг и предоставлении доступа к цифровым материалам",
         )
         frame = Frame(
