@@ -51,7 +51,7 @@ class OfferDocTemplate(BaseDocTemplate):
             topMargin=MARGIN_TOP,
             bottomMargin=MARGIN_BOTTOM,
             title="Публичная оферта Katy Dikaeva",
-            author="Екатерина Петровна Дикаева",
+            author="Дикаева Екатерина Петровна",
             subject="Договор-оферта об оказании услуг и предоставлении доступа к цифровым материалам",
         )
         frame = Frame(
@@ -74,7 +74,7 @@ class OfferDocTemplate(BaseDocTemplate):
         canvas.line(MARGIN_X, 13 * mm, PAGE_WIDTH - MARGIN_X, 13 * mm)
         canvas.setFont("Arial", 8)
         canvas.setFillColor(MUTED)
-        canvas.drawString(MARGIN_X, 8.2 * mm, "Екатерина Петровна Дикаева · ИНН 081409365170")
+        canvas.drawString(MARGIN_X, 8.2 * mm, "Дикаева Екатерина Петровна · ИНН 081409365170")
         canvas.drawRightString(PAGE_WIDTH - MARGIN_X, 8.2 * mm, f"Страница {doc.page}")
         canvas.restoreState()
 
