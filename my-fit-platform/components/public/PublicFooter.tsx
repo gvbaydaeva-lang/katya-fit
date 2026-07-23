@@ -44,6 +44,14 @@ export function PublicFooter() {
             </p>
             <p className="mt-2 text-xs text-stone-500">ИНН 81409365170</p>
             <Link
+              href="/documents/public-offer.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-1 block w-fit text-xs text-stone-500 underline-offset-4 transition-colors hover:text-stone-900 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C4956A]"
+            >
+              Публичная оферта
+            </Link>
+            <Link
               href="/privacy"
               className="mt-1 inline-block text-xs text-stone-500 underline-offset-4 transition-colors hover:text-stone-900 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C4956A]"
             >
