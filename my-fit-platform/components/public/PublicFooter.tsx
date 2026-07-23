@@ -42,7 +42,7 @@ export function PublicFooter() {
             <p className="font-[family-name:var(--font-playfair)] text-xl font-bold tracking-tight text-stone-900">
               Katy Dikaeva
             </p>
-            <p className="mt-2 text-xs text-stone-500">ИНН 81409365170</p>
+            <p className="mt-2 text-xs text-stone-500">ИНН 081409365170</p>
             <Link
               href="/documents/public-offer.pdf"
               target="_blank"

@@ -74,7 +74,7 @@ class OfferDocTemplate(BaseDocTemplate):
         canvas.line(MARGIN_X, 13 * mm, PAGE_WIDTH - MARGIN_X, 13 * mm)
         canvas.setFont("Arial", 8)
         canvas.setFillColor(MUTED)
-        canvas.drawString(MARGIN_X, 8.2 * mm, "Katy Dikaeva · ИНН 81409365170")
+        canvas.drawString(MARGIN_X, 8.2 * mm, "Katy Dikaeva · ИНН 081409365170")
         canvas.drawRightString(PAGE_WIDTH - MARGIN_X, 8.2 * mm, f"Страница {doc.page}")
         canvas.restoreState()
 
