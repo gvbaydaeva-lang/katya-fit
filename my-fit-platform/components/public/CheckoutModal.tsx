@@ -10,6 +10,7 @@ type CheckoutModalProps = {
   planId: string;
   planName: string;
   planPrice: string;
+  rublePaymentUrl?: string;
 };
 
 export default function CheckoutModal({
@@ -18,11 +19,16 @@ export default function CheckoutModal({
   planId,
   planName,
   planPrice,
+  rublePaymentUrl,
 }: CheckoutModalProps) {
+  const [currency, setCurrency] = useState<"rub" | "usd">(
+    rublePaymentUrl ? "rub" : "usd",
+  );
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [consent, setConsent] = useState(false);
+  const [offerAccepted, setOfferAccepted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -33,7 +39,8 @@ export default function CheckoutModal({
     trimmedFullName.length > 0 &&
     trimmedEmail.includes("@") &&
     trimmedPhone.length > 0 &&
-    consent;
+    consent &&
+    offerAccepted;
 
   useEffect(() => {
     if (!isOpen) return;
@@ -43,18 +50,19 @@ export default function CheckoutModal({
     };
   }, [isOpen]);
 
-  useEffect(() => {
-    if (!isOpen) {
-      setFullName("");
-      setEmail("");
-      setPhone("");
-      setConsent(false);
-      setError("");
-      setIsLoading(false);
-    }
-  }, [isOpen]);
-
   if (!isOpen) return null;
+
+  function handleClose() {
+    setCurrency(rublePaymentUrl ? "rub" : "usd");
+    setFullName("");
+    setEmail("");
+    setPhone("");
+    setConsent(false);
+    setOfferAccepted(false);
+    setError("");
+    setIsLoading(false);
+    onClose();
+  }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -80,7 +88,17 @@ export default function CheckoutModal({
       return;
     }
 
+    if (!offerAccepted) {
+      setError("Необходимо принять условия публичной оферты");
+      return;
+    }
+
     setIsLoading(true);
+
+    if (currency === "rub" && rublePaymentUrl) {
+      window.location.assign(rublePaymentUrl);
+      return;
+    }
 
     try {
       const res = await fetch("/api/stripe/checkout", {
@@ -117,12 +135,12 @@ export default function CheckoutModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex justify-center bg-black/50 px-4"
-      onClick={onClose}
+      className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/50 px-4 py-4 sm:py-20"
+      onClick={handleClose}
       role="presentation"
     >
       <div
-        className="relative mx-auto mt-20 w-full max-w-md rounded-sm border border-[#E8E2D9] bg-[#FAF8F4] p-8"
+        className="relative mx-auto w-full max-w-md rounded-sm border border-[#E8E2D9] bg-[#FAF8F4] p-6 sm:p-8"
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
@@ -130,7 +148,7 @@ export default function CheckoutModal({
       >
         <button
           type="button"
-          onClick={onClose}
+          onClick={handleClose}
           className="absolute right-4 top-4 text-stone-400 transition-colors hover:text-stone-700"
           aria-label="Закрыть"
         >
@@ -144,10 +162,45 @@ export default function CheckoutModal({
           Оформление доступа
         </h2>
         <p className="mt-2 text-[#C4956A]">
-          {planName} · {planPrice}
+          {planName}
+          {!rublePaymentUrl && ` · ${planPrice}`}
         </p>
 
-        <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+        {rublePaymentUrl && (
+          <div className="mt-6">
+            <p className="mb-2 text-sm text-[#1c1917]">
+              Выберите валюту оплаты
+            </p>
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                onClick={() => setCurrency("rub")}
+                aria-pressed={currency === "rub"}
+                className={`whitespace-nowrap rounded-sm border px-2 py-3 text-xs font-medium transition-colors sm:px-3 sm:text-sm ${
+                  currency === "rub"
+                    ? "border-[#3D3530] bg-[#3D3530] text-white"
+                    : "border-[#E8E2D9] bg-white text-[#1c1917] hover:border-[#C4956A]"
+                }`}
+              >
+                Оплата в рублях ₽
+              </button>
+              <button
+                type="button"
+                onClick={() => setCurrency("usd")}
+                aria-pressed={currency === "usd"}
+                className={`whitespace-nowrap rounded-sm border px-2 py-3 text-xs font-medium transition-colors sm:px-3 sm:text-sm ${
+                  currency === "usd"
+                    ? "border-[#3D3530] bg-[#3D3530] text-white"
+                    : "border-[#E8E2D9] bg-white text-[#1c1917] hover:border-[#C4956A]"
+                }`}
+              >
+                Оплата в долларах $
+              </button>
+            </div>
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="mt-5 space-y-4">
           <label className="block text-sm text-[#1c1917]">
             Имя, Фамилия
             <input
@@ -196,7 +249,7 @@ export default function CheckoutModal({
               className="mt-1 h-4 w-4 shrink-0 rounded-sm border-[#E8E2D9] accent-[#C4956A]"
             />
             <span>
-              Я согласен на обработку персональных данных.{" "}
+              Я согласен на обработку персональных данных в соответствии с{" "}
               <Link
                 href="/privacy"
                 target="_blank"
@@ -204,7 +257,29 @@ export default function CheckoutModal({
                 className="text-[#C4956A] underline underline-offset-2 hover:text-[#B07D54]"
                 onClick={(e) => e.stopPropagation()}
               >
-                Политика конфиденциальности
+                Политикой конфиденциальности
+              </Link>
+            </span>
+          </label>
+
+          <label className="flex cursor-pointer items-start gap-3 text-sm text-[#1c1917]">
+            <input
+              type="checkbox"
+              checked={offerAccepted}
+              onChange={(e) => setOfferAccepted(e.target.checked)}
+              required
+              className="mt-1 h-4 w-4 shrink-0 rounded-sm border-[#E8E2D9] accent-[#C4956A]"
+            />
+            <span>
+              Я принимаю условия{" "}
+              <Link
+                href="/documents/public-offer.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[#C4956A] underline underline-offset-2 hover:text-[#B07D54]"
+                onClick={(e) => e.stopPropagation()}
+              >
+                Публичной оферты
               </Link>
             </span>
           </label>
@@ -214,14 +289,14 @@ export default function CheckoutModal({
             disabled={isLoading || !isFormValid}
             className="w-full rounded-sm bg-[#3D3530] py-4 text-sm font-medium text-white transition-colors hover:bg-[#C4956A] disabled:cursor-not-allowed disabled:opacity-70"
           >
-            {isLoading ? "Загрузка..." : "Перейти к оплате →"}
+            {isLoading
+              ? "Загрузка..."
+              : currency === "rub"
+                ? "Перейти к оплате в рублях →"
+                : "Перейти к оплате в долларах →"}
           </button>
 
           {error && <p className="text-sm text-red-500">{error}</p>}
-
-          <p className="text-center text-xs text-stone-500">
-            Безопасная оплата через Stripe · Доступ сразу после оплаты
-          </p>
         </form>
       </div>
     </div>

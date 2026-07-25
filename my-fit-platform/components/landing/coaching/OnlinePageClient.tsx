@@ -12,6 +12,7 @@ import { HeroAudienceCard } from "@/components/landing/HeroAudienceCard";
 import { LANDING_HERO_TITLE_CLASS, LANDING_HERO_OBJECT_ONLINE } from "@/components/landing/landing-hero-styles";
 import { ProgramLandingHero } from "@/components/landing/ProgramLandingHero";
 import CheckoutModal from "@/components/public/CheckoutModal";
+import { RUBLE_PAYMENT_LINKS } from "@/lib/payments/ruble-payment-links";
 import { getPlanById } from "@/lib/stripe/plans";
 import {
   Accordion,
@@ -36,12 +37,28 @@ const ONLINE_HERO_MASK: CSSProperties = {
   maskComposite: "intersect",
 };
 
-const onlineSupportPlan = getPlanById("coached")!;
+const togetherPlan = getPlanById("coached")!;
+const controlledPlan = getPlanById("platform")!;
 
-const COACHED_CHECKOUT_PLAN = {
-  id: onlineSupportPlan.id,
-  name: onlineSupportPlan.name,
-  price: onlineSupportPlan.price,
+const ONLINE_CHECKOUT_PLANS = {
+  together: {
+    id: togetherPlan.id,
+    name: togetherPlan.name,
+    price: togetherPlan.price,
+    rublePaymentUrl: RUBLE_PAYMENT_LINKS.coachingTogether,
+  },
+  controlled3Months: {
+    id: controlledPlan.id,
+    name: `${controlledPlan.name} — 3 месяца`,
+    price: controlledPlan.price,
+    rublePaymentUrl: RUBLE_PAYMENT_LINKS.coachingControlled3Months,
+  },
+  controlled6Months: {
+    id: controlledPlan.id,
+    name: `${controlledPlan.name} — 6 месяцев`,
+    price: controlledPlan.price,
+    rublePaymentUrl: RUBLE_PAYMENT_LINKS.coachingControlled6Months,
+  },
 } as const;
 
 const ONLINE_NAV_OVERRIDES = [{ label: "ОТЗЫВЫ", href: "#results" }];
@@ -83,10 +100,11 @@ export function OnlinePageClient() {
     id: string;
     name: string;
     price: string;
+    rublePaymentUrl: string;
   } | null>(null);
 
-  function openCheckout() {
-    setSelectedPlan(COACHED_CHECKOUT_PLAN);
+  function openCheckout(plan: (typeof ONLINE_CHECKOUT_PLANS)[keyof typeof ONLINE_CHECKOUT_PLANS]) {
+    setSelectedPlan(plan);
     setModalOpen(true);
   }
 
@@ -136,50 +154,54 @@ export function OnlinePageClient() {
       <section id="pricing" className="bg-white py-20">
         <div className="mx-auto max-w-6xl px-6">
           <h2 className="text-3xl font-bold text-stone-900 sm:text-4xl text-center">Тарифы</h2>
-          <div className="mt-12 grid items-stretch gap-6 lg:grid-cols-2">
+          <div className="mt-12 grid items-stretch gap-6 lg:grid-cols-3">
             <article className="flex h-full flex-col rounded-sm border border-[#E8E2D9] bg-[#FAF8F4] p-8">
-              <h3 className="text-xl font-bold text-stone-900">Онлайн сопровождение</h3>
+              <h3 className="text-xl font-bold text-stone-900">Вместе</h3>
               <p className="text-sm text-stone-400 mt-1">12 недель персональной работы</p>
               <ul className="mt-6 space-y-3">
                 {["Подробная анкета", "Расчет КБЖУ", "Персональный план питания", "Программа тренировок", "Видео техники упражнений", "1 онлайн-тренировка по видеосвязи", "Ежемесячная корректировка плана"].map((f) => (
                   <li key={f} className="flex gap-3 text-sm text-stone-600"><Check />{f}</li>
                 ))}
               </ul>
-              <div className="mt-auto pt-8">
-                <div className="flex items-baseline gap-2">
-                  <span className="text-4xl font-bold text-stone-900">
-                    {onlineSupportPlan.price}
-                  </span>
-                  <span className="text-sm text-stone-400">/ 12 недель</span>
-                </div>
-              </div>
               <button
                 type="button"
-                onClick={openCheckout}
-                className="mt-4 inline-flex w-full justify-center rounded-sm bg-[#C4956A] px-5 py-3 text-sm font-semibold tracking-wider text-white hover:bg-[#B07D54] transition-colors"
+                onClick={() => openCheckout(ONLINE_CHECKOUT_PLANS.together)}
+                className="mt-auto inline-flex w-full justify-center rounded-sm bg-[#C4956A] px-5 py-3 text-sm font-semibold tracking-wider text-white transition-colors hover:bg-[#B07D54]"
               >
-                КУПИТЬ
+                ПОЛУЧИТЬ ДОСТУП
               </button>
             </article>
             <article className="flex h-full flex-col rounded-sm border border-[#E8E2D9] bg-[#FAF8F4] p-8">
-              <h3 className="text-xl font-bold text-stone-900">Вместе</h3>
-              <p className="text-sm text-stone-400 mt-1">Полное онлайн сопровождение</p>
+              <h3 className="text-xl font-bold text-stone-900">Всё под контролем</h3>
+              <p className="mt-1 text-sm text-stone-400">3 месяца полного онлайн-сопровождения</p>
               <ul className="mt-6 space-y-3">
-                {["Всё из тарифа «Онлайн сопровождение»", "Еженедельные отчеты", "Поддержка", "Ответы на вопросы", "Контроль питания", "Контроль тренировок", "Корректировки по мере необходимости"].map((f) => (
+                {["Всё из тарифа «Вместе»", "Еженедельные отчеты", "Поддержка", "Ответы на вопросы", "Контроль питания", "Контроль тренировок", "Корректировки по мере необходимости"].map((f) => (
                   <li key={f} className="flex gap-3 text-sm text-stone-600"><Check />{f}</li>
                 ))}
               </ul>
-              <div className="mt-auto rounded-sm bg-stone-100 p-4 text-center">
-                <p className="text-sm text-stone-600">Индивидуальные условия. Заполните анкету, чтобы обсудить детали.</p>
-              </div>
-              <Link
-                href="https://forms.gle/QV4jF771qE5wNkjU6"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-4 inline-flex w-full justify-center rounded-sm bg-[#C4956A] px-5 py-3 text-sm font-semibold tracking-wider text-white hover:bg-[#B07D54] transition-colors"
+              <button
+                type="button"
+                onClick={() => openCheckout(ONLINE_CHECKOUT_PLANS.controlled3Months)}
+                className="mt-auto inline-flex w-full justify-center rounded-sm bg-[#C4956A] px-5 py-3 text-sm font-semibold tracking-wider text-white transition-colors hover:bg-[#B07D54]"
               >
-                ЗАПОЛНИТЬ АНКЕТУ
-              </Link>
+                ПОЛУЧИТЬ ДОСТУП
+              </button>
+            </article>
+            <article className="flex h-full flex-col rounded-sm border border-[#E8E2D9] bg-[#FAF8F4] p-8">
+              <h3 className="text-xl font-bold text-stone-900">Всё под контролем</h3>
+              <p className="mt-1 text-sm text-stone-400">6 месяцев полного онлайн-сопровождения</p>
+              <ul className="mt-6 space-y-3">
+                {["Всё из тарифа «Вместе»", "Еженедельные отчеты", "Поддержка", "Ответы на вопросы", "Контроль питания", "Контроль тренировок", "Корректировки по мере необходимости"].map((f) => (
+                  <li key={f} className="flex gap-3 text-sm text-stone-600"><Check />{f}</li>
+                ))}
+              </ul>
+              <button
+                type="button"
+                onClick={() => openCheckout(ONLINE_CHECKOUT_PLANS.controlled6Months)}
+                className="mt-auto inline-flex w-full justify-center rounded-sm bg-[#C4956A] px-5 py-3 text-sm font-semibold tracking-wider text-white transition-colors hover:bg-[#B07D54]"
+              >
+                ПОЛУЧИТЬ ДОСТУП
+              </button>
             </article>
           </div>
         </div>
@@ -221,6 +243,7 @@ export function OnlinePageClient() {
           planId={selectedPlan.id}
           planName={selectedPlan.name}
           planPrice={selectedPlan.price}
+          rublePaymentUrl={selectedPlan.rublePaymentUrl}
         />
       )}
     </LandingChrome>

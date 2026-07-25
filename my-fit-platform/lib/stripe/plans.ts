@@ -11,7 +11,7 @@ export const PLANS = [
   },
   {
     id: "coached",
-    name: "Онлайн сопровождение",
+    name: "Вместе",
     price: "$199",
     amountCents: 19900,
     description:
@@ -19,7 +19,7 @@ export const PLANS = [
   },
   {
     id: "platform",
-    name: "Вместе",
+    name: "Всё под контролем",
     price: "$49",
     amountCents: 4900,
     description:

@@ -14,6 +14,7 @@ import domVZalForWhom from "@/public/images/dom-v-zal-for-whom.webp";
 import katyaHero from "@/public/images/katya-hero.webp";
 
 import { getPlanById } from "@/lib/stripe/plans";
+import { RUBLE_PAYMENT_LINKS } from "@/lib/payments/ruble-payment-links";
 
 const selfPlan = getPlanById("self")!;
 
@@ -236,6 +237,7 @@ export function DomVZalPageClient() {
           planId={selectedPlan.id}
           planName={selectedPlan.name}
           planPrice={selectedPlan.price}
+          rublePaymentUrl={RUBLE_PAYMENT_LINKS.homeToGym}
         />
       )}
     </LandingChrome>
