@@ -143,10 +143,10 @@ export function OnlinePageClient() {
               </ul>
               <div className="mt-auto pt-8 text-center">
                 <p className="text-3xl font-bold text-stone-900">
-                  {ONLINE_CHECKOUT_PLANS.together.rublePrice}
+                  {ONLINE_CHECKOUT_PLANS.together.usdPrice}
                 </p>
-                <p className="mt-1 text-sm text-stone-500">
-                  или {ONLINE_CHECKOUT_PLANS.together.usdPrice}
+                <p className="mt-1.5 text-base font-medium text-stone-600">
+                  {ONLINE_CHECKOUT_PLANS.together.rublePrice}
                 </p>
               </div>
               <button
@@ -167,10 +167,10 @@ export function OnlinePageClient() {
               </ul>
               <div className="mt-auto pt-8 text-center">
                 <p className="text-3xl font-bold text-stone-900">
-                  {ONLINE_CHECKOUT_PLANS.controlled3Months.rublePrice}
+                  {ONLINE_CHECKOUT_PLANS.controlled3Months.usdPrice}
                 </p>
-                <p className="mt-1 text-sm text-stone-500">
-                  или {ONLINE_CHECKOUT_PLANS.controlled3Months.usdPrice}
+                <p className="mt-1.5 text-base font-medium text-stone-600">
+                  {ONLINE_CHECKOUT_PLANS.controlled3Months.rublePrice}
                 </p>
               </div>
               <button
@@ -191,10 +191,10 @@ export function OnlinePageClient() {
               </ul>
               <div className="mt-auto pt-8 text-center">
                 <p className="text-3xl font-bold text-stone-900">
-                  {ONLINE_CHECKOUT_PLANS.controlled6Months.rublePrice}
+                  {ONLINE_CHECKOUT_PLANS.controlled6Months.usdPrice}
                 </p>
-                <p className="mt-1 text-sm text-stone-500">
-                  или {ONLINE_CHECKOUT_PLANS.controlled6Months.usdPrice}
+                <p className="mt-1.5 text-base font-medium text-stone-600">
+                  {ONLINE_CHECKOUT_PLANS.controlled6Months.rublePrice}
                 </p>
               </div>
               <button

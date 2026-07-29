@@ -11,6 +11,10 @@ export function MyStorySection({ id = "my-story" }: MyStorySectionProps) {
     <div id={id} className="scroll-mt-20">
       <section className="bg-white py-20 lg:py-28">
         <div className="mx-auto max-w-6xl px-6">
+          <h2 className="mb-10 text-center text-3xl font-bold text-stone-900 sm:text-4xl lg:mb-12">
+            Моя история
+          </h2>
+
           <div className="grid gap-16 lg:grid-cols-2 lg:items-stretch">
             <div className="w-full min-w-0">
               <div className="relative aspect-square w-full shrink-0 overflow-hidden rounded-sm">
@@ -25,44 +29,36 @@ export function MyStorySection({ id = "my-story" }: MyStorySectionProps) {
             </div>
 
             <div className="flex min-h-0 flex-col lg:h-full">
-              <h2 className="text-3xl font-bold text-stone-900 sm:text-4xl">
-                Моя история
-              </h2>
-              <div className="mt-4 space-y-3 text-base font-normal leading-relaxed text-[#1c1917] lg:mt-5 lg:space-y-4">
+              <div className="space-y-3 text-[15px] font-normal leading-[1.55] text-[#1c1917]">
                 <p>
                   После рождения дочери и переезда в США я набрала{" "}
                   <strong>20 кг</strong>. Новая страна, язык, отсутствие близких
                   рядом, декрет — в какой-то момент я перестала узнавать себя.
                 </p>
                 <p>
-                  Все изменилось, когда я начала вводить дочке прикорм. Тогда я
-                  поймала себя на мысли:{" "}
+                  Все изменилось, когда я начала вводить дочке прикорм и спросила
+                  себя:{" "}
                   <strong>
-                    как я могу учить ребенка любить здоровую еду, если сама питаюсь
-                    совсем иначе?
+                    как учить ребенка любить здоровую еду, если сама питаюсь иначе?
                   </strong>{" "}
-                  Я решила начать с себя.
-                </p>
-                <p>
-                  Постепенно изменила питание, затем добавила тренировки. Мне
-                  хотелось не временного результата, а такого образа жизни, который
-                  останется со мной на долгие годы.
+                  Я начала с себя: постепенно изменила питание, добавила тренировки
+                  и выстроила образ жизни, который останется со мной надолго.
                 </p>
                 <p>
                   <strong>Именно этот путь привел меня в профессию.</strong> Я
                   получила международную сертификацию <strong>IFPA</strong> в США и
                   прошла обучение у <strong>Menno Henselmans</strong> — одного из
-                  ведущих мировых экспертов в области доказательного фитнеса.
+                  ведущих экспертов доказательного фитнеса.
                 </p>
                 <p>
                   Сегодня я помогаю женщинам по всему миру не просто похудеть, а
                   изменить образ жизни, чтобы сохранить здоровье, силу, энергию и
-                  высокое качество жизни на долгие годы. Ведь моя цель — не просто
-                  стройное тело сегодня, а здоровое и активное будущее.
+                  высокое качество жизни на долгие годы. Моя цель — не только
+                  стройное тело сегодня, но и здоровое, активное будущее.
                 </p>
               </div>
 
-              <div className="mt-5 lg:mt-auto">
+              <div className="mt-4 lg:mt-auto">
                 <CertificateBadgeCard />
               </div>
             </div>

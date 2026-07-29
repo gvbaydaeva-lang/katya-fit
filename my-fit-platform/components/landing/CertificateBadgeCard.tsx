@@ -13,10 +13,10 @@ export function CertificateBadgeCard() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="group rounded-sm border border-[#E8E2D9] bg-[#FAF8F4] px-4 py-2.5 text-left transition-shadow duration-300 hover:cursor-pointer hover:shadow-md"
+        className="group flex items-center gap-3 rounded-sm border border-[#E8E2D9] bg-[#FAF8F4] px-3 py-2 text-left transition-shadow duration-300 hover:cursor-pointer hover:shadow-md"
         aria-label="Открыть сертификат Henselmans PT"
       >
-        <div className="relative aspect-[4/3] w-20 overflow-hidden rounded-sm sm:w-24">
+        <div className="relative aspect-[4/3] w-16 shrink-0 overflow-hidden rounded-sm">
           <Image
             src={katyaCertificate}
             alt=""
@@ -25,7 +25,7 @@ export function CertificateBadgeCard() {
             sizes="96px"
           />
         </div>
-        <p className="mt-1.5 text-[9px] tracking-wide text-stone-400">
+        <p className="text-[10px] leading-snug tracking-wide text-stone-500">
           Сертификат Henselmans PT
         </p>
       </button>
