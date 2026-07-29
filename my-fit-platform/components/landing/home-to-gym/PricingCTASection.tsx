@@ -48,11 +48,11 @@ export function PricingCTASection({ onCheckout }: PricingCTASectionProps) {
         </div>
 
         <div className="mt-8">
-          <p className="text-5xl font-bold text-[#1c1917]">
-            {homeToGymPlan.rublePrice}
+          <p className="text-3xl font-bold text-stone-900">
+            {homeToGymPlan.usdPrice}
           </p>
-          <p className="mt-2 text-base text-stone-500">
-            или {homeToGymPlan.usdPrice}
+          <p className="mt-1.5 text-base font-medium text-stone-600">
+            {homeToGymPlan.rublePrice}
           </p>
         </div>
 
