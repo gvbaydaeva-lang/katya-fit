@@ -12,8 +12,7 @@ import { HeroAudienceCard } from "@/components/landing/HeroAudienceCard";
 import { LANDING_HERO_TITLE_CLASS, LANDING_HERO_OBJECT_ONLINE } from "@/components/landing/landing-hero-styles";
 import { ProgramLandingHero } from "@/components/landing/ProgramLandingHero";
 import CheckoutModal from "@/components/public/CheckoutModal";
-import { RUBLE_PAYMENT_LINKS } from "@/lib/payments/ruble-payment-links";
-import { getPlanById } from "@/lib/stripe/plans";
+import { PAYMENT_OPTIONS } from "@/lib/payments/payment-options";
 import {
   Accordion,
   AccordionContent,
@@ -37,28 +36,10 @@ const ONLINE_HERO_MASK: CSSProperties = {
   maskComposite: "intersect",
 };
 
-const togetherPlan = getPlanById("coached")!;
-const controlledPlan = getPlanById("platform")!;
-
 const ONLINE_CHECKOUT_PLANS = {
-  together: {
-    id: togetherPlan.id,
-    name: togetherPlan.name,
-    price: togetherPlan.price,
-    rublePaymentUrl: RUBLE_PAYMENT_LINKS.coachingTogether,
-  },
-  controlled3Months: {
-    id: controlledPlan.id,
-    name: `${controlledPlan.name} — 3 месяца`,
-    price: controlledPlan.price,
-    rublePaymentUrl: RUBLE_PAYMENT_LINKS.coachingControlled3Months,
-  },
-  controlled6Months: {
-    id: controlledPlan.id,
-    name: `${controlledPlan.name} — 6 месяцев`,
-    price: controlledPlan.price,
-    rublePaymentUrl: RUBLE_PAYMENT_LINKS.coachingControlled6Months,
-  },
+  together: PAYMENT_OPTIONS.coachingTogether,
+  controlled3Months: PAYMENT_OPTIONS.coachingControlled3Months,
+  controlled6Months: PAYMENT_OPTIONS.coachingControlled6Months,
 } as const;
 
 const ONLINE_NAV_OVERRIDES = [{ label: "ОТЗЫВЫ", href: "#results" }];
@@ -96,12 +77,9 @@ const faqItems = [
 
 export function OnlinePageClient() {
   const [modalOpen, setModalOpen] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState<{
-    id: string;
-    name: string;
-    price: string;
-    rublePaymentUrl: string;
-  } | null>(null);
+  const [selectedPlan, setSelectedPlan] = useState<
+    (typeof ONLINE_CHECKOUT_PLANS)[keyof typeof ONLINE_CHECKOUT_PLANS] | null
+  >(null);
 
   function openCheckout(plan: (typeof ONLINE_CHECKOUT_PLANS)[keyof typeof ONLINE_CHECKOUT_PLANS]) {
     setSelectedPlan(plan);
@@ -163,10 +141,18 @@ export function OnlinePageClient() {
                   <li key={f} className="flex gap-3 text-sm text-stone-600"><Check />{f}</li>
                 ))}
               </ul>
+              <div className="mt-auto pt-8 text-center">
+                <p className="text-3xl font-bold text-stone-900">
+                  {ONLINE_CHECKOUT_PLANS.together.rublePrice}
+                </p>
+                <p className="mt-1 text-sm text-stone-500">
+                  или {ONLINE_CHECKOUT_PLANS.together.usdPrice}
+                </p>
+              </div>
               <button
                 type="button"
                 onClick={() => openCheckout(ONLINE_CHECKOUT_PLANS.together)}
-                className="mt-auto inline-flex w-full justify-center rounded-sm bg-[#C4956A] px-5 py-3 text-sm font-semibold tracking-wider text-white transition-colors hover:bg-[#B07D54]"
+                className="mt-4 inline-flex w-full justify-center rounded-sm bg-[#C4956A] px-5 py-3 text-sm font-semibold tracking-wider text-white transition-colors hover:bg-[#B07D54]"
               >
                 ПОЛУЧИТЬ ДОСТУП
               </button>
@@ -179,10 +165,18 @@ export function OnlinePageClient() {
                   <li key={f} className="flex gap-3 text-sm text-stone-600"><Check />{f}</li>
                 ))}
               </ul>
+              <div className="mt-auto pt-8 text-center">
+                <p className="text-3xl font-bold text-stone-900">
+                  {ONLINE_CHECKOUT_PLANS.controlled3Months.rublePrice}
+                </p>
+                <p className="mt-1 text-sm text-stone-500">
+                  или {ONLINE_CHECKOUT_PLANS.controlled3Months.usdPrice}
+                </p>
+              </div>
               <button
                 type="button"
                 onClick={() => openCheckout(ONLINE_CHECKOUT_PLANS.controlled3Months)}
-                className="mt-auto inline-flex w-full justify-center rounded-sm bg-[#C4956A] px-5 py-3 text-sm font-semibold tracking-wider text-white transition-colors hover:bg-[#B07D54]"
+                className="mt-4 inline-flex w-full justify-center rounded-sm bg-[#C4956A] px-5 py-3 text-sm font-semibold tracking-wider text-white transition-colors hover:bg-[#B07D54]"
               >
                 ПОЛУЧИТЬ ДОСТУП
               </button>
@@ -195,10 +189,18 @@ export function OnlinePageClient() {
                   <li key={f} className="flex gap-3 text-sm text-stone-600"><Check />{f}</li>
                 ))}
               </ul>
+              <div className="mt-auto pt-8 text-center">
+                <p className="text-3xl font-bold text-stone-900">
+                  {ONLINE_CHECKOUT_PLANS.controlled6Months.rublePrice}
+                </p>
+                <p className="mt-1 text-sm text-stone-500">
+                  или {ONLINE_CHECKOUT_PLANS.controlled6Months.usdPrice}
+                </p>
+              </div>
               <button
                 type="button"
                 onClick={() => openCheckout(ONLINE_CHECKOUT_PLANS.controlled6Months)}
-                className="mt-auto inline-flex w-full justify-center rounded-sm bg-[#C4956A] px-5 py-3 text-sm font-semibold tracking-wider text-white transition-colors hover:bg-[#B07D54]"
+                className="mt-4 inline-flex w-full justify-center rounded-sm bg-[#C4956A] px-5 py-3 text-sm font-semibold tracking-wider text-white transition-colors hover:bg-[#B07D54]"
               >
                 ПОЛУЧИТЬ ДОСТУП
               </button>
@@ -240,9 +242,11 @@ export function OnlinePageClient() {
         <CheckoutModal
           isOpen={modalOpen}
           onClose={() => setModalOpen(false)}
-          planId={selectedPlan.id}
+          planId={selectedPlan.planId}
+          paymentOptionId={selectedPlan.id}
           planName={selectedPlan.name}
-          planPrice={selectedPlan.price}
+          usdPrice={selectedPlan.usdPrice}
+          rublePrice={selectedPlan.rublePrice}
           rublePaymentUrl={selectedPlan.rublePaymentUrl}
         />
       )}

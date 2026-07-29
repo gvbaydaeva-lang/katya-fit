@@ -1,16 +1,31 @@
 import { NextResponse } from "next/server";
 import { createCheckoutSession } from "@/lib/stripe/checkout";
 import { isStripeConfigured } from "@/lib/stripe/config";
+import { getPaymentOptionById } from "@/lib/payments/payment-options";
 import { getPlanById, isValidPlanId } from "@/lib/stripe/plans";
 import { getRequestOrigin } from "@/lib/stripe/request-origin";
 
 export async function POST(request: Request) {
   const body = await request.json().catch(() => ({}));
-  const planId = String(body.planId ?? "");
+  const requestedPlanId = String(body.planId ?? "");
+  const paymentOptionId = String(body.paymentOptionId ?? "");
   const fullName = String(body.fullName ?? "").trim();
   const email = String(body.email ?? "").trim();
   const phone = String(body.phone ?? "").trim();
   const cancelPath = String(body.cancelPath ?? "").trim();
+
+  const paymentOption = paymentOptionId
+    ? getPaymentOptionById(paymentOptionId)
+    : undefined;
+
+  if (paymentOptionId && !paymentOption) {
+    return NextResponse.json(
+      { error: "Неверный вариант оплаты" },
+      { status: 400 },
+    );
+  }
+
+  const planId = paymentOption?.planId ?? requestedPlanId;
 
   if (!isValidPlanId(planId)) {
     return NextResponse.json({ error: "Неверный тариф" }, { status: 400 });
@@ -49,12 +64,14 @@ export async function POST(request: Request) {
   }
 
   const plan = getPlanById(planId)!;
+  const planName = paymentOption?.name ?? plan.name;
+  const amountCents = paymentOption?.usdAmountCents ?? plan.amountCents;
 
   try {
     const url = await createCheckoutSession({
       planId: plan.id,
-      planName: plan.name,
-      amountCents: plan.amountCents,
+      planName,
+      amountCents,
       fullName,
       email,
       phone,

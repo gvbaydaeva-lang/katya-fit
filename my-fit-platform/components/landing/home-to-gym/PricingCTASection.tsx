@@ -1,9 +1,9 @@
 "use client";
 
 import { Button } from "@/components/ui/Button";
-import { getPlanById } from "@/lib/stripe/plans";
+import { PAYMENT_OPTIONS } from "@/lib/payments/payment-options";
 
-const selfPlan = getPlanById("self")!;
+const homeToGymPlan = PAYMENT_OPTIONS.homeToGym;
 
 const INCLUDED_ITEMS = [
   "Видеоуроки с разбором техники",
@@ -48,11 +48,12 @@ export function PricingCTASection({ onCheckout }: PricingCTASectionProps) {
         </div>
 
         <div className="mt-8">
-          <p className="text-xl text-stone-400 line-through">$109</p>
-          <span className="mb-2 mt-2 inline-block rounded-sm bg-[#C4956A] px-3 py-1 text-xs font-semibold text-white">
-            ЭКОНОМИЯ $30
-          </span>
-          <p className="text-5xl font-bold text-[#1c1917]">{selfPlan.price}</p>
+          <p className="text-5xl font-bold text-[#1c1917]">
+            {homeToGymPlan.rublePrice}
+          </p>
+          <p className="mt-2 text-base text-stone-500">
+            или {homeToGymPlan.usdPrice}
+          </p>
         </div>
 
         <div className="mt-6 flex justify-center">

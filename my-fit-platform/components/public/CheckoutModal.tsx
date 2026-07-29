@@ -8,8 +8,10 @@ type CheckoutModalProps = {
   isOpen: boolean;
   onClose: () => void;
   planId: string;
+  paymentOptionId?: string;
   planName: string;
-  planPrice: string;
+  usdPrice: string;
+  rublePrice?: string;
   rublePaymentUrl?: string;
 };
 
@@ -17,8 +19,10 @@ export default function CheckoutModal({
   isOpen,
   onClose,
   planId,
+  paymentOptionId,
   planName,
-  planPrice,
+  usdPrice,
+  rublePrice,
   rublePaymentUrl,
 }: CheckoutModalProps) {
   const [currency, setCurrency] = useState<"rub" | "usd">(
@@ -106,6 +110,7 @@ export default function CheckoutModal({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           planId,
+          paymentOptionId,
           fullName: trimmedFullName,
           email: trimmedEmail,
           phone: trimmedPhone,
@@ -163,7 +168,7 @@ export default function CheckoutModal({
         </h2>
         <p className="mt-2 text-[#C4956A]">
           {planName}
-          {!rublePaymentUrl && ` · ${planPrice}`}
+          {!rublePaymentUrl && ` · ${usdPrice}`}
         </p>
 
         {rublePaymentUrl && (
@@ -176,25 +181,27 @@ export default function CheckoutModal({
                 type="button"
                 onClick={() => setCurrency("rub")}
                 aria-pressed={currency === "rub"}
-                className={`whitespace-nowrap rounded-sm border px-2 py-3 text-xs font-medium transition-colors sm:px-3 sm:text-sm ${
+                className={`flex min-h-16 flex-col items-center justify-center rounded-sm border px-2 py-3 text-xs font-medium transition-colors sm:px-3 sm:text-sm ${
                   currency === "rub"
                     ? "border-[#3D3530] bg-[#3D3530] text-white"
                     : "border-[#E8E2D9] bg-white text-[#1c1917] hover:border-[#C4956A]"
                 }`}
               >
-                Оплата в рублях ₽
+                <span>Оплата в рублях</span>
+                <span className="mt-1 font-semibold">{rublePrice}</span>
               </button>
               <button
                 type="button"
                 onClick={() => setCurrency("usd")}
                 aria-pressed={currency === "usd"}
-                className={`whitespace-nowrap rounded-sm border px-2 py-3 text-xs font-medium transition-colors sm:px-3 sm:text-sm ${
+                className={`flex min-h-16 flex-col items-center justify-center rounded-sm border px-2 py-3 text-xs font-medium transition-colors sm:px-3 sm:text-sm ${
                   currency === "usd"
                     ? "border-[#3D3530] bg-[#3D3530] text-white"
                     : "border-[#E8E2D9] bg-white text-[#1c1917] hover:border-[#C4956A]"
                 }`}
               >
-                Оплата в долларах $
+                <span>Оплата в долларах</span>
+                <span className="mt-1 font-semibold">{usdPrice}</span>
               </button>
             </div>
           </div>

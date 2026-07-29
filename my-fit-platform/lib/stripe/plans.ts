@@ -4,8 +4,8 @@ export const PLANS = [
   {
     id: "self",
     name: "Из дома в зал",
-    price: "$1",
-    amountCents: 100,
+    price: "$49",
+    amountCents: 4900,
     description:
       "Программа мягкого перехода от домашних тренировок к уверенной работе в зале.",
   },
@@ -20,8 +20,8 @@ export const PLANS = [
   {
     id: "platform",
     name: "Всё под контролем",
-    price: "$49",
-    amountCents: 4900,
+    price: "$480",
+    amountCents: 48000,
     description:
       "Расширенный формат с доступом к материалам и более плотной поддержкой.",
   },

@@ -51,7 +51,7 @@ export function PricingSection() {
           onClose={() => setModalOpen(false)}
           planId={selectedPlan.id}
           planName={selectedPlan.name}
-          planPrice={selectedPlan.price}
+          usdPrice={selectedPlan.price}
         />
       )}
     </>

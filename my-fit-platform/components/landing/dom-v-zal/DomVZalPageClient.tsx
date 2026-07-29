@@ -13,16 +13,9 @@ import CheckoutModal from "@/components/public/CheckoutModal";
 import domVZalForWhom from "@/public/images/dom-v-zal-for-whom.webp";
 import katyaHero from "@/public/images/katya-hero.webp";
 
-import { getPlanById } from "@/lib/stripe/plans";
-import { RUBLE_PAYMENT_LINKS } from "@/lib/payments/ruble-payment-links";
+import { PAYMENT_OPTIONS } from "@/lib/payments/payment-options";
 
-const selfPlan = getPlanById("self")!;
-
-const DOM_V_ZAL_CHECKOUT_PLAN = {
-  id: selfPlan.id,
-  name: selfPlan.name,
-  price: selfPlan.price,
-} as const;
+const DOM_V_ZAL_CHECKOUT_PLAN = PAYMENT_OPTIONS.homeToGym;
 
 const DOM_V_ZAL_NAV_OVERRIDES = [
   { label: "ОБО МНЕ", href: "/#my-story", target: "_blank" },
@@ -103,14 +96,8 @@ const checkoutButtonClassName =
 
 export function DomVZalPageClient() {
   const [modalOpen, setModalOpen] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState<{
-    id: string;
-    name: string;
-    price: string;
-  } | null>(null);
 
   function openCheckout() {
-    setSelectedPlan(DOM_V_ZAL_CHECKOUT_PLAN);
     setModalOpen(true);
   }
 
@@ -230,16 +217,16 @@ export function DomVZalPageClient() {
 
       <FaqSection onCheckout={openCheckout} />
 
-      {selectedPlan && (
-        <CheckoutModal
-          isOpen={modalOpen}
-          onClose={() => setModalOpen(false)}
-          planId={selectedPlan.id}
-          planName={selectedPlan.name}
-          planPrice={selectedPlan.price}
-          rublePaymentUrl={RUBLE_PAYMENT_LINKS.homeToGym}
-        />
-      )}
+      <CheckoutModal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        planId={DOM_V_ZAL_CHECKOUT_PLAN.planId}
+        paymentOptionId={DOM_V_ZAL_CHECKOUT_PLAN.id}
+        planName={DOM_V_ZAL_CHECKOUT_PLAN.name}
+        usdPrice={DOM_V_ZAL_CHECKOUT_PLAN.usdPrice}
+        rublePrice={DOM_V_ZAL_CHECKOUT_PLAN.rublePrice}
+        rublePaymentUrl={DOM_V_ZAL_CHECKOUT_PLAN.rublePaymentUrl}
+      />
     </LandingChrome>
   );
 }
