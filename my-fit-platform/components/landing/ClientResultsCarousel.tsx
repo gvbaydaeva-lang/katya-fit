@@ -2,13 +2,13 @@
 
 import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import type { ReactNode } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 export type ClientResult = {
   name?: string;
   profession?: string;
   quote?: string;
+  story?: string;
   period?: string;
   stats: readonly string[];
   image: import("next/image").StaticImageData;
@@ -59,6 +59,10 @@ function ResultCardBody({ client }: { client: ClientResult }) {
         {client.quote ? (
           <p className="text-[11px] leading-relaxed text-stone-500 italic break-words sm:text-xs">
             {client.quote}
+          </p>
+        ) : client.story ? (
+          <p className="text-[11px] leading-relaxed text-stone-500 break-words sm:text-xs">
+            {client.story}
           </p>
         ) : null}
       </div>
@@ -202,7 +206,7 @@ export function ClientResultsCarousel({ clients }: ClientResultsCarouselProps) {
   return (
     <div className="relative mt-12">
       {/* Десктоп: сетка с одинаковой высотой карточек */}
-      <div className="hidden items-stretch gap-4 lg:grid lg:grid-cols-5">
+      <div className="hidden items-stretch gap-4 lg:grid lg:grid-cols-3">
         {clients.map((client) => (
           <ResultCard key={getClientKey(client)} client={client} />
         ))}

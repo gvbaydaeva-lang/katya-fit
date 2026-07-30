@@ -1,6 +1,7 @@
 import { ClientResultsCarousel } from "@/components/landing/ClientResultsCarousel";
 import resultAisa from "@/public/images/result-aisa.webp";
 import resultClientNew from "@/public/images/result-client-new.jpg";
+import resultElina from "@/public/images/result-elina.webp";
 import resultElena from "@/public/images/result-elena.webp";
 import resultGalina from "@/public/images/result-galina.webp";
 import resultKarina from "@/public/images/result-karina.webp";
@@ -64,6 +65,16 @@ const RESULT_CLIENTS = [
     ],
     image: resultClientNew,
     alt: "Результат Саяны — до и после",
+  },
+  {
+    name: "Элина, 26 лет",
+    profession: "Онлайн-сопровождение",
+    story:
+      "До сопровождения Элина тренировалась без системы. Мы слегка скорректировали питание, создали мягкий дефицит 5%, увеличили ежедневную активность и добавили три силовые тренировки в неделю — по индивидуальному плану с постепенной прогрессией.",
+    period: "2 месяца",
+    stats: ["Вес: –5,2 кг", "Устойчивая система питания и тренировок"],
+    image: resultElina,
+    alt: "Результат Элины за два месяца онлайн-сопровождения — до и после",
   },
 ] as const;
 
