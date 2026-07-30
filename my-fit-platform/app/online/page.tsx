@@ -1,8 +1,9 @@
 import { OnlinePageClient } from "@/components/landing/coaching/OnlinePageClient";
 
 export const metadata = {
-  title: "Онлайн сопровождение — Katy Dikaeva",
-  description: "Индивидуальная работа: план питания, программа тренировок и регулярные корректировки.",
+  title: "Персональная работа онлайн — Katy Dikaeva",
+  description:
+    "Два формата персональной работы: индивидуальный план для самостоятельных занятий или полное онлайн-сопровождение.",
 };
 
 export default function OnlinePage() {

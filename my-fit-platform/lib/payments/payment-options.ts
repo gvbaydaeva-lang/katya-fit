@@ -30,7 +30,7 @@ export const PAYMENT_OPTIONS = {
   coachingTogether: {
     id: "coaching-together",
     planId: "coached",
-    name: "Вместе",
+    name: "Персональный план — 3 месяца",
     rublePrice: "14 999 ₽",
     usdPrice: "$199",
     usdAmountCents: 19_900,

@@ -53,11 +53,60 @@ function Check() {
 }
 
 const heroFeatures = [
+  "Два формата работы под разный уровень поддержки",
   "Персональный план питания и тренировок",
-  "Регулярные корректировки",
-  "Поддержка 24/7",
-  "Помощь при срывах и плато",
+  "Самостоятельная работа или полное сопровождение",
+  "Корректировки в зависимости от выбранного формата",
 ];
+
+const PERSONAL_PLAN_FEATURES = [
+  "Индивидуальный план питания",
+  "Персональная программа тренировок",
+  "Видео техники и подробные инструкции",
+  "Корректировка плана 1 раз в месяц",
+];
+
+const CONTROLLED_FEATURES = [
+  "Постоянная связь и ответы на вопросы",
+  "Контроль питания и корректировки",
+  "Контроль тренировок и техники",
+  "Еженедельные отчёты",
+  "Помощь при срывах, плато и снижении мотивации",
+  "Работа на результат и формирование привычек",
+];
+
+const FORMAT_COMPARISON = [
+  {
+    label: "Индивидуальный план питания и тренировок",
+    personal: "Включено",
+    controlled: "Включено",
+  },
+  {
+    label: "Корректировка плана",
+    personal: "1 раз в месяц",
+    controlled: "По мере необходимости",
+  },
+  {
+    label: "Еженедельные отчёты",
+    personal: "Не входит",
+    controlled: "Включено",
+  },
+  {
+    label: "Поддержка и ответы на вопросы",
+    personal: "Не входит",
+    controlled: "Включено",
+  },
+  {
+    label: "Контроль питания, тренировок и техники",
+    personal: "Не входит",
+    controlled: "Включено",
+  },
+  {
+    label: "Помощь при срывах, плато и потере мотивации",
+    personal: "Не входит",
+    controlled: "Включено",
+  },
+] as const;
 
 const forWhom = [
   "Для занятых мам",
@@ -77,9 +126,15 @@ const faqItems = [
 
 export function OnlinePageClient() {
   const [modalOpen, setModalOpen] = useState(false);
+  const [controlledMonths, setControlledMonths] = useState<3 | 6>(6);
   const [selectedPlan, setSelectedPlan] = useState<
     (typeof ONLINE_CHECKOUT_PLANS)[keyof typeof ONLINE_CHECKOUT_PLANS] | null
   >(null);
+
+  const controlledPlan =
+    controlledMonths === 3
+      ? ONLINE_CHECKOUT_PLANS.controlled3Months
+      : ONLINE_CHECKOUT_PLANS.controlled6Months;
 
   function openCheckout(plan: (typeof ONLINE_CHECKOUT_PLANS)[keyof typeof ONLINE_CHECKOUT_PLANS]) {
     setSelectedPlan(plan);
@@ -90,16 +145,16 @@ export function OnlinePageClient() {
     <LandingChrome navOverrides={ONLINE_NAV_OVERRIDES}>
       <ProgramLandingHero
         image={onlineHero}
-        imageAlt="Катя — онлайн сопровождение"
+        imageAlt="Катя — персональная работа онлайн"
         imageObjectPosition={LANDING_HERO_OBJECT_ONLINE}
         imageMask={ONLINE_HERO_MASK}
       >
         <div className="flex flex-col">
         <h1 className={`text-stone-900 ${LANDING_HERO_TITLE_CLASS}`}>
-          Онлайн сопровождение
+          Персональная работа онлайн
         </h1>
         <p className="mt-2 text-sm font-medium tracking-wide text-[#C4956A]">
-          Индивидуальная работа со мной для тех,<br />кто хочет получить максимальный результат
+          Выберите комфортный уровень поддержки:<br />персональный план или полное сопровождение
         </p>
         <ul className="order-3 mt-6 space-y-3">
           {heroFeatures.map((f) => (
@@ -113,7 +168,7 @@ export function OnlinePageClient() {
         />
         <div className="order-5 mt-8 flex flex-wrap items-center gap-4 lg:order-4">
           <Link href="#pricing" className="rounded-sm bg-[#C4956A] px-8 py-3.5 text-sm font-semibold tracking-wider text-white hover:bg-[#B07D54] transition-colors">
-            ХОЧУ В СОПРОВОЖДЕНИЕ
+            ВЫБРАТЬ ФОРМАТ
           </Link>
           <button className="flex items-center gap-2 text-sm text-stone-500 hover:text-stone-700 transition-colors">
             <span className="flex h-10 w-10 items-center justify-center rounded-full border border-stone-300 text-xs">▶</span>
@@ -131,80 +186,198 @@ export function OnlinePageClient() {
 
       <section id="pricing" className="bg-white py-20">
         <div className="mx-auto max-w-6xl px-6">
-          <h2 className="text-3xl font-bold text-stone-900 sm:text-4xl text-center">Тарифы</h2>
-          <div className="mt-12 grid items-stretch gap-6 lg:grid-cols-3">
-            <article className="flex h-full flex-col rounded-sm border border-[#E8E2D9] bg-[#FAF8F4] p-8">
-              <h3 className="text-xl font-bold text-stone-900">Вместе</h3>
-              <p className="text-sm text-stone-400 mt-1">12 недель персональной работы</p>
-              <ul className="mt-6 space-y-3">
-                {["Подробная анкета", "Расчет КБЖУ", "Персональный план питания", "Программа тренировок", "Видео техники упражнений", "1 онлайн-тренировка по видеосвязи", "Ежемесячная корректировка плана"].map((f) => (
-                  <li key={f} className="flex gap-3 text-sm text-stone-600"><Check />{f}</li>
-                ))}
-              </ul>
-              <div className="mt-auto pt-8 text-center">
-                <p className="text-3xl font-bold text-stone-900">
-                  {ONLINE_CHECKOUT_PLANS.together.usdPrice}
-                </p>
-                <p className="mt-1.5 text-base font-medium text-stone-600">
-                  {ONLINE_CHECKOUT_PLANS.together.rublePrice}
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={() => openCheckout(ONLINE_CHECKOUT_PLANS.together)}
-                className="mt-4 inline-flex w-full justify-center rounded-sm bg-[#C4956A] px-5 py-3 text-sm font-semibold tracking-wider text-white transition-colors hover:bg-[#B07D54]"
-              >
-                ПОЛУЧИТЬ ДОСТУП
-              </button>
-            </article>
-            <article className="flex h-full flex-col rounded-sm border border-[#E8E2D9] bg-[#FAF8F4] p-8">
-              <h3 className="text-xl font-bold text-stone-900">Всё под контролем</h3>
-              <p className="mt-1 text-sm text-stone-400">3 месяца полного онлайн-сопровождения</p>
-              <ul className="mt-6 space-y-3">
-                {["Всё из тарифа «Вместе»", "Еженедельные отчеты", "Поддержка", "Ответы на вопросы", "Контроль питания", "Контроль тренировок", "Корректировки по мере необходимости"].map((f) => (
-                  <li key={f} className="flex gap-3 text-sm text-stone-600"><Check />{f}</li>
-                ))}
-              </ul>
-              <div className="mt-auto pt-8 text-center">
-                <p className="text-3xl font-bold text-stone-900">
-                  {ONLINE_CHECKOUT_PLANS.controlled3Months.usdPrice}
-                </p>
-                <p className="mt-1.5 text-base font-medium text-stone-600">
-                  {ONLINE_CHECKOUT_PLANS.controlled3Months.rublePrice}
+          <div className="mx-auto max-w-3xl text-center">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#C4956A]">
+              Два формата — один результат
+            </p>
+            <h2 className="mt-3 text-3xl font-bold text-stone-900 sm:text-4xl">
+              Выберите, как вам комфортнее идти к цели
+            </h2>
+            <p className="mt-4 text-sm leading-relaxed text-stone-500 sm:text-base">
+              В обоих форматах вы получаете индивидуальный план питания и тренировок.
+              Разница — в уровне моей поддержки и контроля.
+            </p>
+          </div>
+
+          <div className="mt-12 grid items-stretch gap-6 lg:grid-cols-5">
+            <article className="flex h-full flex-col rounded-sm border border-[#E8E2D9] bg-[#FAF8F4] p-6 sm:p-8 lg:col-span-2">
+              <div className="flex items-center gap-3">
+                <span className="rounded-sm bg-[#F1E7DC] px-2.5 py-1 text-xs font-semibold text-[#9C6B43]">
+                  01
+                </span>
+                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-stone-400">
+                  Самостоятельный формат
                 </p>
               </div>
-              <button
-                type="button"
-                onClick={() => openCheckout(ONLINE_CHECKOUT_PLANS.controlled3Months)}
-                className="mt-4 inline-flex w-full justify-center rounded-sm bg-[#C4956A] px-5 py-3 text-sm font-semibold tracking-wider text-white transition-colors hover:bg-[#B07D54]"
-              >
-                ПОЛУЧИТЬ ДОСТУП
-              </button>
-            </article>
-            <article className="flex h-full flex-col rounded-sm border border-[#E8E2D9] bg-[#FAF8F4] p-8">
-              <h3 className="text-xl font-bold text-stone-900">Всё под контролем</h3>
-              <p className="mt-1 text-sm text-stone-400">6 месяцев полного онлайн-сопровождения</p>
+              <h3 className="mt-5 text-2xl font-bold text-stone-900">Персональный план</h3>
+              <p className="mt-2 text-sm leading-relaxed text-stone-500">
+                Я составляю индивидуальный маршрут, а вы двигаетесь к цели самостоятельно.
+              </p>
+
               <ul className="mt-6 space-y-3">
-                {["Всё из тарифа «Вместе»", "Еженедельные отчеты", "Поддержка", "Ответы на вопросы", "Контроль питания", "Контроль тренировок", "Корректировки по мере необходимости"].map((f) => (
-                  <li key={f} className="flex gap-3 text-sm text-stone-600"><Check />{f}</li>
+                {PERSONAL_PLAN_FEATURES.map((feature) => (
+                  <li key={feature} className="flex gap-3 text-sm leading-relaxed text-stone-600">
+                    <Check />
+                    {feature}
+                  </li>
                 ))}
               </ul>
-              <div className="mt-auto pt-8 text-center">
-                <p className="text-3xl font-bold text-stone-900">
-                  {ONLINE_CHECKOUT_PLANS.controlled6Months.usdPrice}
-                </p>
-                <p className="mt-1.5 text-base font-medium text-stone-600">
-                  {ONLINE_CHECKOUT_PLANS.controlled6Months.rublePrice}
+
+              <div className="mt-6 rounded-sm border border-[#E8E2D9] bg-white px-4 py-3">
+                <p className="text-xs leading-relaxed text-stone-500">
+                  <span className="font-semibold text-stone-700">Важно:</span>{" "}
+                  постоянная поддержка и контроль в этот формат не входят.
                 </p>
               </div>
-              <button
-                type="button"
-                onClick={() => openCheckout(ONLINE_CHECKOUT_PLANS.controlled6Months)}
-                className="mt-4 inline-flex w-full justify-center rounded-sm bg-[#C4956A] px-5 py-3 text-sm font-semibold tracking-wider text-white transition-colors hover:bg-[#B07D54]"
-              >
-                ПОЛУЧИТЬ ДОСТУП
-              </button>
+
+              <div className="mt-auto pt-8">
+                <div className="border-t border-[#E8E2D9] pt-6 text-center">
+                  <p className="text-4xl font-bold text-stone-900">
+                    {ONLINE_CHECKOUT_PLANS.together.usdPrice}
+                  </p>
+                  <p className="mt-1 text-sm text-stone-500">за 3 месяца</p>
+                  <p className="mt-2 text-base font-medium text-stone-700">
+                    {ONLINE_CHECKOUT_PLANS.together.rublePrice}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => openCheckout(ONLINE_CHECKOUT_PLANS.together)}
+                  className="mt-5 inline-flex w-full justify-center rounded-sm bg-[#C4956A] px-5 py-3.5 text-sm font-semibold tracking-wider text-white transition-colors hover:bg-[#B07D54] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C4956A]"
+                >
+                  ПОЛУЧИТЬ ПЕРСОНАЛЬНЫЙ ПЛАН
+                </button>
+              </div>
             </article>
+
+            <article className="relative flex h-full flex-col rounded-sm border border-[#A7426B]/35 bg-[#FCF7F9] p-6 shadow-[0_16px_40px_rgba(91,40,61,0.08)] sm:p-8 lg:col-span-3">
+              <span className="absolute right-0 top-0 rounded-bl-sm bg-[#96365E] px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-white">
+                Самый популярный
+              </span>
+              <div className="flex items-center gap-3 pr-28">
+                <span className="rounded-sm bg-[#F2DCE5] px-2.5 py-1 text-xs font-semibold text-[#96365E]">
+                  02
+                </span>
+                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#96365E]">
+                  Полное сопровождение
+                </p>
+              </div>
+              <h3 className="mt-5 text-2xl font-bold text-stone-900">Всё под контролем</h3>
+              <p className="mt-2 max-w-2xl text-sm leading-relaxed text-stone-500">
+                Я сопровождаю вас на каждом этапе: контролирую питание и тренировки,
+                отслеживаю прогресс и корректирую план по мере необходимости.
+              </p>
+
+              <ul className="mt-6 grid gap-x-6 gap-y-3 sm:grid-cols-2">
+                {CONTROLLED_FEATURES.map((feature) => (
+                  <li key={feature} className="flex gap-3 text-sm leading-relaxed text-stone-600">
+                    <Check />
+                    {feature}
+                  </li>
+                ))}
+              </ul>
+
+              <div className="mt-8">
+                <p className="text-center text-xs font-semibold uppercase tracking-[0.16em] text-stone-500">
+                  Выберите срок сопровождения
+                </p>
+                <div className="mt-3 grid grid-cols-2 gap-3" role="group" aria-label="Срок сопровождения">
+                  <button
+                    type="button"
+                    onClick={() => setControlledMonths(3)}
+                    aria-pressed={controlledMonths === 3}
+                    className={`rounded-sm border px-3 py-3 text-center transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#96365E] ${
+                      controlledMonths === 3
+                        ? "border-[#96365E] bg-white text-[#96365E]"
+                        : "border-[#E8D9DF] bg-white/60 text-stone-500 hover:border-[#C98DA6]"
+                    }`}
+                  >
+                    <span className="block text-sm font-semibold">3 месяца</span>
+                    <span className="mt-1 block text-xs">$480</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setControlledMonths(6)}
+                    aria-pressed={controlledMonths === 6}
+                    className={`relative rounded-sm border px-3 py-3 text-center transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#96365E] ${
+                      controlledMonths === 6
+                        ? "border-[#96365E] bg-white text-[#96365E]"
+                        : "border-[#E8D9DF] bg-white/60 text-stone-500 hover:border-[#C98DA6]"
+                    }`}
+                  >
+                    <span className="block text-sm font-semibold">6 месяцев</span>
+                    <span className="mt-1 block text-xs">$600 · лучшая цена</span>
+                  </button>
+                </div>
+              </div>
+
+              <div className="mt-auto pt-6">
+                <div className="rounded-sm border border-[#E8D9DF] bg-white px-5 py-5 text-center">
+                  <p className="text-4xl font-bold text-stone-900">{controlledPlan.usdPrice}</p>
+                  <p className="mt-1 text-sm text-stone-500">
+                    за {controlledMonths} {controlledMonths === 3 ? "месяца" : "месяцев"}
+                  </p>
+                  <p className="mt-2 text-base font-medium text-stone-700">
+                    {controlledPlan.rublePrice}
+                  </p>
+                  <p className="mt-3 text-xs leading-relaxed text-[#96365E]">
+                    {controlledMonths === 6
+                      ? "$100 в месяц · всего на $120 больше, чем 3 месяца"
+                      : "Полное сопровождение в течение трёх месяцев"}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => openCheckout(controlledPlan)}
+                  className="mt-5 inline-flex w-full justify-center rounded-sm bg-[#96365E] px-5 py-3.5 text-sm font-semibold tracking-wider text-white transition-colors hover:bg-[#7F2D50] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#96365E]"
+                >
+                  НАЧАТЬ СОПРОВОЖДЕНИЕ
+                </button>
+              </div>
+            </article>
+          </div>
+
+          <div className="mt-10 rounded-sm border border-[#E8E2D9] bg-[#FAF8F4] p-4 sm:p-6">
+            <div className="flex items-start gap-3">
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#96365E] text-sm text-white">
+                ★
+              </span>
+              <p className="pt-0.5 text-sm leading-relaxed text-stone-600">
+                <span className="font-semibold text-stone-900">Бонус для новых клиентов:</span>{" "}
+                первая онлайн-тренировка по видеосвязи в подарок при выборе любого тарифа.
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-14 overflow-hidden rounded-sm border border-[#E8E2D9]">
+            <div className="bg-[#FAF8F4] px-5 py-5 sm:px-6">
+              <h3 className="text-xl font-bold text-stone-900">Сравнение форматов</h3>
+              <p className="mt-1 text-sm text-stone-500">
+                Главное отличие — частота обратной связи и уровень контроля.
+              </p>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[680px] border-collapse text-left text-sm">
+                <thead>
+                  <tr className="border-t border-[#E8E2D9] bg-white">
+                    <th className="w-[46%] px-5 py-4 font-medium text-stone-500 sm:px-6">Что входит</th>
+                    <th className="w-[27%] px-5 py-4 font-semibold text-stone-900">Персональный план</th>
+                    <th className="w-[27%] bg-[#FCF7F9] px-5 py-4 font-semibold text-[#96365E]">Всё под контролем</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {FORMAT_COMPARISON.map((row) => (
+                    <tr key={row.label} className="border-t border-[#E8E2D9]">
+                      <th className="px-5 py-4 font-medium text-stone-600 sm:px-6">{row.label}</th>
+                      <td className={`px-5 py-4 ${row.personal === "Не входит" ? "text-stone-400" : "text-stone-700"}`}>
+                        {row.personal}
+                      </td>
+                      <td className="bg-[#FCF7F9] px-5 py-4 font-medium text-stone-700">{row.controlled}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </section>

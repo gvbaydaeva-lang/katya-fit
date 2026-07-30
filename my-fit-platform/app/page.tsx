@@ -119,13 +119,13 @@ export default function HomePage() {
                 ПОДРОБНЕЕ
               </Link>
             </ProgramCard>
-            <ProgramCard image={programOnline} alt="Программа «Онлайн сопровождение»">
-              <h3 className="text-xl font-bold text-stone-900">Онлайн сопровождение</h3>
+            <ProgramCard image={programOnline} alt="Программа «Персональная работа онлайн»">
+              <h3 className="text-xl font-bold text-stone-900">Персональная работа онлайн</h3>
               <p className="mt-2 max-w-full text-[13px] text-stone-500 leading-relaxed break-words sm:text-sm">
-                Индивидуальная работа со мной для тех, кто хочет получить максимальный результат.
+                Индивидуальный план для самостоятельной работы или полное сопровождение со мной.
               </p>
               <ul className="mt-5 flex-1 space-y-2">
-                {["Индивидуальный план питания и тренировок", "Регулярные корректировки", "Поддержка 24/7", "Помощь при срывах и плато"].map((f) => (
+                {["Персональный план питания и тренировок", "Два уровня поддержки", "Корректировки по выбранному формату", "Срок сопровождения 3 или 6 месяцев"].map((f) => (
                   <li key={f} className="flex items-center gap-2 text-[13px] text-stone-600 break-words sm:text-sm">
                     <CheckIcon /> {f}
                   </li>
