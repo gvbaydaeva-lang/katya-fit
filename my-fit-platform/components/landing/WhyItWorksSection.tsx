@@ -1,13 +1,9 @@
-const leftColumnPoints = [
+const points = [
   "Без жёстких запретов",
   "Без марафонов",
   "Без экстремальных диет",
   "Под реальную жизнь",
-] as const;
-
-const rightColumnPoints = [
   "Подходит для мам в декрете",
-  "Подходит для женщин в эмиграции",
   "Для тех, кто начинал не один раз",
 ] as const;
 
@@ -33,11 +29,8 @@ export default function WhyItWorksSection() {
           Потому что создано для реальной жизни — не для идеальных условий.
         </p>
 
-        <ul className="mx-auto grid max-w-3xl grid-cols-1 gap-x-16 gap-y-5 md:grid-cols-2">
-          {leftColumnPoints.map((point) => (
-            <Point key={point}>{point}</Point>
-          ))}
-          {rightColumnPoints.map((point) => (
+        <ul className="mx-auto grid max-w-3xl grid-cols-1 gap-x-16 gap-y-5 md:grid-flow-col md:grid-rows-3">
+          {points.map((point) => (
             <Point key={point}>{point}</Point>
           ))}
         </ul>

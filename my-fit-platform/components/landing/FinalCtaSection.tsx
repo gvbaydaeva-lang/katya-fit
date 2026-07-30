@@ -1,4 +1,6 @@
 import Image from "next/image";
+import { AnchorLink } from "@/components/public/AnchorLink";
+import { LANDING_SECTIONS } from "@/lib/landing/anchors";
 import katyaCta from "@/public/images/katya-cta.webp";
 
 export default function FinalCtaSection() {
@@ -14,12 +16,12 @@ export default function FinalCtaSection() {
             шаг к новой версии себя.
           </p>
           <div>
-            <a
-              href="#contact"
+            <AnchorLink
+              sectionId={LANDING_SECTIONS.contact}
               className="inline-block rounded-sm bg-[#C4956A] px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-[#B07D54]"
             >
               Получить консультацию
-            </a>
+            </AnchorLink>
           </div>
         </div>
 

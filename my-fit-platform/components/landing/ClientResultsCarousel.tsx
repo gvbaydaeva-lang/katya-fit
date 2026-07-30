@@ -94,6 +94,7 @@ function ResultCard({
 }) {
   return (
     <article
+      data-result-card
       className={`flex h-full flex-col overflow-hidden rounded-sm border border-[#E8E2D9] bg-[#FAF8F4] ${className}`}
     >
       <div className="shrink-0 p-2">
@@ -114,13 +115,16 @@ export function ClientResultsCarousel({ clients }: ClientResultsCarouselProps) {
   const trackRef = useRef<HTMLDivElement>(null);
   const dragState = useRef({ active: false, startX: 0, scrollLeft: 0 });
   const [isDragging, setIsDragging] = useState(false);
+  const [isAutoScrollPaused, setIsAutoScrollPaused] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
 
   const updateActiveIndex = useCallback(() => {
     const track = trackRef.current;
     if (!track) return;
 
-    const cards = Array.from(track.children) as HTMLElement[];
+    const cards = Array.from(
+      track.querySelectorAll<HTMLElement>("[data-result-card]"),
+    );
     if (cards.length === 0) return;
 
     const trackLeft = track.getBoundingClientRect().left;
@@ -156,9 +160,33 @@ export function ClientResultsCarousel({ clients }: ClientResultsCarouselProps) {
     const track = trackRef.current;
     if (!track) return;
 
-    const card = track.children[index] as HTMLElement | undefined;
+    const cards = track.querySelectorAll<HTMLElement>("[data-result-card]");
+    const card = cards[index];
     card?.scrollIntoView({ behavior: "smooth", inline: "start", block: "nearest" });
   }, []);
+
+  useEffect(() => {
+    if (isAutoScrollPaused || isDragging || clients.length < 2) return;
+
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    if (prefersReducedMotion) return;
+
+    const interval = window.setInterval(() => {
+      const nextIndex =
+        activeIndex === clients.length - 1 ? 0 : activeIndex + 1;
+      scrollToIndex(nextIndex);
+    }, 4500);
+
+    return () => window.clearInterval(interval);
+  }, [
+    activeIndex,
+    clients.length,
+    isAutoScrollPaused,
+    isDragging,
+    scrollToIndex,
+  ]);
 
   const scrollByCard = useCallback((direction: -1 | 1) => {
     const next = Math.min(clients.length - 1, Math.max(0, activeIndex + direction));
@@ -171,6 +199,8 @@ export function ClientResultsCarousel({ clients }: ClientResultsCarouselProps) {
   }, []);
 
   const onPointerDown = useCallback((event: React.PointerEvent<HTMLDivElement>) => {
+    setIsAutoScrollPaused(true);
+
     if (event.pointerType !== "mouse" || event.button !== 0) return;
 
     const track = trackRef.current;
@@ -196,89 +226,98 @@ export function ClientResultsCarousel({ clients }: ClientResultsCarouselProps) {
 
   const onPointerUp = useCallback(
     (event: React.PointerEvent<HTMLDivElement>) => {
-      trackRef.current?.releasePointerCapture(event.pointerId);
+      const track = trackRef.current;
+      if (track?.hasPointerCapture(event.pointerId)) {
+        track.releasePointerCapture(event.pointerId);
+      }
       endDrag();
+      setIsAutoScrollPaused(false);
       updateActiveIndex();
     },
     [endDrag, updateActiveIndex],
   );
 
   return (
-    <div className="relative mt-12">
-      {/* Десктоп: сетка с одинаковой высотой карточек */}
-      <div className="hidden items-stretch gap-4 lg:grid lg:grid-cols-3">
-        {clients.map((client) => (
-          <ResultCard key={getClientKey(client)} client={client} />
-        ))}
+    <div
+      className="relative mt-12"
+      onMouseEnter={() => setIsAutoScrollPaused(true)}
+      onMouseLeave={() => setIsAutoScrollPaused(false)}
+      onFocusCapture={() => setIsAutoScrollPaused(true)}
+      onBlurCapture={() => setIsAutoScrollPaused(false)}
+    >
+      <div className="relative -mx-6 px-6">
+        <div
+          ref={trackRef}
+          role="region"
+          aria-label="Результаты клиенток"
+          aria-roledescription="карусель"
+          className={`flex snap-x snap-mandatory items-stretch gap-4 overflow-x-auto overscroll-x-contain pb-2 [--result-card-width:min(82vw,19rem)] lg:[--result-card-width:20rem] [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${
+            isDragging ? "cursor-grabbing select-none" : "cursor-grab"
+          }`}
+          onPointerDown={onPointerDown}
+          onPointerMove={onPointerMove}
+          onPointerUp={onPointerUp}
+          onPointerCancel={() => {
+            endDrag();
+            setIsAutoScrollPaused(false);
+          }}
+          onLostPointerCapture={() => {
+            endDrag();
+            setIsAutoScrollPaused(false);
+          }}
+        >
+          {clients.map((client) => (
+            <ResultCard
+              key={getClientKey(client)}
+              client={client}
+              className="w-[var(--result-card-width)] shrink-0 self-stretch snap-start"
+            />
+          ))}
+          <div
+            className="w-[calc(100%-var(--result-card-width))] shrink-0 snap-none"
+            aria-hidden
+          />
+        </div>
       </div>
 
-      {/* Мобильная и планшетная карусель с peek */}
-      <div className="lg:hidden">
-        <div className="relative -mx-6 px-6">
-          <div
-            ref={trackRef}
-            role="region"
-            aria-label="Результаты клиенток"
-            aria-roledescription="карусель"
-            className={`flex snap-x snap-mandatory items-stretch gap-4 overflow-x-auto overscroll-x-contain pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${
-              isDragging ? "cursor-grabbing select-none" : "cursor-grab"
-            }`}
-            onPointerDown={onPointerDown}
-            onPointerMove={onPointerMove}
-            onPointerUp={onPointerUp}
-            onPointerCancel={endDrag}
-            onLostPointerCapture={endDrag}
-          >
-            {clients.map((client) => (
-              <ResultCard
-                key={getClientKey(client)}
-                client={client}
-                className="w-[min(78vw,300px)] shrink-0 self-stretch snap-start"
-              />
-            ))}
-            <div className="w-4 shrink-0 snap-none" aria-hidden />
-          </div>
+      <div className="mt-6 flex items-center justify-center gap-4">
+        <button
+          type="button"
+          onClick={() => scrollByCard(-1)}
+          disabled={activeIndex === 0}
+          aria-label="Предыдущая карточка"
+          className="inline-flex h-9 w-9 items-center justify-center rounded-sm border border-[#E8E2D9] text-stone-500 transition-colors hover:border-[#C4956A] hover:text-[#C4956A] disabled:cursor-not-allowed disabled:opacity-40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C4956A]"
+        >
+          <ChevronLeft className="h-4 w-4" aria-hidden />
+        </button>
+
+        <div className="flex items-center gap-2" role="tablist" aria-label="Слайды результатов">
+          {clients.map((client, index) => (
+            <button
+              key={getClientKey(client)}
+              type="button"
+              role="tab"
+              aria-selected={activeIndex === index}
+              aria-label={`Карточка ${index + 1} из ${clients.length}`}
+              onClick={() => scrollToIndex(index)}
+              className={`h-2 rounded-full transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C4956A] ${
+                activeIndex === index
+                  ? "w-6 bg-[#C4956A]"
+                  : "w-2 bg-[#E8E2D9] hover:bg-stone-400"
+              }`}
+            />
+          ))}
         </div>
 
-        <div className="mt-6 flex items-center justify-center gap-4">
-          <button
-            type="button"
-            onClick={() => scrollByCard(-1)}
-            disabled={activeIndex === 0}
-            aria-label="Предыдущая карточка"
-            className="inline-flex h-9 w-9 items-center justify-center rounded-sm border border-[#E8E2D9] text-stone-500 transition-colors hover:border-[#C4956A] hover:text-[#C4956A] disabled:cursor-not-allowed disabled:opacity-40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C4956A]"
-          >
-            <ChevronLeft className="h-4 w-4" aria-hidden />
-          </button>
-
-          <div className="flex items-center gap-2" role="tablist" aria-label="Слайды результатов">
-            {clients.map((client, index) => (
-              <button
-                key={getClientKey(client)}
-                type="button"
-                role="tab"
-                aria-selected={activeIndex === index}
-                aria-label={`Карточка ${index + 1} из ${clients.length}`}
-                onClick={() => scrollToIndex(index)}
-                className={`h-2 rounded-full transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C4956A] ${
-                  activeIndex === index
-                    ? "w-6 bg-[#C4956A]"
-                    : "w-2 bg-[#E8E2D9] hover:bg-stone-400"
-                }`}
-              />
-            ))}
-          </div>
-
-          <button
-            type="button"
-            onClick={() => scrollByCard(1)}
-            disabled={activeIndex === clients.length - 1}
-            aria-label="Следующая карточка"
-            className="inline-flex h-9 w-9 items-center justify-center rounded-sm border border-[#E8E2D9] text-stone-500 transition-colors hover:border-[#C4956A] hover:text-[#C4956A] disabled:cursor-not-allowed disabled:opacity-40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C4956A]"
-          >
-            <ChevronRight className="h-4 w-4" aria-hidden />
-          </button>
-        </div>
+        <button
+          type="button"
+          onClick={() => scrollByCard(1)}
+          disabled={activeIndex === clients.length - 1}
+          aria-label="Следующая карточка"
+          className="inline-flex h-9 w-9 items-center justify-center rounded-sm border border-[#E8E2D9] text-stone-500 transition-colors hover:border-[#C4956A] hover:text-[#C4956A] disabled:cursor-not-allowed disabled:opacity-40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C4956A]"
+        >
+          <ChevronRight className="h-4 w-4" aria-hidden />
+        </button>
       </div>
     </div>
   );

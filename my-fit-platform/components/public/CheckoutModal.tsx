@@ -39,12 +39,14 @@ export default function CheckoutModal({
   const trimmedFullName = fullName.trim();
   const trimmedEmail = email.trim();
   const trimmedPhone = phone.trim();
-  const isFormValid =
+  const hasRequiredPersonalData =
     trimmedFullName.length > 0 &&
     trimmedEmail.includes("@") &&
-    trimmedPhone.length > 0 &&
+    trimmedPhone.length > 0;
+  const isFormValid =
     consent &&
-    offerAccepted;
+    offerAccepted &&
+    (currency === "rub" || hasRequiredPersonalData);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -72,6 +74,22 @@ export default function CheckoutModal({
     e.preventDefault();
     setError("");
 
+    if (!consent) {
+      setError("Необходимо согласие на обработку персональных данных");
+      return;
+    }
+
+    if (!offerAccepted) {
+      setError("Необходимо принять условия публичной оферты");
+      return;
+    }
+
+    if (currency === "rub" && rublePaymentUrl) {
+      setIsLoading(true);
+      window.location.assign(rublePaymentUrl);
+      return;
+    }
+
     if (!trimmedFullName) {
       setError("Укажите имя и фамилию");
       return;
@@ -87,22 +105,7 @@ export default function CheckoutModal({
       return;
     }
 
-    if (!consent) {
-      setError("Необходимо согласие на обработку персональных данных");
-      return;
-    }
-
-    if (!offerAccepted) {
-      setError("Необходимо принять условия публичной оферты");
-      return;
-    }
-
     setIsLoading(true);
-
-    if (currency === "rub" && rublePaymentUrl) {
-      window.location.assign(rublePaymentUrl);
-      return;
-    }
 
     try {
       const res = await fetch("/api/stripe/checkout", {
@@ -179,7 +182,10 @@ export default function CheckoutModal({
             <div className="grid grid-cols-2 gap-2">
               <button
                 type="button"
-                onClick={() => setCurrency("rub")}
+                onClick={() => {
+                  setCurrency("rub");
+                  setError("");
+                }}
                 aria-pressed={currency === "rub"}
                 className={`flex min-h-16 flex-col items-center justify-center rounded-sm border px-2 py-3 text-xs font-medium transition-colors sm:px-3 sm:text-sm ${
                   currency === "rub"
@@ -192,7 +198,10 @@ export default function CheckoutModal({
               </button>
               <button
                 type="button"
-                onClick={() => setCurrency("usd")}
+                onClick={() => {
+                  setCurrency("usd");
+                  setError("");
+                }}
                 aria-pressed={currency === "usd"}
                 className={`flex min-h-16 flex-col items-center justify-center rounded-sm border px-2 py-3 text-xs font-medium transition-colors sm:px-3 sm:text-sm ${
                   currency === "usd"
@@ -208,44 +217,53 @@ export default function CheckoutModal({
         )}
 
         <form onSubmit={handleSubmit} className="mt-5 space-y-4">
-          <label className="block text-sm text-[#1c1917]">
-            Имя, Фамилия
-            <input
-              type="text"
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-              placeholder="Иван Иванов"
-              required
-              className="mt-1.5 w-full rounded-sm border border-[#E8E2D9] bg-white px-4 py-3 text-sm focus:border-[#C4956A] focus:outline-none"
-              autoComplete="name"
-            />
-          </label>
+          {currency === "rub" ? (
+            <p className="rounded-sm border border-[#E8E2D9] bg-white px-4 py-3 text-sm leading-relaxed text-[#6b5e54]">
+              Контактные данные вы укажете на защищённой странице платёжного
+              провайдера после перехода к оплате.
+            </p>
+          ) : (
+            <>
+              <label className="block text-sm text-[#1c1917]">
+                Имя, Фамилия
+                <input
+                  type="text"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  placeholder="Иван Иванов"
+                  required
+                  className="mt-1.5 w-full rounded-sm border border-[#E8E2D9] bg-white px-4 py-3 text-sm focus:border-[#C4956A] focus:outline-none"
+                  autoComplete="name"
+                />
+              </label>
 
-          <label className="block text-sm text-[#1c1917]">
-            Email для доступа к кабинету
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@example.com"
-              required
-              className="mt-1.5 w-full rounded-sm border border-[#E8E2D9] bg-white px-4 py-3 text-sm focus:border-[#C4956A] focus:outline-none"
-              autoComplete="email"
-            />
-          </label>
+              <label className="block text-sm text-[#1c1917]">
+                Email для доступа к кабинету
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="you@example.com"
+                  required
+                  className="mt-1.5 w-full rounded-sm border border-[#E8E2D9] bg-white px-4 py-3 text-sm focus:border-[#C4956A] focus:outline-none"
+                  autoComplete="email"
+                />
+              </label>
 
-          <label className="block text-sm text-[#1c1917]">
-            Телефон (WhatsApp)
-            <input
-              type="tel"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              placeholder="+1 (555) 000-0000"
-              required
-              className="mt-1.5 w-full rounded-sm border border-[#E8E2D9] bg-white px-4 py-3 text-sm focus:border-[#C4956A] focus:outline-none"
-              autoComplete="tel"
-            />
-          </label>
+              <label className="block text-sm text-[#1c1917]">
+                Телефон (WhatsApp)
+                <input
+                  type="tel"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  placeholder="+1 (555) 000-0000"
+                  required
+                  className="mt-1.5 w-full rounded-sm border border-[#E8E2D9] bg-white px-4 py-3 text-sm focus:border-[#C4956A] focus:outline-none"
+                  autoComplete="tel"
+                />
+              </label>
+            </>
+          )}
 
           <label className="flex cursor-pointer items-start gap-3 text-sm text-[#1c1917]">
             <input
