@@ -55,7 +55,7 @@ function ResultCardBody({ client }: { client: ClientResult }) {
           </p>
         ) : null}
       </div>
-      <div className="mt-2 h-[9.75rem] sm:h-[10rem]">
+      <div className="mt-2 h-48">
         {client.quote ? (
           <p className="text-[11px] leading-relaxed text-stone-500 italic break-words sm:text-xs">
             {client.quote}
@@ -95,7 +95,7 @@ function ResultCard({
   return (
     <article
       data-result-card
-      className={`flex h-full flex-col overflow-hidden rounded-sm border border-[#E8E2D9] bg-[#FAF8F4] ${className}`}
+      className={`flex h-[35rem] flex-col overflow-hidden rounded-sm border border-[#E8E2D9] bg-[#FAF8F4] ${className}`}
     >
       <div className="shrink-0 p-2">
         <CoverImage src={client.image} alt={client.alt} sizes="(max-width: 1024px) 78vw, 220px" />
