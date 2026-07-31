@@ -88,9 +88,11 @@ export function Header({ navOverrides }: HeaderProps) {
         </Link>
 
         <button
+          type="button"
           onClick={() => setMenuOpen(!menuOpen)}
-          className="md:hidden p-2 text-stone-600"
+          className="inline-flex h-11 w-11 items-center justify-center text-stone-600 md:hidden"
           aria-label="Menu"
+          aria-expanded={menuOpen}
         >
           <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             {menuOpen ? (

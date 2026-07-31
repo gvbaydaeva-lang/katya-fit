@@ -148,7 +148,7 @@ export default function CheckoutModal({
       role="presentation"
     >
       <div
-        className="relative mx-auto w-full max-w-md rounded-sm border border-[#E8E2D9] bg-[#FAF8F4] p-6 sm:p-8"
+        className="relative mx-auto w-full max-w-md rounded-sm border border-[#E8E2D9] bg-[#FAF8F4] p-5 sm:p-8"
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
@@ -157,7 +157,7 @@ export default function CheckoutModal({
         <button
           type="button"
           onClick={handleClose}
-          className="absolute right-4 top-4 text-stone-400 transition-colors hover:text-stone-700"
+          className="absolute right-2 top-2 inline-flex h-11 w-11 items-center justify-center text-stone-400 transition-colors hover:text-stone-700 sm:right-3 sm:top-3"
           aria-label="Закрыть"
         >
           <X className="h-5 w-5" />
@@ -217,12 +217,7 @@ export default function CheckoutModal({
         )}
 
         <form onSubmit={handleSubmit} className="mt-5 space-y-4">
-          {currency === "rub" ? (
-            <p className="rounded-sm border border-[#E8E2D9] bg-white px-4 py-3 text-sm leading-relaxed text-[#6b5e54]">
-              Контактные данные вы укажете на защищённой странице платёжного
-              провайдера после перехода к оплате.
-            </p>
-          ) : (
+          {currency === "usd" && (
             <>
               <label className="block text-sm text-[#1c1917]">
                 Имя, Фамилия

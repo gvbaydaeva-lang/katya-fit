@@ -280,18 +280,18 @@ export function ClientResultsCarousel({ clients }: ClientResultsCarouselProps) {
         </div>
       </div>
 
-      <div className="mt-6 flex items-center justify-center gap-4">
+      <div className="mt-6 flex items-center justify-center gap-2 sm:gap-4">
         <button
           type="button"
           onClick={() => scrollByCard(-1)}
           disabled={activeIndex === 0}
           aria-label="Предыдущая карточка"
-          className="inline-flex h-9 w-9 items-center justify-center rounded-sm border border-[#E8E2D9] text-stone-500 transition-colors hover:border-[#C4956A] hover:text-[#C4956A] disabled:cursor-not-allowed disabled:opacity-40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C4956A]"
+          className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-sm border border-[#E8E2D9] text-stone-500 transition-colors hover:border-[#C4956A] hover:text-[#C4956A] disabled:cursor-not-allowed disabled:opacity-40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C4956A]"
         >
           <ChevronLeft className="h-4 w-4" aria-hidden />
         </button>
 
-        <div className="flex items-center gap-2" role="tablist" aria-label="Слайды результатов">
+        <div className="flex items-center gap-1 sm:gap-2" role="tablist" aria-label="Слайды результатов">
           {clients.map((client, index) => (
             <button
               key={getClientKey(client)}
@@ -300,12 +300,17 @@ export function ClientResultsCarousel({ clients }: ClientResultsCarouselProps) {
               aria-selected={activeIndex === index}
               aria-label={`Карточка ${index + 1} из ${clients.length}`}
               onClick={() => scrollToIndex(index)}
-              className={`h-2 rounded-full transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C4956A] ${
-                activeIndex === index
-                  ? "w-6 bg-[#C4956A]"
-                  : "w-2 bg-[#E8E2D9] hover:bg-stone-400"
-              }`}
-            />
+              className="inline-flex h-11 w-6 items-center justify-center rounded-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C4956A]"
+            >
+              <span
+                aria-hidden
+                className={`h-2 rounded-full transition-all ${
+                  activeIndex === index
+                    ? "w-6 bg-[#C4956A]"
+                    : "w-2 bg-[#E8E2D9]"
+                }`}
+              />
+            </button>
           ))}
         </div>
 
@@ -314,7 +319,7 @@ export function ClientResultsCarousel({ clients }: ClientResultsCarouselProps) {
           onClick={() => scrollByCard(1)}
           disabled={activeIndex === clients.length - 1}
           aria-label="Следующая карточка"
-          className="inline-flex h-9 w-9 items-center justify-center rounded-sm border border-[#E8E2D9] text-stone-500 transition-colors hover:border-[#C4956A] hover:text-[#C4956A] disabled:cursor-not-allowed disabled:opacity-40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C4956A]"
+          className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-sm border border-[#E8E2D9] text-stone-500 transition-colors hover:border-[#C4956A] hover:text-[#C4956A] disabled:cursor-not-allowed disabled:opacity-40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C4956A]"
         >
           <ChevronRight className="h-4 w-4" aria-hidden />
         </button>

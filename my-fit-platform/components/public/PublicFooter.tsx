@@ -31,7 +31,7 @@ const SOCIAL_LINKS = [
 ] as const;
 
 const socialLinkClassName =
-  "inline-flex h-10 w-10 items-center justify-center rounded-sm text-stone-400 transition-colors hover:text-[#C4956A] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C4956A]";
+  "inline-flex h-11 w-11 items-center justify-center rounded-sm text-stone-400 transition-colors hover:text-[#C4956A] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C4956A]";
 
 export function PublicFooter() {
   return (

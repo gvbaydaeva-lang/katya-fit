@@ -91,7 +91,7 @@ function SetPasswordFormInner() {
           Новый пароль
           <input
             type="password"
-            className="mt-1.5 w-full rounded-xl border border-zinc-300 px-3 py-2.5 outline-none ring-rose-500 focus:ring-2"
+            className="mt-1.5 min-h-11 w-full rounded-xl border border-zinc-300 px-3 py-2.5 outline-none ring-rose-500 focus:ring-2"
             autoComplete="new-password"
             required
             minLength={6}
@@ -103,7 +103,7 @@ function SetPasswordFormInner() {
           Повторите пароль
           <input
             type="password"
-            className="mt-1.5 w-full rounded-xl border border-zinc-300 px-3 py-2.5 outline-none ring-rose-500 focus:ring-2"
+            className="mt-1.5 min-h-11 w-full rounded-xl border border-zinc-300 px-3 py-2.5 outline-none ring-rose-500 focus:ring-2"
             autoComplete="new-password"
             required
             minLength={6}

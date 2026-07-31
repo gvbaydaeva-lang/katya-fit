@@ -59,7 +59,7 @@ function LoginFormInner({ callbackUrl }: LoginFormProps) {
         <input
           type="email"
           name="email"
-          className="mt-1.5 w-full rounded-xl border border-zinc-300 px-3 py-2.5 outline-none ring-rose-500 focus:ring-2"
+          className="mt-1.5 min-h-11 w-full rounded-xl border border-zinc-300 px-3 py-2.5 outline-none ring-rose-500 focus:ring-2"
           autoComplete="email"
           required
         />
@@ -69,7 +69,7 @@ function LoginFormInner({ callbackUrl }: LoginFormProps) {
         <input
           type="password"
           name="password"
-          className="mt-1.5 w-full rounded-xl border border-zinc-300 px-3 py-2.5 outline-none ring-rose-500 focus:ring-2"
+          className="mt-1.5 min-h-11 w-full rounded-xl border border-zinc-300 px-3 py-2.5 outline-none ring-rose-500 focus:ring-2"
           autoComplete="current-password"
           required
           minLength={6}
