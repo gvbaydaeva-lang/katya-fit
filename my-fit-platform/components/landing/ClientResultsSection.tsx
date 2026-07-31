@@ -5,8 +5,19 @@ import resultElina from "@/public/images/result-elina.webp";
 import resultElena from "@/public/images/result-elena.webp";
 import resultGalina from "@/public/images/result-galina.webp";
 import resultKarina from "@/public/images/result-karina.webp";
+import resultSveta from "@/public/images/result-sveta.jpg";
 
 const RESULT_CLIENTS = [
+  {
+    name: "Света, 36 лет",
+    profession: "Мама троих детей",
+    story:
+      "Домашние тренировки вернули Свете силу и лёгкость. Однажды она подняла младшего ребёнка на руки и легко поднялась с ним по лестнице, а осознала это лишь спустя минуту. Теперь ей нравится собственное отражение, она снова носит летние сарафаны и чувствует себя уверенно.",
+    period: "9 недель",
+    stats: ["Вес: –7 кг", "Талия: –7 см", "Живот: –10 см", "Бёдра: –6 см"],
+    image: resultSveta,
+    alt: "Результат Светы за 9 недель — до и после",
+  },
   {
     name: "Карина, 36 лет",
     profession: "Пекарь, мама двоих детей",
