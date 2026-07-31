@@ -162,7 +162,14 @@ export function ClientResultsCarousel({ clients }: ClientResultsCarouselProps) {
 
     const cards = track.querySelectorAll<HTMLElement>("[data-result-card]");
     const card = cards[index];
-    card?.scrollIntoView({ behavior: "smooth", inline: "start", block: "nearest" });
+    if (!card) return;
+
+    const left =
+      card.getBoundingClientRect().left -
+      track.getBoundingClientRect().left +
+      track.scrollLeft;
+
+    track.scrollTo({ left, top: 0, behavior: "smooth" });
   }, []);
 
   useEffect(() => {
@@ -251,7 +258,7 @@ export function ClientResultsCarousel({ clients }: ClientResultsCarouselProps) {
           role="region"
           aria-label="Результаты клиенток"
           aria-roledescription="карусель"
-          className={`flex snap-x snap-mandatory items-stretch gap-4 overflow-x-auto overscroll-x-contain pb-2 [--result-card-width:min(82vw,19rem)] lg:[--result-card-width:14rem] [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${
+          className={`client-results-track flex snap-x snap-mandatory items-stretch gap-4 overflow-x-auto overscroll-x-contain pb-2 touch-pan-x [--result-card-width:min(82vw,19rem)] lg:[--result-card-width:14rem] [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${
             isDragging ? "cursor-grabbing select-none" : "cursor-grab"
           }`}
           onPointerDown={onPointerDown}

@@ -3,6 +3,7 @@
 import Image from "next/image";
 import type { StaticImageData } from "next/image";
 import { useState } from "react";
+import { MobileCardCarousel } from "@/components/landing/MobileCardCarousel";
 import {
   Dialog,
   DialogContent,
@@ -264,7 +265,6 @@ function ProgramFeatureCard({
 }
 
 export function CourseTimelineSection() {
-  const marqueeCards = [...programCards, ...programCards, ...programCards];
   const [selectedCard, setSelectedCard] = useState<ProgramCard | null>(null);
 
   return (
@@ -279,15 +279,21 @@ export function CourseTimelineSection() {
         </p>
 
         <div className="mt-10 md:hidden">
-          <div className="relative -mx-4 overflow-hidden">
-            <ul className="course-cards-marquee flex w-max gap-4 px-4">
-              {marqueeCards.map((card, index) => (
-                <li key={`${card.number}-${index}`} className="w-[72vw] max-w-[280px] shrink-0">
-                  <ProgramFeatureCard card={card} className="h-full" onOpen={() => setSelectedCard(card)} />
-                </li>
-              ))}
-            </ul>
-          </div>
+          <MobileCardCarousel
+            items={programCards}
+            getKey={(card) => card.number}
+            ariaLabel="Что входит в программу"
+            className="-mx-4"
+            trackClassName="px-4"
+            itemClassName="w-[72vw] max-w-[280px]"
+            renderItem={(card) => (
+              <ProgramFeatureCard
+                card={card}
+                className="h-full"
+                onOpen={() => setSelectedCard(card)}
+              />
+            )}
+          />
         </div>
 
         <ul className="mt-10 hidden gap-4 md:grid md:grid-cols-2 lg:grid-cols-5">

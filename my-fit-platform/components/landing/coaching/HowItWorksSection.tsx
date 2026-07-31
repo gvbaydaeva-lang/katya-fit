@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { MobileCardCarousel } from "@/components/landing/MobileCardCarousel";
 import {
   Dialog,
   DialogContent,
@@ -127,7 +128,6 @@ function StepCard({
 }
 
 export function HowItWorksSection() {
-  const marqueeCards = [...STEPS, ...STEPS, ...STEPS];
   const [selectedStep, setSelectedStep] = useState<(typeof STEPS)[number] | null>(null);
 
   return (
@@ -138,15 +138,17 @@ export function HowItWorksSection() {
         </h2>
 
         <div className="mt-10 md:hidden">
-          <div className="relative -mx-6 overflow-hidden">
-            <ul className="course-cards-marquee flex w-max gap-4 px-6">
-              {marqueeCards.map((step, index) => (
-                <li key={`${step.n}-${index}`} className="w-[72vw] max-w-[280px] shrink-0">
-                  <StepCard step={step} onOpen={() => setSelectedStep(step)} />
-                </li>
-              ))}
-            </ul>
-          </div>
+          <MobileCardCarousel
+            items={STEPS}
+            getKey={(step) => step.n}
+            ariaLabel="Как проходит работа"
+            className="-mx-6"
+            trackClassName="px-6"
+            itemClassName="w-[72vw] max-w-[280px]"
+            renderItem={(step) => (
+              <StepCard step={step} onOpen={() => setSelectedStep(step)} />
+            )}
+          />
         </div>
 
         <ul className="mt-10 hidden gap-5 md:grid md:grid-cols-2 lg:flex lg:items-stretch">
