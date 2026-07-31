@@ -44,7 +44,10 @@ export function ReadySection() {
             </div>
             <div>
               <Link
-                href="#"
+                href="https://wa.me/19299090451"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Записаться на консультацию в WhatsApp"
                 className="inline-flex rounded-sm bg-[#C4956A] px-5 py-3 text-xs font-medium uppercase tracking-[0.08em] text-white transition-colors hover:bg-[#B07D54]"
               >
                 ЗАПИСАТЬСЯ НА КОНСУЛЬТАЦИЮ
