@@ -251,7 +251,7 @@ export function ClientResultsCarousel({ clients }: ClientResultsCarouselProps) {
           role="region"
           aria-label="Результаты клиенток"
           aria-roledescription="карусель"
-          className={`flex snap-x snap-mandatory items-stretch gap-4 overflow-x-auto overscroll-x-contain pb-2 [--result-card-width:min(82vw,19rem)] lg:[--result-card-width:20rem] [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${
+          className={`flex snap-x snap-mandatory items-stretch gap-4 overflow-x-auto overscroll-x-contain pb-2 [--result-card-width:min(82vw,19rem)] lg:[--result-card-width:14rem] [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${
             isDragging ? "cursor-grabbing select-none" : "cursor-grab"
           }`}
           onPointerDown={onPointerDown}
