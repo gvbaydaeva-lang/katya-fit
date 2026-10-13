@@ -293,7 +293,7 @@ export function OnlinePageClient() {
                     }`}
                   >
                     <span className="block text-sm font-semibold">3 месяца</span>
-                    <span className="mt-1 block text-xs">$480</span>
+                    <span className="mt-1 block text-xs">$549</span>
                   </button>
                   <button
                     type="button"
@@ -306,7 +306,7 @@ export function OnlinePageClient() {
                     }`}
                   >
                     <span className="block text-sm font-semibold">6 месяцев</span>
-                    <span className="mt-1 block text-xs">$600 · лучшая цена</span>
+                    <span className="mt-1 block text-xs">$799 · лучшая цена</span>
                   </button>
                 </div>
               </div>
@@ -322,7 +322,7 @@ export function OnlinePageClient() {
                   </p>
                   <p className="mt-3 text-xs leading-relaxed text-[#96365E]">
                     {controlledMonths === 6
-                      ? "$100 в месяц · всего на $120 больше, чем 3 месяца"
+                      ? "$133.17 в месяц · всего на $250 больше, чем 3 месяца"
                       : "Полное сопровождение в течение трёх месяцев"}
                   </p>
                 </div>

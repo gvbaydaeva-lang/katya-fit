@@ -20,8 +20,8 @@ export const PLANS = [
   {
     id: "platform",
     name: "Всё под контролем",
-    price: "$480",
-    amountCents: 48000,
+    price: "$549",
+    amountCents: 54900,
     description:
       "Расширенный формат с доступом к материалам и более плотной поддержкой.",
   },
