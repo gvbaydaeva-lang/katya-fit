@@ -1,5 +1,7 @@
 import Image from "next/image";
 import storyBeforeAfter from "@/public/images/story-before-after.webp";
+import katyaCertificate from "@/public/images/katya-certificate.jpg";
+import ifpaCertificate from "@/public/images/ifpa-personal-fitness-trainer-certificate.jpg";
 import { CertificateBadgeCard } from "@/components/landing/CertificateBadgeCard";
 
 type MyStorySectionProps = {
@@ -58,8 +60,20 @@ export function MyStorySection({ id = "my-story" }: MyStorySectionProps) {
                 </p>
               </div>
 
-              <div className="mt-4 lg:mt-auto">
-                <CertificateBadgeCard />
+              <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:mt-auto">
+                <CertificateBadgeCard
+                  certificate={{
+                    src: katyaCertificate,
+                    label: "Сертификат Henselmans PT",
+                  }}
+                />
+                <CertificateBadgeCard
+                  certificate={{
+                    src: ifpaCertificate,
+                    label: "Сертификат IFPA Personal Fitness Trainer",
+                    thumbnailFit: "contain",
+                  }}
+                />
               </div>
             </div>
           </div>
